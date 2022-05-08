@@ -3,6 +3,7 @@
 	<head>
 		<script src="./jquery-3.4.1.slim.min.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
+		<script src="./jQuery.js"></script>
 	</head>
 
 	<body>
@@ -23,28 +24,28 @@
 			</div>
 			<div id="loginPage" class="toggle" style="display: none;">
 				<form>
-					<label for="userName"><b>User Name:</b></label>
-					<input type="text" placeholder="Enter User Name:" name="userName" id="userName" required></input>
-					<label for="password"><b>Password:</b></label>
-					<input type="text" placeholder="Enter Password:" name="password" id="password" required></input>
+					<label for="userNameLog"><b>User Name:</b></label>
+					<input type="text" placeholder="Enter User Name:" name="userNameLog" id="userNameLog" required></input>
+					<label for="passwordLog"><b>Password:</b></label>
+					<input type="text" placeholder="Enter Password:" name="passwordLog" id="passwordLog" required></input>
 					<button type="reset" id="reset-button">Reset</button>
 					<button type="login" id="login-button">Login</button>
 				</form>
 			</div>
 			<div id="registerPage" class="toggle" style="display: none;">
 				<form id="signUp-form">
-					<label for="userName"><b>User Name:</b></label>
-					<input type="text" placeholder="Enter User Name:" name="userName" id="userName" required></input>
-					<label for="password"><b>Password:</b></label>
-					<input type="text" placeholder="Enter Password:" name="password" id="password" required></input>
+					<label for="userNameReg"><b>User Name:</b></label>
+					<input type="text" placeholder="Enter User Name" name="userNameReg" id="userNameReg" required></input>
+					<label for="passwordReg"><b>Password:</b></label>
+					<input type="text" placeholder="Enter Password" name="passwordReg" id="passwordReg" required></input>
 					<label for="name"><b>Enter Full Name:</b></label>
-					<input type="text" placeholder="Enter Your Name:" name="name" id="name" required></input>
+					<input type="text" placeholder="Enter Your Name" name="name" id="name" required></input>
 					<label for="email"><b>Enter Email:</b></label>
 					<input type="text" placeholder="Enter Email" name="email" id="email" required>
 					<label for="birthDay">Select Your Birth Date:</label> 	
 					<input type="date" id="birthday" name="birthday">
 					<button type="reset" id="reset-button">Reset</button>
-					<button type="submit" id="submit-button" onclick="checkSubmission()">Submit</button>
+					<button name="submit-button" type="button" id="submit-button">Submit</button>
 				</form>
 			</div>
 			<div id="settingsPage" class="toggle" style="display: none;">
