@@ -6,6 +6,7 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var currentPage;
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -170,3 +171,31 @@ function UpdatePosition() {
 		Draw();
 	}
 }
+
+// switchContent(idToShow)
+// {
+// 	divToHide.style.display = 'none'
+// 	var divToShow = document.getElementById(idToShow)
+// 	divToShow.style.visibility = 'visibale'
+// }
+
+function switchContent(id) 
+{
+	const target = document.getElementById(id);
+	if (!target) return;
+  
+	// Hide all other div elements.
+	const divs = document.querySelectorAll('.toggle');
+	for (const div of divs) {
+	  div.style.display = 'none';
+	}
+  
+	// Show selected one
+	target.style.display = 'block';
+  }
+  
+
+
+
+
+

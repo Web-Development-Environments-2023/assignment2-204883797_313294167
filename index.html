@@ -6,16 +6,45 @@
 	</head>
 
 	<body>
-		<div id="score">
-			<label for="lblScore">SCORE:</label>
-			<input id="lblScore" type="text" />
+		<div id="header">
+			
 		</div>
-		<div id="time">
-			<label for="lblTime">TIME:</label>
-			<input id="lblTime" type="text" />
+		<div id="menu">
+			<button id="welcomeButton" onclick="switchContent('welcomePage')">Welcome</button>
+			<button id="registerButton" onclick="switchContent('registerPage')">Register</button>
+			<button id="loginButton" onclick="switchContent('loginPage')">Login</button>
+			<button id="aboutButton" onclick="switchContent('aboutPage')">About Us</button>
 		</div>
-		<div id="game">
-			<canvas id="canvas" height="600" width="600"></canvas>
+		<div id="content">
+			<div id="welcomePage" class="toggle">
+				<p> in welcome </p>
+			</div>
+			<div id="loginPage" class="toggle" style="display: none;">
+				<p> in login </p>
+			</div>
+			<div id="registerPage" class="toggle" style="display: none;">
+				<p> in register </p>
+			</div>
+			<div id="settingsPage" class="toggle" style="display: none;">
+				<p> in settings </p>
+			</div>
+			<div id="aboutPage" class="toggle" style="display: none;">
+				<p> in about </p>
+			</div>
+			<div id="gamePage" hidden>
+				<canvas id="canvas" height="600" width="600"></canvas>
+				<div id="score">
+					<label for="lblScore">SCORE:</label>
+					<input id="lblScore" type="text" />
+				</div>
+				<div id="time">
+					<label for="lblTime">TIME:</label>
+					<input id="lblTime" type="text" />
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+			
 		</div>
 	</body>
 </html>
