@@ -17,13 +17,35 @@
 		</div>
 		<div id="content">
 			<div id="welcomePage" class="toggle">
-				<p> in welcome </p>
+				<!-- TODO: add logo -->
+				<button id="registerButton" onclick="switchContent('registerPage')">Register</button>
+				<button id="loginButton" onclick="switchContent('loginPage')">Login</button>
 			</div>
 			<div id="loginPage" class="toggle" style="display: none;">
-				<p> in login </p>
+				<form>
+					<label for="userName"><b>User Name:</b></label>
+					<input type="text" placeholder="Enter User Name:" name="userName" id="userName" required></input>
+					<label for="password"><b>Password:</b></label>
+					<input type="text" placeholder="Enter Password:" name="password" id="password" required></input>
+					<button type="reset" id="reset-button">Reset</button>
+					<button type="login" id="login-button">Login</button>
+				</form>
 			</div>
 			<div id="registerPage" class="toggle" style="display: none;">
-				<p> in register </p>
+				<form id="signUp-form">
+					<label for="userName"><b>User Name:</b></label>
+					<input type="text" placeholder="Enter User Name:" name="userName" id="userName" required></input>
+					<label for="password"><b>Password:</b></label>
+					<input type="text" placeholder="Enter Password:" name="password" id="password" required></input>
+					<label for="name"><b>Enter Full Name:</b></label>
+					<input type="text" placeholder="Enter Your Name:" name="name" id="name" required></input>
+					<label for="email"><b>Enter Email:</b></label>
+					<input type="text" placeholder="Enter Email" name="email" id="email" required>
+					<label for="birthDay">Select Your Birth Date:</label> 	
+					<input type="date" id="birthday" name="birthday">
+					<button type="reset" id="reset-button">Reset</button>
+					<button type="submit" id="submit-button" onclick="checkSubmission()">Submit</button>
+				</form>
 			</div>
 			<div id="settingsPage" class="toggle" style="display: none;">
 				<p> in settings </p>
