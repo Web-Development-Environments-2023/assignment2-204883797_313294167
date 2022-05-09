@@ -23,6 +23,7 @@ $(document).ready(function() {
 	});
   
 	$('#submit-button').on('click', function() {
+    
 		var createUsernameEntry = $("#userNameReg").val();
 		var createPasswordEntry = $("#passwordReg").val();
     var createNameEntry = $("#name").val();
@@ -46,7 +47,9 @@ $(document).ready(function() {
     var validatePass= /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     var validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
    
-    if(!validate.test(createUsernameEntry) || (createUsernameEntry).length == 0) {
+
+
+    if(!validate.test(createUsernameEntry) || (createUsernameEntry).length == 0 || (createUsernameEntry == "Enter a valid username")) {
       $(createUsernameObject).addClass("error")
       $(createUsernameObject).val("Enter a valid username")
     } else {
@@ -54,7 +57,7 @@ $(document).ready(function() {
       var createUsername = $(createUsernameObject).val();
     }
     
-    if(!validate.test(createPasswordEntry) || !validatePass.test(createPasswordEntry) || (createPasswordEntry).length < 6) {
+    if(!validate.test(createPasswordEntry) || !validatePass.test(createPasswordEntry) || (createPasswordEntry).length < 6 || (createPasswordEntry == "Enter a valid password")) {
       $(createPasswordObject).addClass("error");
       $(createPasswordObject).val("Enter a valid password");
     } else {
@@ -62,7 +65,7 @@ $(document).ready(function() {
       var createPassword = $(createPasswordObject).val();
     }
 
-    if(!validate.test(createNameEntry) || !validateName.test(createNameEntry) || (createNameEntry).length == 0) {
+    if(!validate.test(createNameEntry) || !validateName.test(createNameEntry) || (createNameEntry).length == 0 || (createNameEntry == "Enter a valid name")){
         $(createNameObject).addClass("error");
         $(createNameObject).val("Enter a valid name");
       } else {
@@ -70,21 +73,20 @@ $(document).ready(function() {
         var createName = $(createNameObject).val();
       }
     
-    if(!validateEmail.test(createEmailEntry)) {
+    if(!validateEmail.test(createEmailEntry) || (createEmailEntry == "Enter a valid email")) {
       $(createEmailObject).addClass("error");
       $(createEmailObject).val("Enter a valid email");
     } else {
       createEmailValid = true;
     }
 
-    if((createBirthDayEntry).length == 0) {
+    if((createBirthDayEntry).length == 0 || (createEmailEntry == "Enter a valid date")) {
       $(createBirthDayObject).addClass("error");
       $(createBirthDayObject).val("Enter a valid date");
     } else {
       createBirthDayValid = true;
     }
 
-      
     $(createUsernameObject).on('click', function () {
       $(this).val("");  
       $(this).removeClass("error");
@@ -109,23 +111,17 @@ $(document).ready(function() {
       $(this).val("");
       $(this).removeClass("error");
     });
-    console.log(sfaf);
 		account = [createUsername, createPassword];
     accountList.push(account);
-    
-    
+
+
 		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true) {
-      $('#toggle').animate({
-        height: "toggle",
-        opacity: "toggle"
-      }, "fast");
+
+        $("#registerPage").hide();
+        $("#loginPage").show();
+    
       }
     });
     
-    $('.message a').on('click', function() {
-      $('#toggle').animate({
-        height: "toggle",
-        opacity: "toggle"
-      }, "fast");
-    });
+
   });
