@@ -2,7 +2,10 @@ $(document).ready(function() {
 	var loginUsername;
 	var loginPassword;
 	var account = [loginUsername, loginPassword];
-    var accountList = [[k,k]]
+  var accountList = [];
+  accountList.push(account);
+  var loginForm = $('#loginPage');
+  var registerForm = $('#registerPage');
 
   
 	$('#login-button').on('click', function() {
@@ -22,21 +25,26 @@ $(document).ready(function() {
 	$('#submit-button').on('click', function() {
 		var createUsernameEntry = $("#userNameReg").val();
 		var createPasswordEntry = $("#passwordReg").val();
-        var createNameEntry = $("#name").val();
+    var createNameEntry = $("#name").val();
 		var createEmailEntry = $("#email").val();
-        var createUsernameValid = false;
-        var createPasswordValid = false;
-        var createNameValid = false;
-        var createEmailValid = false;
-        var createUsernameObject = $("#userNameReg");
-        var createPasswordObject = $("#passwordReg");
-        var createNameObject = $("#name");
-        var createEmailObject = $("#email");
+    var createBirthDayEntry = $("#birthday").val();
+    var createUsernameValid = false;
+    var createPasswordValid = false;
+    var createNameValid = false;
+    var createEmailValid = false;
+    var createBirthDayValid = false;
 
-        var validate = /^\s*[a-zA-Z0-9,\s]+\s*$/;
-        var validateName = /^([^0-9]*)$/;
-        var validatePass= /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
-        var validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var createUsernameObject = $("#userNameReg");
+    var createPasswordObject = $("#passwordReg");
+    var createBirthDayObject = $("#birthday");
+
+    var createNameObject = $("#name");
+    var createEmailObject = $("#email");
+
+    var validate = /^\s*[a-zA-Z0-9,\s]+\s*$/;
+    var validateName = /^([^0-9]*)$/;
+    var validatePass= /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+    var validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
    
     if(!validate.test(createUsernameEntry) || (createUsernameEntry).length == 0) {
       $(createUsernameObject).addClass("error")
@@ -67,8 +75,15 @@ $(document).ready(function() {
       $(createEmailObject).val("Enter a valid email");
     } else {
       createEmailValid = true;
-      console.log("Account Email " + createEmailObject.val())
     }
+
+    if((createBirthDayEntry).length == 0) {
+      $(createBirthDayObject).addClass("error");
+      $(createBirthDayObject).val("Enter a valid date");
+    } else {
+      createBirthDayValid = true;
+    }
+
       
     $(createUsernameObject).on('click', function () {
       $(this).val("");  
@@ -89,24 +104,28 @@ $(document).ready(function() {
       $(this).val("");
       $(this).removeClass("error");
     });
-    
+
+    $(createBirthDayObject).on('click', function () {
+      $(this).val("");
+      $(this).removeClass("error");
+    });
+    console.log(sfaf);
 		account = [createUsername, createPassword];
-        accountList.push(account);
-		console.log("Account Username " + account[0]);
-		console.log("Account Password " + account[1]);
+    accountList.push(account);
     
-		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true) {
-      $('form').animate({
-			height: "toggle",
-			opacity: "toggle"
-		}, "fast");
-    }
-	});
-  
-	$('.message a').on('click', function() {
-		$('form').animate({
-			height: "toggle",
-			opacity: "toggle"
-		}, "fast");
-	});
-});
+    
+		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true) {
+      $('#toggle').animate({
+        height: "toggle",
+        opacity: "toggle"
+      }, "fast");
+      }
+    });
+    
+    $('.message a').on('click', function() {
+      $('#toggle').animate({
+        height: "toggle",
+        opacity: "toggle"
+      }, "fast");
+    });
+  });

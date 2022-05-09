@@ -4,6 +4,9 @@
 		<script src="./jquery-3.4.1.slim.min.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
 		<script src="./jQuery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		
+
 	</head>
 
 	<body>
@@ -22,8 +25,10 @@
 				<button id="registerButton" onclick="switchContent('registerPage')">Register</button>
 				<button id="loginButton" onclick="switchContent('loginPage')">Login</button>
 			</div>
+
+
 			<div id="loginPage" class="toggle" style="display: none;">
-				<form>
+				<form class="login-form">
 					<label for="userNameLog"><b>User Name:</b></label>
 					<input type="text" placeholder="Enter User Name:" name="userNameLog" id="userNameLog" required></input>
 					<label for="passwordLog"><b>Password:</b></label>
@@ -47,7 +52,10 @@
 					<button type="reset" id="reset-button">Reset</button>
 					<button name="submit-button" type="button" id="submit-button">Submit</button>
 				</form>
+
 			</div>
+
+		</div>
 			<div id="settingsPage" class="toggle" style="display: none;">
 				<p> in settings </p>
 			</div>
