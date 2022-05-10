@@ -1,24 +1,28 @@
 $(document).ready(function() {
-	var loginUsername;
-	var loginPassword;
-	var account = [loginUsername, loginPassword];
+
+	var account = ['k','k'];
   var accountList = [];
   accountList.push(account);
-  var loginForm = $('#loginPage');
-  var registerForm = $('#registerPage');
+
 
   
 	$('#login-button').on('click', function() {
-		var loginUsernameEntry = $("#login-username").val();
-		var loginPasswordEntry = $("#login-password").val();
-		if (loginUsernameEntry == account[0] && loginPasswordEntry == account[1]) {
-			console.log("Current Username " + account[0]);
-			console.log("Current Password " + account[1]);
-			console.log("Logged In");
-		} else {
-			console.log("Attempted Username " + loginUsernameEntry);
-			console.log("Attempted Password " + loginPasswordEntry);
-			console.log("Login Falied");
+		var loginUsernameEntry = $("#userNameLog").val();
+		var loginPasswordEntry = $("#passwordLog").val();
+    var check=0;
+    var arrayLength = accountList.length;
+    for (var i = 0; i < arrayLength; i++) {
+      if(accountList[i][0]==loginUsernameEntry && accountList[i][1]==loginPasswordEntry){
+        check=1;
+      }
+    }
+
+    if (check==1){
+      $("#loginPage").hide();
+      $("#settingsPage").show();
+    }
+		else {
+			alert("Your username or password is incorrect please try again.")
 		};
 	});
   
@@ -111,12 +115,12 @@ $(document).ready(function() {
       $(this).val("");
       $(this).removeClass("error");
     });
-		account = [createUsername, createPassword];
-    accountList.push(account);
 
 
-		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true) {
 
+		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true && createBirthDayValid == true) {
+        account = [createUsername, createPassword];
+        accountList.push(account);
         $("#registerPage").hide();
         $("#loginPage").show();
     
