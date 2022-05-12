@@ -5,27 +5,31 @@
 		<script type="text/javascript" src="./app.js"></script>
 		<script src="./jQuery.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		
-
+		<link rel="stylesheet" type="text/css" href="styling.css" />
+     	<meta charset="UTF-8">
 	</head>
 
 	<body>
 		<div id="header">
-			
+			<img id="pacmanLogo" src="images\pacman-logo.jpg" width="100px"></img>
+			<img id="pacmanName" src="images\pacman-name.png" height="100px"></img>
+			<p id="ourDetails"> By Leah & Shahar </p>
 		</div>
+
 		<div id="menu">
 			<button id="welcomeButton" onclick="switchContent('welcomePage')">Welcome</button>
 			<button id="registerButton" onclick="switchContent('registerPage')">Register</button>
 			<button id="loginButton" onclick="switchContent('loginPage')">Login</button>
 			<button id="aboutButton" onclick="switchContent('aboutPage')">About Us</button>
 		</div>
+
 		<div id="content">
 			<div id="welcomePage" class="toggle">
 				<!-- TODO: add logo -->
-				<button id="registerButton" onclick="switchContent('registerPage')">Register</button>
-				<button id="loginButton" onclick="switchContent('loginPage')">Login</button>
+				<img id="pacmanWelcome" src="backgrounds\pacman-background.gif"></img> <br>
+				<button id="WelcomeRegisterButton" onclick="switchContent('registerPage')">Register</button>
+				<button id="WelcomeLoginButton" onclick="switchContent('loginPage')">Login</button>
 			</div>
-
 
 			<div id="loginPage" class="toggle" style="display: none;">
 				<form class="login-form">
@@ -37,6 +41,7 @@
 					<button name="login-button" type="button" id="login-button">Login</button>
 				</form>
 			</div>
+
 			<div id="registerPage" class="toggle" style="display: none;">
 				<form id="signUp-form">
 					<label for="userNameReg"><b>User Name:</b></label>
@@ -52,16 +57,43 @@
 					<button type="reset" id="reset-button">Reset</button>
 					<button name="submit-button" type="button" id="submit-button">Submit</button>
 				</form>
-
 			</div>
 
-		</div>
 			<div id="settingsPage" class="toggle" style="display: none;">
-				<p> in settings </p>
+				<h2> settings </h2>
+				<div id="settingKeys"> <p> click the keys buttons to set a key for movement: <br>
+					<button id="up" onclick="showSetter('up')">&#160; up : &#8593; &#160;</button>
+					<div id="enterKeySectionUp" style="display: none;" class="hide">
+						<label>Type the keyboard key for moving up:</label>
+						<input type="text" id="enterKeyUp"></input><br>
+						<button onclick="setKey('up')">ok</button><button onclick="showSetter('up')">cancel</button><button onclick="setDefault('up')">default</button>
+					</div> 
+					<button id="left" onclick="showSetter('left')"> left : &#8592;</button>
+					<div id="enterKeySectionLeft" style="display: none;" class="hide">
+						<label>Type the keyboard key for moving left:</label>
+						<input type="text" id="enterKeyLeft"></input><br>
+						<button onclick="setKey('left')">ok</button><button onclick="showSetter('left')">cancel</button><button onclick="setDefault('left')">default</button> 
+					</div>
+					<button id="right" onclick="showSetter('right')"> right : &#8594;</button> 
+					<div id="enterKeySectionRight" style="display: none;" class="hide">
+						<label>Type the keyboard key for moving right:</label>
+						<input type="text" id="enterKeyRight"></input><br>
+						<button onclick="setKey('right')">ok</button><button onclick="showSetter('right')">cancel</button><button onclick="setDefault('right')">default</button> 
+					</div>
+					<br>
+					<button id="down" onclick="showSetter('down')">&#160; down : &#8595; &#160;</button>
+					<div id="enterKeySectionDown" style="display: none;" class="hide">
+						<label>Type the keyboard key for moving down:</label>
+						<input type="text" id="enterKeyDown"></input><br>
+						<button onclick="setKey('down')">ok</button><button onclick="showSetter('down')">cancel</button><button onclick="setDefault('down')">default</button> 
+					</div>
+				</p> </div>
 			</div>
+
 			<div id="aboutPage" class="toggle" style="display: none;">
 				<p> in about </p>
 			</div>
+
 			<div id="gamePage" hidden>
 				<canvas id="canvas" height="600" width="600"></canvas>
 				<div id="score">
@@ -73,9 +105,11 @@
 					<input id="lblTime" type="text" />
 				</div>
 			</div>
-		</div>
+
+			</div>
+
 		<div id="footer">
-			
+			<p id="contactUs">Contact Us At: leahma@post.bgu.ac.il</p>
 		</div>
 	</body>
 </html>
