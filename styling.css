@@ -1,0 +1,90 @@
+body
+{
+    margin: 0.2%;
+}
+
+#menu
+{
+	width: 100%;
+	height: fit-content;
+	/* background-color:rgb(255, 204, 212); */
+	background-image: url("backgrounds/violet-backgroud.jpg");
+	background-size: cover;
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+#menu button 
+{
+	padding-left: 2%;
+	padding-right: 2%;
+	color: white;
+	text-decoration: none;
+	font-size: 20px;
+    background-color: transparent;
+    border: none;
+}
+
+#menu button:hover
+{
+	color: lightgray;
+	display: inline-block;
+}
+
+#pacmanLogo, #pacmanName
+{
+    /* padding: top right bottom left; */
+	padding: 0% 0% 0% 0%;
+}
+
+#header
+{
+    width: 100%;
+    height: fit-content;
+    background-color: black;
+    color: white;
+}
+
+#ourDetails, #contactUs
+{
+    font-size: 15px;
+    margin: 0;
+}
+
+#footer
+{
+	width: 100%;
+	height: fit-content;
+	/* background-color:rgb(255, 204, 212); */
+	background-image: url("backgrounds/violet-backgroud.jpg");
+	background-size: cover;
+	padding-top: 1%;
+	padding-bottom: 1%;
+    color: white;
+    font-size: 15px;
+}
+
+#welcomePage button
+{
+    background-color: darkblue;
+	color: white;
+	padding: 2% 5%;
+	text-decoration: none;
+	margin: 4px 2px;
+	cursor: pointer;
+	font-size: 15px;
+}
+
+#pacmanWelcome
+{
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#welcomePage
+{
+    background-color: black;
+    align-items: center;
+    text-align: center;
+}

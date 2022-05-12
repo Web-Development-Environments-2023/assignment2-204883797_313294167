@@ -7,13 +7,18 @@ var start_time;
 var time_elapsed;
 var interval;
 var currentPage;
+var keyUp = '38';
+var keyDown = '40';
+var keyRight = '39';
+var keyLeft = '37';
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
 	Start();
 });
 
-function Start() {
+function Start() 
+{
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
@@ -21,36 +26,40 @@ function Start() {
 	var food_remain = 50;
 	var pacman_remain = 1;
 	start_time = new Date();
-	for (var i = 0; i < 10; i++) {
+	for (var i = 0; i < 10; i++) 
+	{
 		board[i] = new Array();
 		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 10; j++) {
+		for (var j = 0; j < 10; j++) 
+		{
 			if (
 				(i == 3 && j == 3) ||
 				(i == 3 && j == 4) ||
 				(i == 3 && j == 5) ||
 				(i == 6 && j == 1) ||
 				(i == 6 && j == 2)
-			) {
-				board[i][j] = 4;
-			} else {
+			) { board[i][j] = 4; } 
+			else 
+			{
 				var randomNum = Math.random();
-				if (randomNum <= (1.0 * food_remain) / cnt) {
+				if (randomNum <= (1.0 * food_remain) / cnt) 
+				{
 					food_remain--;
 					board[i][j] = 1;
-				} else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
+				} 
+				else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) 
+				{
 					shape.i = i;
 					shape.j = j;
 					pacman_remain--;
 					board[i][j] = 2;
-				} else {
-					board[i][j] = 0;
-				}
+				} else { board[i][j] = 0; }
 				cnt--;
 			}
 		}
 	}
-	while (food_remain > 0) {
+	while (food_remain > 0) 
+	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 1;
 		food_remain--;
@@ -83,31 +92,28 @@ function findRandomEmptyCell(board) {
 	return [i, j];
 }
 
-function GetKeyPressed() {
-	if (keysDown[38]) {
-		return 1;
-	}
-	if (keysDown[40]) {
-		return 2;
-	}
-	if (keysDown[37]) {
-		return 3;
-	}
-	if (keysDown[39]) {
-		return 4;
-	}
+function GetKeyPressed() 
+{
+	if (keysDown[keyUp]) { return 1; } //up
+	if (keysDown[keyDown]) { return 2; } //down
+	if (keysDown[keyLeft]) { return 3; } //left
+	if (keysDown[keyRight]) { return 4; } //right
 }
 
-function Draw() {
+function Draw() 
+{
 	canvas.width = canvas.width; //clean board
 	lblScore.value = score;
 	lblTime.value = time_elapsed;
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
+	for (var i = 0; i < 10; i++) 
+	{
+		for (var j = 0; j < 10; j++) 
+		{
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
-			if (board[i][j] == 2) {
+			if (board[i][j] == 2) 
+			{
 				context.beginPath();
 				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
@@ -117,12 +123,16 @@ function Draw() {
 				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
 				context.fillStyle = "black"; //color
 				context.fill();
-			} else if (board[i][j] == 1) {
+			} 
+			else if (board[i][j] == 1) 
+			{
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
 				context.fillStyle = "black"; //color
 				context.fill();
-			} else if (board[i][j] == 4) {
+			} 
+			else if (board[i][j] == 4) 
+			{
 				context.beginPath();
 				context.rect(center.x - 30, center.y - 30, 60, 60);
 				context.fillStyle = "grey"; //color
@@ -132,52 +142,41 @@ function Draw() {
 	}
 }
 
-function UpdatePosition() {
+function UpdatePosition() 
+{
 	board[shape.i][shape.j] = 0;
 	var x = GetKeyPressed();
-	if (x == 1) {
-		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) {
-			shape.j--;
-		}
+	if (x == 1) //move up
+	{
+		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) { shape.j--; }
 	}
-	if (x == 2) {
-		if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) {
-			shape.j++;
-		}
+	if (x == 2) //move down
+	{
+		if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { shape.j++; }
 	}
-	if (x == 3) {
-		if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
-			shape.i--;
-		}
+	if (x == 3) //move left
+	{
+		if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { shape.i--; }
 	}
-	if (x == 4) {
-		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) {
-			shape.i++;
-		}
+	if (x == 4) //move right
+	{
+		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
 	}
-	if (board[shape.i][shape.j] == 1) {
-		score++;
-	}
+	if (board[shape.i][shape.j] == 1) { score++; }
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
 	time_elapsed = (currentTime - start_time) / 1000;
-	if (score >= 20 && time_elapsed <= 10) {
+	if (score >= 20 && time_elapsed <= 10) 
+	{
 		pac_color = "green";
 	}
-	if (score == 50) {
+	if (score == 50) 
+	{
 		window.clearInterval(interval);
 		window.alert("Game completed");
-	} else {
-		Draw();
-	}
+	} 
+	else { Draw(); }
 }
-
-// switchContent(idToShow)
-// {
-// 	divToHide.style.display = 'none'
-// 	var divToShow = document.getElementById(idToShow)
-// 	divToShow.style.visibility = 'visibale'
-// }
 
 function switchContent(id) 
 {
@@ -192,7 +191,118 @@ function switchContent(id)
   
 	// Show selected one
 	target.style.display = 'block';
-  }
+}
+
+function showSetter(direction)
+{
+	var section;
+	switch (direction) 
+	{
+		case 'up':
+			section = document.getElementById("enterKeySectionUp");
+			break;
+
+		case 'left':
+			section = document.getElementById("enterKeySectionLeft");
+			break;
+
+		case 'right':
+			section = document.getElementById("enterKeySectionRight");
+			break;
+
+		case 'down':
+			section = document.getElementById("enterKeySectionDown");
+			break;
+	}
+	if (section.className == 'hide')
+	{
+		section.style.display = 'block';
+		section.className = 'show';
+	}
+	else
+	{
+		section.style.display = 'none';
+		section.className = 'hide';
+	}
+}
+
+function setKey(direction)
+{
+	var text;
+	var textValue;
+	var button;
+	switch(direction)
+	{
+		case 'up':
+			text = document.getElementById("enterKeyUp");
+			textValue = text.value;
+			keyUp = textValue;
+			button = document.getElementById("up");
+			button.textContent = "up : " + keyUp;
+			break;
+
+		case 'left':
+			text = document.getElementById("enterKeyLeft");
+			textValue = text.value;
+			keyLeft = textValue;
+			button = document.getElementById("left");
+			button.textContent = "left : " + keyLeft;
+			break;
+
+		case 'right':
+			text = document.getElementById("enterKeyRight");
+			textValue = text.value;
+			keyRight = textValue;
+			button = document.getElementById("right");
+			button.textContent = "right : " + keyRight;
+			break;
+
+		case 'down':
+			text = document.getElementById("enterKeyDown");
+			textValue = text.value;
+			keyDown = textValue;
+			button = document.getElementById("down");
+			button.textContent = "down : " + keyDown;
+			break;	
+		
+	}
+	showSetter(direction)
+}
+
+function setDefault(direction)
+{
+	var button;
+	switch(direction)
+	{
+		case 'up':
+			keyUp = '38';
+			button = document.getElementById("up");
+			button.textContent = "UP : " + "↑";
+			break;
+
+		case 'left':
+			keyLeft = '37';
+			button = document.getElementById("left");
+			button.textContent = "left : " + "←";
+			break;
+
+		case 'right':
+			keyLeft = '39';
+			button = document.getElementById("right");
+			button.textContent = "right : " + "→";
+			break;
+
+		case 'down':
+			keyLeft = '40';
+			button = document.getElementById("down");
+			button.textContent = "down : " + "↓";
+			break;
+	}
+	showSetter(direction)
+}
+
+
+
   
 
 
