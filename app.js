@@ -11,6 +11,7 @@ var keyUp = '38';
 var keyDown = '40';
 var keyRight = '39';
 var keyLeft = '37';
+var ballsNum = 50;
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -301,7 +302,10 @@ function setDefault(direction)
 	showSetter(direction)
 }
 
-
+function setBallsNum()
+{
+	
+}
 
   
 

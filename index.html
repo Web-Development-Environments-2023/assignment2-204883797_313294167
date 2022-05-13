@@ -28,8 +28,8 @@
 				<!-- TODO: add logo -->
 				<img id="pacmanWelcome" src="backgrounds\pacman-background.gif"></img> <br>
 				<button id="WelcomeRegisterButton" onclick="switchContent('registerPage')">Register</button>
-				<button id="WelcomeLoginButton" onclick="switchContent('loginPage')">Login</button>
-			</div>
+				<button id="WelcomeLoginButton" onclick="switchContent('loginPage')">Login</button> 
+			</div> 
 
 			<div id="loginPage" class="toggle" style="display: none;">
 				<form class="login-form">
@@ -88,6 +88,14 @@
 						<button onclick="setKey('down')">ok</button><button onclick="showSetter('down')">cancel</button><button onclick="setDefault('down')">default</button> 
 					</div>
 				</p> </div>
+				<div id="settingBallsNum">
+					<p>
+						choose the amount of balls for the game: <br>
+						<input type="text" id="enterBalls"></input>
+						<button onclick="setBallsNum()">ok</button><button onclick="clearBox()">cancel</button>
+					</p>
+				</div>
+				<button onclick="switchContent('gamePage')">start game</button>
 			</div>
 
 			<div id="aboutPage" class="toggle" style="display: none;">
