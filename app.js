@@ -282,43 +282,70 @@ function showSetter(direction)
 	}
 }
 
+function validateChar(char)
+{
+	if (char == '')
+	{ 
+		alert("no key selected"); 
+		return false;
+	}
+	if (char.length > 1)
+	{
+		alert("please select only one character"); 
+		return false;
+	} 
+	return true;
+}
+
 function setKey(direction)
 {
-	var text;
-	var textValue;
+	var char;
 	var button;
+	var status;
 	switch(direction)
 	{
 		case 'up':
-			text = document.getElementById("enterKeyUp");
-			textValue = text.value;
-			keyUp = textValue;
-			button = document.getElementById("up");
-			button.textContent = "up : " + keyUp;
+			char = document.getElementById("enterKeyUp").value.substring(0,1).toUpperCase();
+			status = validateChar(char)
+			if (status == true)
+			{
+				keyUp = String(document.getElementById("enterKeyUp").value.toUpperCase().charCodeAt(0));
+				button = document.getElementById("up");
+				button.textContent = "up : " + char;
+			}
 			break;
 
 		case 'left':
-			text = document.getElementById("enterKeyLeft");
-			textValue = text.value;
-			keyLeft = textValue;
-			button = document.getElementById("left");
-			button.textContent = "left : " + keyLeft;
+			char = document.getElementById("enterKeyLeft").value.substring(0,1).toUpperCase();
+			status = validateChar(char)
+			if (status == true)
+			{
+				keyLeft = String(document.getElementById("enterKeyLeft").value.toUpperCase().charCodeAt(0));
+				button = document.getElementById("left");
+				button.textContent = "left : " + char;
+			}
 			break;
 
 		case 'right':
-			text = document.getElementById("enterKeyRight");
-			textValue = text.value;
-			keyRight = textValue;
-			button = document.getElementById("right");
-			button.textContent = "right : " + keyRight;
+			char = document.getElementById("enterKeyRight").value.substring(0,1).toUpperCase();
+			status = validateChar(char)
+			if (status == true)
+			{
+				keyRight = String(document.getElementById("enterKeyRight").value.toUpperCase().charCodeAt(0));
+				button = document.getElementById("right");
+				button.textContent = "right : " + char;
+			}
 			break;
 
 		case 'down':
-			text = document.getElementById("enterKeyDown");
-			textValue = text.value;
-			keyDown = textValue;
-			button = document.getElementById("down");
-			button.textContent = "down : " + keyDown;
+			char = document.getElementById("enterKeyDown").value.substring(0,1).toUpperCase();
+			status = validateChar(char)
+			if (status == true)
+			{
+				keyDown = String(document.getElementById("enterKeyDown").value.toUpperCase().charCodeAt(0));
+				button = document.getElementById("down");
+				button.textContent = "down : " + char;
+			}
 			break;	
 		
 	}
