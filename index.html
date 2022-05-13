@@ -95,7 +95,7 @@
 					<p>
 						choose the amount of balls for the game: <br>
 						<input type="text" id="enterBalls"></input>
-						<button onclick="setBallsNum()">ok</button><button onclick="clearBox()">cancel</button>
+						<button onclick="setBallsNum()">ok</button><button onclick="clearBox('enterBalls')">cancel</button>
 					</p>
 				</div>
 				<div id="settingBallsColors">
@@ -127,7 +127,13 @@
 						<button onclick="setBallColor(25)">ok</button>
 					</p>
 				</div>
-
+				<div id="settingTime">
+					<p>
+						select time per game: <br>
+						<input type="text" id="enterTime"></input>
+						<button onclick="setTime()">ok</button><button onclick="clearBox('enterTime')">cancel</button>
+					</p>
+				</div>
 				<button onclick="switchContent('gamePage')">start game</button>
 			</div>
 

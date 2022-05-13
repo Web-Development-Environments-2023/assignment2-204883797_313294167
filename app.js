@@ -409,9 +409,9 @@ function setBallsNum()
 	}
 }
 
-function clearBox()
+function clearBox(id)
 {
-	var inputBalls = document.getElementById("enterBalls");
+	var inputBalls = document.getElementById(id);
 	inputBalls.value = '';
 }
 
@@ -436,6 +436,26 @@ function setBallColor(pointsAmount)
 			if (twentyFiveColor == 'select color') {twentyFiveColor = 'green'; }
 			alert('25 point ball color is set to: ' + twentyFiveColor)
 			break;
+	}
+}
+
+function setTime()
+{
+	var time = document.getElementById("enterTime").value;
+	if (isNaN(time))
+	{
+		alert('please insert a number of seconds');
+		clearBox('enterTime')
+	}
+	else if (time > 60) 
+	{ 
+		time_elapsed = time; 
+		alert('time set to: ' + time_elapsed)
+	}
+	else 
+	{
+		alert('please insert at least 60 seconds');
+		clearBox('enterTime')
 	}
 }
 
