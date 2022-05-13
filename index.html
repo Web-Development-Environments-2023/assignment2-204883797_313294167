@@ -95,6 +95,19 @@
 						<button onclick="setBallsNum()">ok</button><button onclick="clearBox()">cancel</button>
 					</p>
 				</div>
+				<div id="settingBallsColors">
+					<p>
+						choose the color for each ball: <br>
+						<label id="fivePoints">Select for 5 points:</label> 	
+						<br/> <select name="fivePointsBall" id="fivePointsBall">
+							<option name="default-blue" value=&#128309;>&#128309;</option>
+							<option name="red" value=&#128308;>&#128308;</option>
+							<option name="green" value=&#128994;>&#128994;</option>
+						</select>
+						<button onclick="setBallColor('5')">ok</button><button onclick="clearBox()">cancel</button>
+					</p>
+				</div>
+
 				<button onclick="switchContent('gamePage')">start game</button>
 			</div>
 

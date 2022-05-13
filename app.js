@@ -304,7 +304,33 @@ function setDefault(direction)
 
 function setBallsNum()
 {
-	
+	var inputBalls = document.getElementById("enterBalls");
+	if (isNaN(inputBalls.value))
+	{
+		alert("please choose a number between 50 and 90");
+		inputBalls.value = '';
+	}
+	else if (inputBalls.value < 50)
+	{
+		alert("please choose at least 50 balls");
+		inputBalls.value = '';
+	}
+	else if (inputBalls.value > 90)
+	{
+		alert("please choose at most 90 balls");
+		inputBalls.value = '';
+	}
+	else 
+	{
+		ballsNum = inputBalls.value; 
+		alert("balls num successfully set to: " + ballsNum)
+	}
+}
+
+function clearBox()
+{
+	var inputBalls = document.getElementById("enterBalls");
+	inputBalls.value = '';
 }
 
   
