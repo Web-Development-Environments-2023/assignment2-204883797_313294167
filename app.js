@@ -189,10 +189,15 @@ function switchContent(id)
 	for (const div of divs) {
 	  div.style.display = 'none';
 	}
-  
+
+
+
 	// Show selected one
 	target.style.display = 'block';
+
 }
+
+
 
 function showSetter(direction)
 {
@@ -334,6 +339,8 @@ function clearBox()
 }
 
   
+
+
 
 
 
