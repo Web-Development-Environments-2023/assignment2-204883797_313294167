@@ -15,6 +15,7 @@ var ballsNum = 50;
 var fiveColor = 'blue'
 var fifteenColor = 'red'
 var twentyFiveColor = 'green'
+var balls_eaten;
 
 
 
@@ -23,11 +24,21 @@ function Start()
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
+	balls_eaten=ballsNum;
 	pac_color = "yellow";
 	var cnt = 100;
 	var food_remain_25 = ballsNum*0.1;
+	food_remain_25=Math.round(food_remain_25);
 	var food_remain_15 = ballsNum*0.3;
+	food_remain_15=Math.round(food_remain_15);
 	var food_remain_5 = ballsNum*0.6;
+	food_remain_5=Math.round(food_remain_5);
+	if(food_remain_5+food_remain_15+food_remain_25>ballsNum){
+		food_remain_5--;
+	}
+	else if(food_remain_5+food_remain_15+food_remain_25<ballsNum){
+		food_remain_5++;
+	}
 
 	var pacman_remain = 1;
 	start_time = new Date();
@@ -208,7 +219,19 @@ function UpdatePosition()
 	{
 		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
 	}
-	if (board[shape.i][shape.j] == 1 || board[shape.i][shape.j] == 5 || board[shape.i][shape.j] == 6) { score++; }
+	if (board[shape.i][shape.j] == 1) { 
+		balls_eaten--;
+		score=score+5; 
+	}
+	else if (board[shape.i][shape.j] == 5) { 
+		score=score+15; 
+		balls_eaten--;
+	}
+	else if (board[shape.i][shape.j] == 6) { 
+		score=score+25; 
+		balls_eaten--;
+	}
+
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
 	time_elapsed = (currentTime - start_time) / 1000;
@@ -216,7 +239,7 @@ function UpdatePosition()
 	{
 		pac_color = "green";
 	}
-	if (score == ballsNum) 
+	if (balls_eaten == 0) 
 	{
 		window.clearInterval(interval);
 		window.alert("Game completed");
