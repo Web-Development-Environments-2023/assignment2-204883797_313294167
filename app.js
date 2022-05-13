@@ -426,13 +426,13 @@ function setBallColor(pointsAmount)
 			break;
 		
 		case 15:
-			fifteenColor = document.getElementById("fivePointsBall").value;
+			fifteenColor = document.getElementById("fifteenPointsBall").value;
 			if (fifteenColor == 'select color') {fifteenColor = 'red'; }
 			alert('15 point ball color is set to: ' + fifteenColor)
 			break;
 
 		case 25:
-			twentyFiveColor = document.getElementById("fivePointsBall").value;
+			twentyFiveColor = document.getElementById("twentyFivePointsBall").value;
 			if (twentyFiveColor == 'select color') {twentyFiveColor = 'green'; }
 			alert('25 point ball color is set to: ' + twentyFiveColor)
 			break;
