@@ -13,6 +13,8 @@ var keyRight = '39';
 var keyLeft = '37';
 var ballsNum = 50;
 var fiveColor = 'blue'
+var fifteenColor = 'red'
+var twentyFiveColor = 'green'
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -345,12 +347,20 @@ function setBallColor(pointsAmount)
 	{
 		case 5:
 			fiveColor = document.getElementById("fivePointsBall").value;
-			alert('five point ball color is set to: ' + fiveColor)
+			if (fiveColor == 'select color') {fiveColor = 'blue'; }
+			alert('5 point ball color is set to: ' + fiveColor)
 			break;
 		
 		case 15:
-			fiveColor = document.getElementById("fivePointsBall").value;
-			alert('five point ball color is set to: ' + fiveColor)
+			fifteenColor = document.getElementById("fivePointsBall").value;
+			if (fifteenColor == 'select color') {fifteenColor = 'red'; }
+			alert('15 point ball color is set to: ' + fifteenColor)
+			break;
+
+		case 25:
+			twentyFiveColor = document.getElementById("fivePointsBall").value;
+			if (twentyFiveColor == 'select color') {twentyFiveColor = 'green'; }
+			alert('25 point ball color is set to: ' + twentyFiveColor)
 			break;
 	}
 }
