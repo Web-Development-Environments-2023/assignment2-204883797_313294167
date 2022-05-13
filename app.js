@@ -12,6 +12,7 @@ var keyDown = '40';
 var keyRight = '39';
 var keyLeft = '37';
 var ballsNum = 50;
+var fiveColor = 'blue'
 
 $(document).ready(function() {
 	context = canvas.getContext("2d");
@@ -336,6 +337,22 @@ function clearBox()
 {
 	var inputBalls = document.getElementById("enterBalls");
 	inputBalls.value = '';
+}
+
+function setBallColor(pointsAmount)
+{
+	switch (pointsAmount)
+	{
+		case 5:
+			fiveColor = document.getElementById("fivePointsBall").value;
+			alert('five point ball color is set to: ' + fiveColor)
+			break;
+		
+		case 15:
+			fiveColor = document.getElementById("fivePointsBall").value;
+			alert('five point ball color is set to: ' + fiveColor)
+			break;
+	}
 }
 
   

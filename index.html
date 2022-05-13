@@ -100,11 +100,25 @@
 						choose the color for each ball: <br>
 						<label id="fivePoints">Select for 5 points:</label> 	
 						<br/> <select name="fivePointsBall" id="fivePointsBall">
-							<option name="default-blue" value=&#128309;>&#128309;</option>
-							<option name="red" value=&#128308;>&#128308;</option>
+							<option style="background: blue;">blue</option>
+							<option name="red" value='red'>red</option>
+							<option name="green" value='green'>green</option>
+						</select>
+						<button onclick="setBallColor(5)">ok</button><button onclick="clearBox()">cancel</button>
+						<label id="fifteenPoints">Select for 15 points:</label> 	
+						<br/> <select name="fifteenPointsBall" id="fifteenPointsBall">
+							<option name="default-white" value=&#9898;>&#9898;</option>
+							<option name="orange" value=&#128992;>&#128992;</option>
+							<option name="purple" value=&#128995;>&#128995;</option>
+						</select>
+						<button onclick="setBallColor(15)">ok</button><button onclick="clearBox()">cancel</button>
+						<label id="twentyFivePoints">Select for 25 points:</label> 	
+						<br/> <select name="twentyFivePointsBall" id="twentyFivePointsBall">
+							<option name="default-rainbow" value=&#58444;>&#58444;</option>
+							<option name="orange" value=&#128992;>&#128992;</option>
 							<option name="green" value=&#128994;>&#128994;</option>
 						</select>
-						<button onclick="setBallColor('5')">ok</button><button onclick="clearBox()">cancel</button>
+						<button onclick="setBallColor(25)">ok</button><button onclick="clearBox()">cancel</button>
 					</p>
 				</div>
 
