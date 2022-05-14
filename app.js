@@ -20,21 +20,21 @@ var twentyFiveColor = 'green'
 var ballsToEat;
 var monstersNum = 1;
 
-class Boundry
-{
-	constructor({position}) // curly brackets allow interchanging the order of params 
-	{
-		this.position = position;
-		this.width = 40;
-		this.height = 40;
-	}
+// class Boundry
+// {
+// 	constructor({position}) // curly brackets allow interchanging the order of params 
+// 	{
+// 		this.position = position;
+// 		this.width = 40;
+// 		this.height = 40;
+// 	}
 
-	drawBoundry()
-	{
-		context.fillStyle = 'blue'
-		context.fillRect(this.position.x, this.position.y, this.width, this.height)
-	}
-}
+// 	drawBoundry()
+// 	{
+// 		context.fillStyle = 'blue'
+// 		context.fillRect(this.position.x, this.position.y, this.width, this.height)
+// 	}
+// }
 
 
 function Start() 
@@ -282,21 +282,16 @@ function switchContent(id)
 	
 	// Hide all other div elements.
 	const divs = document.querySelectorAll('.toggle');
-	for (const div of divs) {
+	for (const div of divs) 
+	{
 	  div.style.display = 'none';
 	}
 
-	if(id=="gamePage"){
-		Start();
-	}
-
-
+	if (id == "gamePage") { Start(); }
 
 	// Show selected one
 	target.style.display = 'block';
-
 }
-
 
 
 function showSetter(direction)
