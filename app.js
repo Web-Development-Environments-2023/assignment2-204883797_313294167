@@ -409,7 +409,7 @@ function setDefault(direction, isRandom)
 		case 'up':
 			keyUp = '38';
 			button = document.getElementById("up");
-			button.textContent = "UP : " + "↑";
+			button.textContent = "up : " + "↑";
 			break;
 
 		case 'left':
@@ -548,6 +548,16 @@ function randomSelectSettings()
 	ballsNum = Math.floor(Math.random() * (maxBallsNum - minBallsNum + 1)) + minBallsNum;
 	var inputBalls = document.getElementById("enterBalls");
 	inputBalls.value = ballsNum;
+	minTime = Math.ceil(60);
+    maxTime = Math.floor(120);
+	gameTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+	var time = document.getElementById("enterTime");
+	time.value = gameTime;
+	minMonsters = Math.ceil(1);
+    maxMonsters = Math.floor(4);
+	monsters = Math.floor(Math.random() * (maxMonsters - minMonsters + 1)) + minMonsters;
+	var inputMonsters = document.getElementById("enterMonsters");
+	inputMonsters.value = monsters;
 }
 
   
