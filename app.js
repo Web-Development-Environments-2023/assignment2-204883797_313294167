@@ -26,8 +26,8 @@ class Boundry
 	constructor({position}) // curly brackets allow interchanging the order of params 
 	{
 		this.position = position;
-		this.width = 40;
-		this.height = 40;
+		this.width = 80;
+		this.height = 80;
 	}
 
 	drawBoundry()
@@ -45,7 +45,7 @@ function Start()
 	score = 0;
 	ballsToEat = ballsNum;
 	pacColor = "yellow";
-	var cnt = 100;
+	var cnt = 400;
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
 	var food_remain_15 = ballsNum * 0.3;
@@ -63,18 +63,20 @@ function Start()
 
 	var pacman_remain = 1;
 	startTime = new Date();
-	for (var i = 0; i < 10; i++) 
+	for (var i = 0; i < 20; i++) 
 	{
 		board[i] = new Array();
 		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 10; j++) 
+		for (var j = 0; j < 20; j++) 
 		{
 			if (
 				(i == 3 && j == 3) ||
 				(i == 3 && j == 4) ||
 				(i == 3 && j == 5) ||
 				(i == 6 && j == 1) ||
-				(i == 6 && j == 2)
+				(i == 6 && j == 2) ||
+				(i == 8 && j == 8) ||
+				(i == 12 && j == 12)
 			) { board[i][j] = 4; } 
 			else 
 			{
@@ -172,9 +174,9 @@ function Draw()
 	lblScore.value = score;
 	lblTime.value = (gameTime - timeElapsed).toFixed(3);
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
-	for (var i = 0; i < 10; i++) 
+	for (var i = 0; i < 20; i++) 
 	{
-		for (var j = 0; j < 10; j++) 
+		for (var j = 0; j < 20; j++) 
 		{
 			var center = new Object();
 			center.x = i * 60 + 30;
@@ -239,6 +241,7 @@ function Draw()
 			} 
 			else if (board[i][j] == 5) 
 			{
+
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
 				context.fillStyle = fifteenColor; //color
@@ -246,6 +249,7 @@ function Draw()
 			} 
 			else if (board[i][j] == 6) 
 			{
+
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
 				context.fillStyle = twentyFiveColor; //color
@@ -253,6 +257,8 @@ function Draw()
 			} 
 			else if (board[i][j] == 4) 
 			{
+				alert(i)
+				alert(j)
 				context.beginPath();
 				context.rect(center.x - 30, center.y - 30, 60, 60);
 				context.fillStyle = "grey"; //color
