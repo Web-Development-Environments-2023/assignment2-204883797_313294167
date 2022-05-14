@@ -106,6 +106,8 @@ function Start()
 				cnt--;
 			}
 		}
+
+
 	}
 	while (food_remain_5 > 0) 
 	{
@@ -284,7 +286,6 @@ function switchContent(id)
 	  div.style.display = 'none';
 	}
 
-
 	if(id=="gamePage"){
 		Start();
 	}
@@ -409,7 +410,7 @@ function setDefault(direction, isRandom)
 		case 'up':
 			keyUp = '38';
 			button = document.getElementById("up");
-			button.textContent = "up : " + "↑";
+			button.textContent = "UP : " + "↑";
 			break;
 
 		case 'left':
@@ -576,14 +577,12 @@ function randomSelectSettings()
 	colorRandom(colorNum);
 }
 
-function colorRandom(num)
-{
+function colorRandom(num){
 	var fivePointsBall = document.getElementById("fivePointsBall");
 	var fifteenPointsBall = document.getElementById("fifteenPointsBall");
 	var twentyFivePointsBall = document.getElementById("twentyFivePointsBall");
 
-	switch (num)
-	{
+	switch (num){
 		case 1:
 			fiveColor = 'blue'
 			fifteenColor = 'red'
@@ -592,7 +591,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
 			break;
-
+			
 		case 2:
 			fiveColor = 'blue'
 			fifteenColor = 'red'
@@ -709,7 +708,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
-		
+
 		case 15:
 			fiveColor = 'Cyan'
 			fifteenColor = 'orange'
@@ -718,7 +717,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
-		
+
 		case 16:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -727,7 +726,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
 			break;
-		
+
 		case 17:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -736,7 +735,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
-		
+
 		case 18:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -745,7 +744,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
-	
+
 		case 19:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -754,7 +753,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
 			break;
-		
+
 		case 20:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -763,7 +762,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
-				
+
 		case 21:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -772,7 +771,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
-				
+
 		case 22:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
@@ -781,7 +780,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
 			break;
-				
+
 		case 23:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
@@ -790,7 +789,7 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
-				
+
 		case 24:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
