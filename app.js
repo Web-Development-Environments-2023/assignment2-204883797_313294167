@@ -637,7 +637,6 @@ function colorRandom(num)
 			twentyFivePointsBall.value = 'green';
 			break;
 
-
 		case 8:
 			fiveColor = 'blue'
 			fifteenColor = 'Tomato'
