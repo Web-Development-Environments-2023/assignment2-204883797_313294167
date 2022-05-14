@@ -559,7 +559,6 @@ function colorRandom(num){
 	var fivePointsBall = document.getElementById("fivePointsBall");
 	var fifteenPointsBall = document.getElementById("fifteenPointsBall");
 	var twentyFivePointsBall = document.getElementById("twentyFivePointsBall");
-	alert(num)
 
 	switch (num){
 		case 1:
@@ -569,7 +568,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
-
+			break;
 
 		case 2:
 			fiveColor = 'blue'
@@ -578,6 +577,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
+			break;
 
 		case 3:
 			fiveColor = 'blue'
@@ -586,6 +586,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
+			break;
 
 		case 4:
 			fiveColor = 'blue'
@@ -594,6 +595,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
+			break;
 
 		case 5:
 			fiveColor = 'blue'
@@ -602,7 +604,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
-
+			break;
 
 		case 6:
 			fiveColor = 'blue'
@@ -611,7 +613,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
-
+			break;
 
 		case 7:
 			fiveColor = 'blue'
@@ -620,7 +622,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
-
+			break;
 
 		case 8:
 			fiveColor = 'blue'
@@ -629,6 +631,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
+			break;
 		
 		case 9:
 			fiveColor = 'blue'
@@ -637,6 +640,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'blue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
+			break;
 		
 		case 10:
 			fiveColor = 'Cyan'
@@ -645,6 +649,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
+			break;
 		
 		case 11:
 			fiveColor = 'Cyan'
@@ -653,6 +658,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
+			break;
 		
 		case 12:
 			fiveColor = 'Cyan'
@@ -661,6 +667,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
+			break;
 
 		case 13:
 			fiveColor = 'Cyan'
@@ -669,6 +676,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
+			break;
 
 		case 14:
 			fiveColor = 'Cyan'
@@ -677,7 +685,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
-		
+			break;
+
 		case 15:
 			fiveColor = 'Cyan'
 			fifteenColor = 'orange'
@@ -685,7 +694,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
-		
+			break;
+
 		case 16:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -693,7 +703,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
-		
+			break;
+
 		case 17:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -701,7 +712,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
-		
+			break;
+
 		case 18:
 			fiveColor = 'Cyan'
 			fifteenColor = 'Tomato'
@@ -709,7 +721,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'Cyan';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
-	
+			break;
+
 		case 19:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -717,7 +730,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
-		
+			break;
+
 		case 20:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -725,7 +739,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
-				
+			break;
+
 		case 21:
 			fiveColor = 'steelblue'
 			fifteenColor = 'red'
@@ -733,7 +748,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
-				
+			break;
+
 		case 22:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
@@ -741,7 +757,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
-				
+			break;
+
 		case 23:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
@@ -749,7 +766,8 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
-				
+			break;
+
 		case 24:
 			fiveColor = 'steelblue'
 			fifteenColor = 'orange'
@@ -757,6 +775,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
+			break;
 
 		case 25:
 			fiveColor = 'steelblue'
@@ -765,6 +784,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
+			break;
 
 		case 26:
 			fiveColor = 'steelblue'
@@ -773,6 +793,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
+			break;
 
 		case 27:
 			fiveColor = 'steelblue'
@@ -781,6 +802,7 @@ function colorRandom(num){
 			fivePointsBall.value = 'steelblue';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
+			break;
 	}
 
 }
