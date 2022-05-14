@@ -85,18 +85,18 @@ function Start()
 			{
 				var randomNum = Math.random();
 
-				if (randomNum > 0.4 && randomNum < 0.6 && food_remain_5 > 0) 
+				if (randomNum > 0.3 && randomNum < 0.34 && food_remain_5 > 0) 
 				{
 					food_remain_5--;
 					board[i][j] = 1;
 				} 
-				else if(randomNum > 0.25 && randomNum <= 0.4 && food_remain_15 > 0){
+				else if(randomNum > 0.25 && randomNum <= 0.27 && food_remain_15 > 0){
 					food_remain_15--;
 					board[i][j] = 5;
 
 				}
 
-				else if(randomNum <= 0.05 && food_remain_25 > 0){
+				else if(randomNum <= 0.22 && randomNum>=0.21 && food_remain_25 > 0.24){
 					food_remain_25--;
 					board[i][j] = 6;
 
@@ -154,12 +154,13 @@ function Start()
 }
 
 function findRandomEmptyCell(board) {
-	var i = Math.floor(Math.random() * 9 + 1);
-	var j = Math.floor(Math.random() * 9 + 1);
+	var i = Math.floor(Math.random() * 19 + 1);
+	var j = Math.floor(Math.random() * 19 + 1);
 	while (board[i][j] != 0) {
-		i = Math.floor(Math.random() * 9 + 1);
-		j = Math.floor(Math.random() * 9 + 1);
+		i = Math.floor(Math.random() * 19 + 1);
+		j = Math.floor(Math.random() * 19 + 1);
 	}
+
 	return [i, j];
 }
 
