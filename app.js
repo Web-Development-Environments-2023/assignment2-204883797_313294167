@@ -30,13 +30,6 @@ class Boundry
 		this.height = 80;
 	}
 
-	drawBoundry()
-	{
-		context.fillStyle = 'blue'
-		context.fillRect(this.position.x, this.position.y, this.width, this.height)
-	}
-}
-
 
 function Start() 
 {
@@ -332,23 +325,15 @@ function switchContent(id)
 	
 	// Hide all other div elements.
 	const divs = document.querySelectorAll('.toggle');
-	for (const div of divs) {
 	  div.style.display = 'none';
 	}
 	window.clearInterval(interval);
 
 
-	if(id=="gamePage"){
-		Start();
-	}
-
-
 
 	// Show selected one
 	target.style.display = 'block';
-
 }
-
 
 
 function showSetter(direction)
