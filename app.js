@@ -285,6 +285,8 @@ function switchContent(id)
 	for (const div of divs) {
 	  div.style.display = 'none';
 	}
+	window.clearInterval(interval);
+
 
 	if(id=="gamePage"){
 		Start();
