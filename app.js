@@ -45,7 +45,7 @@ function Start()
 	score = 0;
 	ballsToEat = ballsNum;
 	pacColor = "yellow";
-	var cnt = 100;
+	var cnt = 400;
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
 	var food_remain_15 = ballsNum * 0.3;
@@ -63,11 +63,11 @@ function Start()
 
 	var pacman_remain = 1;
 	startTime = new Date();
-	for (var i = 0; i < 10; i++) 
+	for (var i = 0; i < 20; i++) 
 	{
 		board[i] = new Array();
 		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 10; j++) 
+		for (var j = 0; j < 20; j++) 
 		{
 			if (
 				(i == 3 && j == 3) ||
@@ -80,24 +80,24 @@ function Start()
 			{
 				var randomNum = Math.random();
 
-				if (randomNum > 0.4 && randomNum<0.6 && food_remain_5>0) 
+				if (randomNum > 0.4 && randomNum < 0.6 && food_remain_5 > 0) 
 				{
 					food_remain_5--;
 					board[i][j] = 1;
 				} 
-				else if(randomNum>0.25 && randomNum<=0.4 && food_remain_15>0){
+				else if(randomNum > 0.25 && randomNum <= 0.4 && food_remain_15 > 0){
 					food_remain_15--;
 					board[i][j] = 5;
 
 				}
 
-				else if(randomNum<=0.05 && food_remain_25>0){
+				else if(randomNum <= 0.05 && food_remain_25 > 0){
 					food_remain_25--;
 					board[i][j] = 6;
 
 				}
 
-				else if (randomNum>0.9 && pacman_remain==1) 
+				else if (randomNum > 0.9 && pacman_remain == 1) 
 				{
 					shape.i = i;
 					shape.j = j;
@@ -172,59 +172,59 @@ function Draw()
 	lblScore.value = score;
 	lblTime.value = (gameTime - timeElapsed).toFixed(3);
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
-	for (var i = 0; i < 10; i++) 
+	for (var i = 0; i < 20; i++) 
 	{
-		for (var j = 0; j < 10; j++) 
+		for (var j = 0; j < 20; j++) 
 		{
 			var center = new Object();
-			center.x = i * 60 + 30;
-			center.y = j * 60 + 30;
+			center.x = i * 30 + 15;
+			center.y = j * 30 + 15;
 			if (board[i][j] == 2) 
 			{
 				if(pacmanDirection=='up'){
 					context.beginPath();
-					context.arc(center.x, center.y, 30, 1.65 * Math.PI, 3.35 * Math.PI); // half circle
+					context.arc(center.x, center.y, 15, 1.65 * Math.PI, 3.35 * Math.PI); // half circle
 					context.lineTo(center.x, center.y);
 					context.fillStyle = pacColor; //color
 					context.fill();
 					context.beginPath();
-					context.arc(center.x + 15, center.y - 5, 5, 0, 2 * Math.PI); // circle
+					context.arc(center.x + 7.5, center.y - 2.5, 2.5, 0, 2 * Math.PI); // circle
 					context.fillStyle = "black"; //color
 					context.fill();
 				}
 
 				else if(pacmanDirection=='down'){
 					context.beginPath();
-					context.arc(center.x, center.y, 30, 0.65 * Math.PI, 2.35 * Math.PI ); // half circle
+					context.arc(center.x, center.y, 15, 0.65 * Math.PI, 2.35 * Math.PI ); // half circle
 					context.lineTo(center.x, center.y);
 					context.fillStyle = pacColor; //color
 					context.fill();
 					context.beginPath();
-					context.arc(center.x + 15, center.y + 5, 5, 0, 2 * Math.PI); // circle
+					context.arc(center.x + 7.5, center.y + 2.5, 2.5, 0, 2 * Math.PI); // circle
 					context.fillStyle = "black"; //color
 					context.fill();
 				}
 
 				else if(pacmanDirection=='right'){
 					context.beginPath();
-					context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+					context.arc(center.x, center.y, 15, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 					context.lineTo(center.x, center.y);
 					context.fillStyle = pacColor; //color
 					context.fill();
 					context.beginPath();
-					context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+					context.arc(center.x + 2.5, center.y - 7.5, 2.5, 0, 2 * Math.PI); // circle
 					context.fillStyle = "black"; //color
 					context.fill();
 				}
 
 				else if(pacmanDirection=='left'){
 					context.beginPath();
-					context.arc(center.x, center.y, 30, 1.15 * Math.PI, 2.85 * Math.PI ); // half circle
+					context.arc(center.x, center.y, 15, 1.15 * Math.PI, 2.85 * Math.PI ); // half circle
 					context.lineTo(center.x, center.y);
 					context.fillStyle = pacColor; //color
 					context.fill();
 					context.beginPath();
-					context.arc(center.x - 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+					context.arc(center.x - 2.5, center.y - 7.5, 2.5, 0, 2 * Math.PI); // circle
 					context.fillStyle = "black"; //color
 					context.fill();
 				}
@@ -254,7 +254,7 @@ function Draw()
 			else if (board[i][j] == 4) 
 			{
 				context.beginPath();
-				context.rect(center.x - 30, center.y - 30, 60, 60);
+				context.rect(center.x - 15, center.y - 15, 30, 30);
 				context.fillStyle = "grey"; //color
 				context.fill();
 			}
@@ -274,7 +274,7 @@ function UpdatePosition()
 	if (x == 2) //move down
 	{
 		pacmanDirection='down'
-		if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { shape.j++; }
+		if (shape.j < 19 && board[shape.i][shape.j + 1] != 4) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
@@ -284,7 +284,7 @@ function UpdatePosition()
 	if (x == 4) //move right
 	{
 		pacmanDirection='right'
-		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
+		if (shape.i < 19 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
 	}
 	if (board[shape.i][shape.j] == 1) { 
 		ballsToEat--;
