@@ -21,6 +21,8 @@ var ballsToEat;
 var monstersNum = 1;
 var pacmanDirection='right';
 
+
+
 // class Boundry
 // {
 // 	constructor({position}) // curly brackets allow interchanging the order of params 
@@ -36,6 +38,7 @@ var pacmanDirection='right';
 // 		context.fillRect(this.position.x, this.position.y, this.width, this.height)
 // 	}
 // }
+
 
 
 function Start() 
@@ -74,7 +77,9 @@ function Start()
 				(i == 3 && j == 4) ||
 				(i == 3 && j == 5) ||
 				(i == 6 && j == 1) ||
-				(i == 6 && j == 2)
+				(i == 6 && j == 2) ||
+				(i == 8 && j == 8) ||
+				(i == 12 && j == 12)
 			) { board[i][j] = 4; } 
 			else 
 			{
@@ -239,6 +244,7 @@ function Draw()
 			} 
 			else if (board[i][j] == 5) 
 			{
+
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
 				context.fillStyle = fifteenColor; //color
@@ -246,6 +252,7 @@ function Draw()
 			} 
 			else if (board[i][j] == 6) 
 			{
+
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
 				context.fillStyle = twentyFiveColor; //color
@@ -326,18 +333,23 @@ function switchContent(id)
 	
 	// Hide all other div elements.
 	const divs = document.querySelectorAll('.toggle');
-	for (const div of divs) 
-	{
+	for (const div of divs) {
 	  div.style.display = 'none';
 	}
 	window.clearInterval(interval);
 
 
-	if (id == "gamePage") { Start(); }
+	if(id=="gamePage"){
+		Start();
+	}
+
+
 
 	// Show selected one
 	target.style.display = 'block';
+
 }
+
 
 
 function showSetter(direction)
