@@ -64,13 +64,13 @@ function Start()
 					food_remain_5--;
 					board[i][j] = 1;
 				} 
-				else if(randomNum>0.2 && randomNum<=0.4 && food_remain_15>0){
+				else if(randomNum>0.25 && randomNum<=0.4 && food_remain_15>0){
 					food_remain_15--;
 					board[i][j] = 5;
 
 				}
 
-				else if(randomNum<=0.2 && food_remain_25>0){
+				else if(randomNum<=0.05 && food_remain_25>0){
 					food_remain_25--;
 					board[i][j] = 6;
 
