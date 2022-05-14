@@ -69,39 +69,40 @@
 					<div id="enterKeySectionUp" style="display: none;" class="hide">
 						<label>Type the keyboard key for moving up:</label>
 						<input type="text" id="enterKeyUp"></input><br>
-						<button onclick="setKey('up')">ok</button><button onclick="showSetter('up')">cancel</button><button onclick="setDefault('up')">default</button>
+						<button onclick="setKey('up')">ok</button><button onclick="showSetter('up')">cancel</button><button onclick="setDefault('up', false)">default</button>
 					</div> 
 					<button id="left" onclick="showSetter('left')"> left : &#8592;</button>
 					<div id="enterKeySectionLeft" style="display: none;" class="hide">
 						<label>Type the keyboard key for moving left:</label>
 						<input type="text" id="enterKeyLeft"></input><br>
-						<button onclick="setKey('left')">ok</button><button onclick="showSetter('left')">cancel</button><button onclick="setDefault('left')">default</button> 
+						<button onclick="setKey('left')">ok</button><button onclick="showSetter('left')">cancel</button><button onclick="setDefault('left', false)">default</button> 
 					</div>
 					<button id="right" onclick="showSetter('right')"> right : &#8594;</button> 
 					<div id="enterKeySectionRight" style="display: none;" class="hide">
 						<label>Type the keyboard key for moving right:</label>
 						<input type="text" id="enterKeyRight"></input><br>
-						<button onclick="setKey('right')">ok</button><button onclick="showSetter('right')">cancel</button><button onclick="setDefault('right')">default</button> 
+						<button onclick="setKey('right')">ok</button><button onclick="showSetter('right')">cancel</button><button onclick="setDefault('right', false)">default</button> 
 					</div>
 					<br>
 					<button id="down" onclick="showSetter('down')">&#160; down : &#8595; &#160;</button>
 					<div id="enterKeySectionDown" style="display: none;" class="hide">
 						<label>Type the keyboard key for moving down:</label>
 						<input type="text" id="enterKeyDown"></input><br>
-						<button onclick="setKey('down')">ok</button><button onclick="showSetter('down')">cancel</button><button onclick="setDefault('down')">default</button> 
+						<button onclick="setKey('down')">ok</button><button onclick="showSetter('down')">cancel</button><button onclick="setDefault('down', false)">default</button> 
 					</div>
 				</p> </div>
 				<div id="settingBallsNum">
 					<p>
 						choose the amount of balls for the game: <br>
 						<input type="text" id="enterBalls"></input>
-						<button onclick="setBallsNum()">ok</button><button onclick="clearBox('enterBalls')">cancel</button>
+						<button onclick="setBallsNum()">ok</button><button onclick="clearBoxes(['enterBalls'])">cancel</button>
 					</p>
 				</div>
 				<div id="settingBallsColors">
 					<p>
 						choose the color for each ball: <br>
-						<label id="fivePoints">Select for 5 points:</label> 	
+						<label id="fivePoints">Select for 5 points:</label> 
+						<!-- <br> <input type="color" value='#0000FF'>	 -->
 						<br/> <select name="fivePointsBall" id="fivePointsBall">
 							<option>select color</option>
 							<option style="color: blue;">blue</option>
@@ -129,11 +130,19 @@
 				</div>
 				<div id="settingTime">
 					<p>
-						select time per game: <br>
+						select time (in seconds) per game: <br>
 						<input type="text" id="enterTime"></input>
-						<button onclick="setTime()">ok</button><button onclick="clearBox('enterTime')">cancel</button>
+						<button onclick="setTime()">ok</button><button onclick="clearBoxes(['enterTime'])">cancel</button>
 					</p>
 				</div>
+				<div id="settingMonsters">
+					<p>
+						select amount of monsters per game: <br>
+						<input type="text" id="enterMonsters"></input>
+						<button onclick="setMonsters()">ok</button><button onclick="clearBoxes(['enterMonsters'])">cancel</button>
+					</p>
+				</div>
+				<button onclick="randomSelectSettings()">choose random values</button>
 				<button onclick="switchContent('gamePage')">start game</button>
 			</div>
 

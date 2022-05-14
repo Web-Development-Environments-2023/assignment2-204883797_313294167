@@ -2,10 +2,12 @@ var context;
 var shape = new Object();
 var board;
 var score;
-var pac_color;
-var start_time;
-var time_elapsed;
+var pacColor;
+var gameTime = 60;
+var startTime;
+var timeElapsed;
 var interval;
+var intervalTime = 120;
 var currentPage;
 var keyUp = '38';
 var keyDown = '40';
@@ -15,8 +17,24 @@ var ballsNum = 50;
 var fiveColor = 'blue'
 var fifteenColor = 'red'
 var twentyFiveColor = 'green'
-var balls_eaten;
+var ballsToEat;
+var monstersNum = 1;
 
+class Boundry
+{
+	constructor({position}) // curly brackets allow interchanging the order of params 
+	{
+		this.position = position;
+		this.width = 40;
+		this.height = 40;
+	}
+
+	drawBoundry()
+	{
+		context.fillStyle = 'blue'
+		context.fillRect(this.position.x, this.position.y, this.width, this.height)
+	}
+}
 
 
 function Start() 
@@ -24,24 +42,26 @@ function Start()
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
-	balls_eaten=ballsNum;
-	pac_color = "yellow";
+	ballsToEat = ballsNum;
+	pacColor = "yellow";
 	var cnt = 100;
-	var food_remain_25 = ballsNum*0.1;
-	food_remain_25=Math.round(food_remain_25);
-	var food_remain_15 = ballsNum*0.3;
-	food_remain_15=Math.round(food_remain_15);
-	var food_remain_5 = ballsNum*0.6;
-	food_remain_5=Math.round(food_remain_5);
-	if(food_remain_5+food_remain_15+food_remain_25>ballsNum){
+	var food_remain_25 = ballsNum * 0.1;
+	food_remain_25 = Math.round(food_remain_25);
+	var food_remain_15 = ballsNum * 0.3;
+	food_remain_15 = Math.round(food_remain_15);
+	var food_remain_5 = ballsNum * 0.6;
+	food_remain_5 = Math.round(food_remain_5);
+	if (food_remain_5 + food_remain_15 + food_remain_25 > ballsNum)
+	{
 		food_remain_5--;
 	}
-	else if(food_remain_5+food_remain_15+food_remain_25<ballsNum){
+	else if (food_remain_5 + food_remain_15 + food_remain_25 < ballsNum)
+	{
 		food_remain_5++;
 	}
 
 	var pacman_remain = 1;
-	start_time = new Date();
+	startTime = new Date();
 	for (var i = 0; i < 10; i++) 
 	{
 		board[i] = new Array();
@@ -122,7 +142,7 @@ function Start()
 		},
 		false
 	);
-	interval = setInterval(UpdatePosition, 120);
+	interval = setInterval(UpdatePosition, intervalTime);
 }
 
 function findRandomEmptyCell(board) {
@@ -147,7 +167,8 @@ function Draw()
 {
 	canvas.width = canvas.width; //clean board
 	lblScore.value = score;
-	lblTime.value = time_elapsed;
+	lblTime.value = (gameTime - timeElapsed).toFixed(3);
+	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
 	for (var i = 0; i < 10; i++) 
 	{
 		for (var j = 0; j < 10; j++) 
@@ -160,7 +181,7 @@ function Draw()
 				context.beginPath();
 				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
-				context.fillStyle = pac_color; //color
+				context.fillStyle = pacColor; //color
 				context.fill();
 				context.beginPath();
 				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
@@ -220,26 +241,31 @@ function UpdatePosition()
 		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
 	}
 	if (board[shape.i][shape.j] == 1) { 
-		balls_eaten--;
+		ballsToEat--;
 		score=score+5; 
 	}
 	else if (board[shape.i][shape.j] == 5) { 
 		score=score+15; 
-		balls_eaten--;
+		ballsToEat--;
 	}
 	else if (board[shape.i][shape.j] == 6) { 
 		score=score+25; 
-		balls_eaten--;
+		ballsToEat--;
 	}
 
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
-	time_elapsed = (currentTime - start_time) / 1000;
-	if (score >= 20 && time_elapsed <= 10) 
+	timeElapsed = (currentTime - startTime) / 1000;
+	if (score >= 20 && timeElapsed <= 10) 
 	{
-		pac_color = "green";
+		pacColor = "green";
 	}
-	if (balls_eaten == 0) 
+	if (timeElapsed > gameTime)
+	{
+		window.clearInterval(interval);
+		alert('time up!');
+	}
+	if (ballsToEat == 0) 
 	{
 		window.clearInterval(interval);
 		window.alert("Game completed");
@@ -375,7 +401,7 @@ function setKey(direction)
 	showSetter(direction)
 }
 
-function setDefault(direction)
+function setDefault(direction, isRandom)
 {
 	var button;
 	switch(direction)
@@ -404,38 +430,41 @@ function setDefault(direction)
 			button.textContent = "down : " + "↓";
 			break;
 	}
-	showSetter(direction)
+	if (isRandom == false) { showSetter(direction); }
 }
 
 function setBallsNum()
 {
-	var inputBalls = document.getElementById("enterBalls");
-	if (isNaN(inputBalls.value))
+	var inputBalls = document.getElementById("enterBalls").value;
+	if (isNaN(inputBalls) || !(Number.isInteger(inputBalls)))
 	{
-		alert("please choose a number between 50 and 90");
-		inputBalls.value = '';
+		alert("please choose an integer number between 50 and 90");
+		clearBoxes(['enterBalls'])
 	}
-	else if (inputBalls.value < 50)
+	else if (inputBalls < 50)
 	{
 		alert("please choose at least 50 balls");
-		inputBalls.value = '';
+		clearBoxes(['enterBalls'])
 	}
-	else if (inputBalls.value > 90)
+	else if (inputBalls > 90)
 	{
 		alert("please choose at most 90 balls");
-		inputBalls.value = '';
+		clearBoxes(['enterBalls'])
 	}
 	else 
 	{
-		ballsNum = inputBalls.value; 
+		ballsNum = inputBalls; 
 		alert("balls num successfully set to: " + ballsNum)
 	}
 }
 
-function clearBox(id)
+function clearBoxes(ids)
 {
-	var inputBalls = document.getElementById(id);
-	inputBalls.value = '';
+	for (i=0; i<ids.length; i++)
+	{
+		var boxToClear = document.getElementById(ids[i]);
+		boxToClear.value = '';
+	}
 }
 
 function setBallColor(pointsAmount)
@@ -465,21 +494,60 @@ function setBallColor(pointsAmount)
 function setTime()
 {
 	var time = document.getElementById("enterTime").value;
-	if (isNaN(time))
+	if (isNaN(time) || !(Number.isInteger(time)))
 	{
-		alert('please insert a number of seconds');
-		clearBox('enterTime')
+		alert('please insert an integer number of seconds');
+		clearBoxes(['enterTime'])
 	}
 	else if (time > 60) 
 	{ 
-		time_elapsed = time; 
-		alert('time set to: ' + time_elapsed)
+		gameTime = time; 
+		alert('time set to: ' + gameTime)
 	}
 	else 
 	{
 		alert('please insert at least 60 seconds');
-		clearBox('enterTime')
+		clearBoxes(['enterTime'])
 	}
+}
+
+function setMonsters()
+{
+	var monsters = document.getElementById("enterMonsters").value;
+	if (isNaN(monsters) || !(Number.isInteger(monsters)))
+	{
+		alert('please insert an integer number of monsters');
+		clearBoxes(['enterMonsters'])
+	}
+	else if (monsters > 4)
+	{
+		alert('please insert a number of monsters that is less than 4');
+		clearBoxes(['enterMonsters'])
+	}
+	else if (monsters < 1)
+	{
+		alert('please insert a number of monsters that is greater than 1');
+		clearBoxes(['enterMonsters'])
+	}
+	else 
+	{ 
+		monstersNum = monsters; 
+		alert('number of monsters set to ' +  monstersNum);
+	}
+	
+}
+
+function randomSelectSettings()
+{
+	setDefault('up');
+	setDefault('left');
+	setDefault('right');
+	setDefault('down');
+	minBallsNum = Math.ceil(50);
+    maxBallsNum = Math.floor(90);
+	ballsNum = Math.floor(Math.random() * (maxBallsNum - minBallsNum + 1)) + minBallsNum;
+	var inputBalls = document.getElementById("enterBalls");
+	inputBalls.value = ballsNum;
 }
 
   

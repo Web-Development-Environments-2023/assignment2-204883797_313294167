@@ -12,16 +12,21 @@ $(document).ready(function() {
     var check=0;
     var arrayLength = accountList.length;
     for (var i = 0; i < arrayLength; i++) {
-      if(accountList[i][0]==loginUsernameEntry && accountList[i][1]==loginPasswordEntry){
+      if(accountList[i][0]==loginUsernameEntry && accountList[i][1]==loginPasswordEntry)
+      {
         check=1;
       }
     }
 
-    if (check==1){
+    if (check==1)
+    {
       $("#loginPage").hide();
       $("#settingsPage").show();
+      $("#userNameLog").val('');
+      $("#passwordLog").val('');
     }
-		else {
+		else 
+    {
 			alert("Your username or password is incorrect please try again.")
 		};
 	});
