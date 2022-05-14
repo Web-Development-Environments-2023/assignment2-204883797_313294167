@@ -436,6 +436,10 @@ function setDefault(direction, isRandom)
 function setBallsNum()
 {
 	var inputBalls = document.getElementById("enterBalls").value;
+	if (/^\d+$/.test(inputBalls))
+	{
+		inputBalls = parseInt(document.getElementById("enterTime").value);
+	}
 	if (isNaN(inputBalls) || !(Number.isInteger(inputBalls)))
 	{
 		alert("please choose an integer number between 50 and 90");
@@ -494,6 +498,10 @@ function setBallColor(pointsAmount)
 function setTime()
 {
 	var time = document.getElementById("enterTime").value;
+	if (/^\d+$/.test(time))
+	{
+		time = parseInt(document.getElementById("enterTime").value);
+	}
 	if (isNaN(time) || !(Number.isInteger(time)))
 	{
 		alert('please insert an integer number of seconds');
@@ -514,6 +522,10 @@ function setTime()
 function setMonsters()
 {
 	var monsters = document.getElementById("enterMonsters").value;
+	if (/^\d+$/.test(monsters))
+	{
+		monsters = parseInt(document.getElementById("enterMonsters").value);
+	}
 	if (isNaN(monsters) || !(Number.isInteger(monsters)))
 	{
 		alert('please insert an integer number of monsters');
@@ -617,7 +629,6 @@ function colorRandom(num)
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
-
 		case 6:
 			fiveColor = 'blue'
 			fifteenColor = 'orange'
@@ -626,7 +637,6 @@ function colorRandom(num)
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
-
 
 		case 7:
 			fiveColor = 'blue'
