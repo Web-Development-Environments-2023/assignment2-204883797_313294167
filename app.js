@@ -106,6 +106,8 @@ function Start()
 				cnt--;
 			}
 		}
+
+
 	}
 	while (food_remain_5 > 0) 
 	{
@@ -284,7 +286,6 @@ function switchContent(id)
 	  div.style.display = 'none';
 	}
 
-
 	if(id=="gamePage"){
 		Start();
 	}
@@ -436,6 +437,7 @@ function setDefault(direction, isRandom)
 function setBallsNum()
 {
 	var inputBalls = document.getElementById("enterBalls").value;
+
 	if (isNaN(inputBalls) || !(Number.isInteger(inputBalls)))
 	{
 		alert("please choose an integer number between 50 and 90");
