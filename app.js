@@ -545,10 +545,247 @@ function randomSelectSettings()
 	setDefault('down');
 	minBallsNum = Math.ceil(50);
     maxBallsNum = Math.floor(90);
+	colorRandomMin = Math.ceil(1);
+	colorRandomMax = Math.floor(27);
 	ballsNum = Math.floor(Math.random() * (maxBallsNum - minBallsNum + 1)) + minBallsNum;
+	colorNum = Math.floor(Math.random() * (colorRandomMax - colorRandomMin + 1)) + colorRandomMin;
 	var inputBalls = document.getElementById("enterBalls");
 	inputBalls.value = ballsNum;
+	colorRandom(colorNum);
+
 }
+
+function colorRandom(num){
+	var fivePointsBall = document.getElementById("fivePointsBall");
+	var fifteenPointsBall = document.getElementById("fifteenPointsBall");
+	var twentyFivePointsBall = document.getElementById("twentyFivePointsBall");
+	alert(num)
+
+	switch (num){
+		case 1:
+			fiveColor = 'blue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'green';
+
+
+		case 2:
+			fiveColor = 'blue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+
+		case 3:
+			fiveColor = 'blue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'SpringGreen';
+
+		case 4:
+			fiveColor = 'blue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'green';
+
+		case 5:
+			fiveColor = 'blue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+
+
+		case 6:
+			fiveColor = 'blue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'SpringGreen';
+
+
+		case 7:
+			fiveColor = 'blue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'green';
+
+
+		case 8:
+			fiveColor = 'blue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+		
+		case 9:
+			fiveColor = 'blue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'blue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'SpringGreen';
+		
+		case 10:
+			fiveColor = 'Cyan'
+			fifteenColor = 'red'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'green';
+		
+		case 11:
+			fiveColor = 'Cyan'
+			fifteenColor = 'red'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+		
+		case 12:
+			fiveColor = 'Cyan'
+			fifteenColor = 'red'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'SpringGreen';
+
+		case 13:
+			fiveColor = 'Cyan'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'green';
+
+		case 14:
+			fiveColor = 'Cyan'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+		
+		case 15:
+			fiveColor = 'Cyan'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'SpringGreen';
+		
+		case 16:
+			fiveColor = 'Cyan'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'green';
+		
+		case 17:
+			fiveColor = 'Cyan'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+		
+		case 18:
+			fiveColor = 'Cyan'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'Cyan';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'SpringGreen';
+	
+		case 19:
+			fiveColor = 'steelblue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'green';
+		
+		case 20:
+			fiveColor = 'steelblue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+				
+		case 21:
+			fiveColor = 'steelblue'
+			fifteenColor = 'red'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'red';
+			twentyFivePointsBall.value = 'SpringGreen';
+				
+		case 22:
+			fiveColor = 'steelblue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'green';
+				
+		case 23:
+			fiveColor = 'steelblue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+				
+		case 24:
+			fiveColor = 'steelblue'
+			fifteenColor = 'orange'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'orange';
+			twentyFivePointsBall.value = 'SpringGreen';
+
+		case 25:
+			fiveColor = 'steelblue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'green'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'green';
+
+		case 26:
+			fiveColor = 'steelblue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'DarkSeaGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'DarkSeaGreen';
+
+		case 27:
+			fiveColor = 'steelblue'
+			fifteenColor = 'Tomato'
+			twentyFiveColor = 'SpringGreen'
+			fivePointsBall.value = 'steelblue';
+			fifteenPointsBall.value = 'Tomato';
+			twentyFivePointsBall.value = 'SpringGreen';
+	}
+
+}
+
+
 
   
 
