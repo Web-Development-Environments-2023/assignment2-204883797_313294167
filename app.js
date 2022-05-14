@@ -21,16 +21,8 @@ var ballsToEat;
 var monstersNum = 1;
 var pacmanDirection='right';
 
-<<<<<<< HEAD
-class Boundry
-{
-	constructor({position}) // curly brackets allow interchanging the order of params 
-	{
-		this.position = position;
-		this.width = 80;
-		this.height = 80;
-	}
-=======
+
+
 // class Boundry
 // {
 // 	constructor({position}) // curly brackets allow interchanging the order of params 
@@ -39,7 +31,6 @@ class Boundry
 // 		this.width = 40;
 // 		this.height = 40;
 // 	}
->>>>>>> 5455cd48696b5f0a146c4ef05219654c6ceffe4a
 
 // 	drawBoundry()
 // 	{
@@ -47,6 +38,7 @@ class Boundry
 // 		context.fillRect(this.position.x, this.position.y, this.width, this.height)
 // 	}
 // }
+
 
 
 function Start() 
@@ -268,8 +260,6 @@ function Draw()
 			} 
 			else if (board[i][j] == 4) 
 			{
-				alert(i)
-				alert(j)
 				context.beginPath();
 				context.rect(center.x - 30, center.y - 30, 60, 60);
 				context.fillStyle = "grey"; //color
@@ -343,18 +333,23 @@ function switchContent(id)
 	
 	// Hide all other div elements.
 	const divs = document.querySelectorAll('.toggle');
-	for (const div of divs) 
-	{
+	for (const div of divs) {
 	  div.style.display = 'none';
 	}
 	window.clearInterval(interval);
 
 
-	if (id == "gamePage") { Start(); }
+	if(id=="gamePage"){
+		Start();
+	}
+
+
 
 	// Show selected one
 	target.style.display = 'block';
+
 }
+
 
 
 function showSetter(direction)
