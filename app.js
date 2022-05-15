@@ -19,7 +19,7 @@ var fiveColor = 'plum'
 var fifteenColor = 'red'
 var twentyFiveColor = 'green'
 var ballsToEat;
-var monstersNum = 1;
+var monstersNum = 4;
 var pacmanDirection='right';
 var cornerTopLeft = new Image();
 cornerTopLeft.src = 'images/pacmanAssets/pipeCorner1.png'
@@ -35,11 +35,6 @@ var leftAndRightBorders = new Image();
 leftAndRightBorders.src = 'images/pacmanAssets/pipeVertical.png'
 var connectorDown = new Image();
 connectorDown.src = 'images/pacmanAssets/pipeConnectorBottom.png'
-var cherry = new Image();
-cherry.src = 'images/pacmanAssets/cherry.jpg'
-var man = new Image();
-man.src = 'images/pacmanAssets/man.jpg'
-
 var leftCap = new Image();
 leftCap.src = 'images/pacmanAssets/capLeft.png'
 var rightCap = new Image();
@@ -50,6 +45,18 @@ var topCap = new Image();
 topCap.src = 'images/pacmanAssets/capTop.png'
 var cross = new Image();
 cross.src = 'images/pacmanAssets/pipeCross.png'
+var cherry = new Image();
+cherry.src = 'images/cherry.png'
+var man = new Image();
+man.src = 'images/bugs-bunny.png'
+var monster1 = new Image();
+monster1.src = 'images/pacman-monster1.png'
+var monster2 = new Image();
+monster2.src = 'images/pacman-monster2.png'
+var monster3 = new Image();
+monster3.src = 'images/pacman-monster3.png'
+var monster4 = new Image();
+monster4.src = 'images/pacman-monster4.png'
 
 
 function Start() 
@@ -99,6 +106,12 @@ function Start()
 			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 12 && row == 6)) {board[col][row] = 11; }
 			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 12 && row == 6)) {board[col][row] = 12; }
 
+			//monsters:
+			else if (col == 1 && row == 1) {board[col][row] = 20;}
+			else if ((col == 18 && row == 1) && ((monstersNum == 2) || (monstersNum == 3) || (monstersNum == 4))) {board[col][row] = 21;}
+			else if ((col == 18 && row == 18) && (monstersNum == 3 || (monstersNum == 4))) {board[col][row] = 22;}
+			else if ((col == 1 && row == 18) && (monstersNum == 4)) {board[col][row] = 23;}
+			
 			else 
 			{
 				var randomNum = Math.random();
@@ -387,8 +400,6 @@ function Draw()
 			{
 				context.drawImage(cross, center.x - 20, center.y - 20);
 			}
-
-
 			else if (board[col][row] == 18) //cherry
 			{
 				context.drawImage(cherry, center.x-20, center.y-20);
@@ -397,6 +408,22 @@ function Draw()
 			else if (board[col][row] == 19) //man
 			{
 				context.drawImage(man, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 20) //orange ghost
+			{
+				context.drawImage(monster1, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 21) //pink ghost
+			{
+				context.drawImage(monster2, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 22) //blue ghost
+			{
+				context.drawImage(monster3, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 23) //red ghost
+			{
+				context.drawImage(monster4, center.x-20, center.y-20);
 			}
 		}
 	}
