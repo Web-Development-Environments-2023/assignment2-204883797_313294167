@@ -272,7 +272,7 @@ function Draw()
 			} 
 			else if (board[col][row] == 4) //wall top 3 way
 			{
-				context.drawImage(connectorDown, center.x - 15, center.y - 15);
+				context.drawImage(connectorDown, center.x - 20, center.y - 20);
 			}
 			else if (board[col][row] == 7) //wall corner top left
 			{
