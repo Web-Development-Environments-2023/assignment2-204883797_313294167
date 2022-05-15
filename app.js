@@ -152,9 +152,9 @@ function Start()
 
 	if(man_remain == 1){
 		var emptyCell = findRandomEmptyCell(board);
-		man_shape.i=col;
-		man_shape.j=row;
 		board[emptyCell[0]][emptyCell[1]] = 19;
+		man_shape.i=emptyCell[0];
+		man_shape.j=emptyCell[1];
 		man_remain--;
 	}
 	while (food_remain_5 > 0) 
@@ -446,26 +446,32 @@ function UpdatePosition()
 	}
 
 	//man move rnadomly
-
+	
+	board[man_shape.i][man_shape.j] = 0;
 	manMovemin = Math.ceil(1);
     manMovemaxin = Math.floor(4);
 	manMove = Math.floor(Math.random() * (manMovemaxin - manMovemin + 1)) + manMovemin;
+	
+
 	if(manMove==1){//up
 		if (man_shape.j > 0 && !isBorder(board[man_shape.i][man_shape.j - 1])) { man_shape.j--; }
 
 
 	}
 	else if(manMove==2){//down
+
 		if (man_shape.j < 19 && !isBorder(board[man_shape.i][man_shape.j + 1])) { man_shape.j++; }
 
 
 	}
 	else if(manMove==3){//left
+
 		if (man_shape.i > 0 && !isBorder(board[man_shape.i - 1][man_shape.j])) { man_shape.i--; }
 
 
 	}
 	else if(manMove==4){//right
+
 		if (man_shape.i < 19 && !isBorder(board[man_shape.i + 1][man_shape.j])) { man_shape.i++; }
 
 
@@ -473,6 +479,7 @@ function UpdatePosition()
 
 
 	board[shape.i][shape.j] = 2;
+	board[man_shape.i][man_shape.j] = 19;
 	var currentTime = new Date();
 	timeElapsed = (currentTime - startTime) / 1000;
 
