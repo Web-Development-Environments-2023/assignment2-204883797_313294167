@@ -14,31 +14,36 @@ var keyDown = '40';
 var keyRight = '39';
 var keyLeft = '37';
 var ballsNum = 50;
-var fiveColor = 'blue'
+var fiveColor = 'plum'
 var fifteenColor = 'red'
 var twentyFiveColor = 'green'
 var ballsToEat;
 var monstersNum = 1;
 var pacmanDirection='right';
-
-
-
-// class Boundry
-// {
-// 	constructor({position}) // curly brackets allow interchanging the order of params 
-// 	{
-// 		this.position = position;
-// 		this.width = 40;
-// 		this.height = 40;
-// 	}
-
-// 	drawBoundry()
-// 	{
-// 		context.fillStyle = 'blue'
-// 		context.fillRect(this.position.x, this.position.y, this.width, this.height)
-// 	}
-// }
-
+var cornerTopLeft = new Image();
+cornerTopLeft.src = 'images/pacmanAssets/pipeCorner1.png'
+var cornerBottomRight = new Image();
+cornerBottomRight.src = 'images/pacmanAssets/pipeCorner3.png'
+var cornerTopRight = new Image();
+cornerTopRight.src = 'images/pacmanAssets/pipeCorner2.png'
+var cornerBottomLeft = new Image();
+cornerBottomLeft.src = 'images/pacmanAssets/pipeCorner4.png'
+var bottomAndTopBorders = new Image();
+bottomAndTopBorders.src = 'images/pacmanAssets/pipeHorizontal.png'
+var leftAndRightBorders = new Image();
+leftAndRightBorders.src = 'images/pacmanAssets/pipeVertical.png'
+var connectorDown = new Image();
+connectorDown.src = 'images/pacmanAssets/pipeConnectorBottom.png'
+var leftCap = new Image();
+leftCap.src = 'images/pacmanAssets/capLeft.png'
+var rightCap = new Image();
+rightCap.src = 'images/pacmanAssets/capRight.png'
+var bottomCap = new Image();
+bottomCap.src = 'images/pacmanAssets/capBottom.png'
+var topCap = new Image();
+topCap.src = 'images/pacmanAssets/capTop.png'
+var cross = new Image();
+cross.src = 'images/pacmanAssets/pipeCross.png'
 
 
 function Start() 
@@ -66,21 +71,25 @@ function Start()
 
 	var pacman_remain = 1;
 	startTime = new Date();
-	for (var i = 0; i < 20; i++) 
+	for (var col = 0; col < 20; col++) 
 	{
-		board[i] = new Array();
-		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 20; j++) 
+		board[col] = new Array();
+		for (var row = 0; row < 20; row++) 
 		{
-			if (
-				(i == 3 && j == 3) ||
-				(i == 3 && j == 4) ||
-				(i == 3 && j == 5) ||
-				(i == 6 && j == 1) ||
-				(i == 6 && j == 2) ||
-				(i == 8 && j == 8) ||
-				(i == 12 && j == 12)
-			) { board[i][j] = 4; } 
+			if ((col == 6 && row == 2) || (col == 12 && row == 12)) { board[col][row] = 4; } //top 3 way
+			else if ((col == 5 && row == 2) || (col == 11 && row == 12) || (col == 2 && row == 10) || (col == 11 && row == 6)) {board[col][row] = 13; } //wall [
+			else if (col == 3 && row == 9) {board[col][row] = 16; } //top cap
+			else if ((col == 7 && row == 2) || (col == 13 && row == 12) || (col == 4 && row == 10) || (col == 13 && row == 6)) {board[col][row] = 14; } //wall ]
+			else if ((col == 6 && row == 3) || (col == 12 && row == 13) || col == 3 && row == 11) {board[col][row] = 15; } //bottom cap
+			else if ((col == 3 && row == 10)) {board[col][row] = 17} //cross
+			//wall corners:
+			else if ((col == 0 && row == 0)) {board[col][row] = 7; } // top left
+			else if ((col == 19 && row == 19)) {board[col][row] = 8; } //botoom right
+			else if (col == 0 && row == 19) {board[col][row] = 9; }
+			else if (col == 19 && row == 0) {board[col][row] = 10; }
+			//wall borders:
+			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 12 && row == 6)) {board[col][row] = 11; }
+			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 12 && row == 6)) {board[col][row] = 12; }
 			else 
 			{
 				var randomNum = Math.random();
@@ -88,27 +97,27 @@ function Start()
 				if (randomNum > 0.3 && randomNum < 0.34 && food_remain_5 > 0) 
 				{
 					food_remain_5--;
-					board[i][j] = 1;
+					board[col][row] = 1;
 				} 
 				else if(randomNum > 0.25 && randomNum <= 0.27 && food_remain_15 > 0){
 					food_remain_15--;
-					board[i][j] = 5;
+					board[col][row] = 5;
 
 				}
 
 				else if(randomNum <= 0.22 && randomNum>=0.21 && food_remain_25 > 0.24){
 					food_remain_25--;
-					board[i][j] = 6;
+					board[col][row] = 6;
 
 				}
 
 				else if (randomNum > 0.9 && pacman_remain == 1) 
 				{
-					shape.i = i;
-					shape.j = j;
+					shape.i = col;
+					shape.j = row;
 					pacman_remain--;
-					board[i][j] = 2;
-				} else { board[i][j] = 0; }
+					board[col][row] = 2;
+				} else { board[col][row] = 0; }
 				cnt--;
 			}
 		}
@@ -178,16 +187,17 @@ function Draw()
 	lblScore.value = score;
 	lblTime.value = (gameTime - timeElapsed).toFixed(3);
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
-	for (var i = 0; i < 20; i++) 
+	for (var col = 0; col < 20; col++) 
 	{
-		for (var j = 0; j < 20; j++) 
+		for (var row = 0; row < 20; row++) 
 		{
 			var center = new Object();
-			center.x = i * 30 + 15;
-			center.y = j * 30 + 15;
-			if (board[i][j] == 2) 
+			center.x = col * 40 + 20;
+			center.y = row * 40 + 20;
+			if (board[col][row] == 2) //pacman
 			{
-				if(pacmanDirection=='up'){
+				if(pacmanDirection=='up')
+				{
 					context.beginPath();
 					context.arc(center.x, center.y, 15, 1.65 * Math.PI, 3.35 * Math.PI); // half circle
 					context.lineTo(center.x, center.y);
@@ -199,7 +209,8 @@ function Draw()
 					context.fill();
 				}
 
-				else if(pacmanDirection=='down'){
+				else if(pacmanDirection=='down')
+				{
 					context.beginPath();
 					context.arc(center.x, center.y, 15, 0.65 * Math.PI, 2.35 * Math.PI ); // half circle
 					context.lineTo(center.x, center.y);
@@ -211,7 +222,8 @@ function Draw()
 					context.fill();
 				}
 
-				else if(pacmanDirection=='right'){
+				else if(pacmanDirection=='right')
+				{
 					context.beginPath();
 					context.arc(center.x, center.y, 15, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 					context.lineTo(center.x, center.y);
@@ -223,7 +235,8 @@ function Draw()
 					context.fill();
 				}
 
-				else if(pacmanDirection=='left'){
+				else if(pacmanDirection=='left')
+				{
 					context.beginPath();
 					context.arc(center.x, center.y, 15, 1.15 * Math.PI, 2.85 * Math.PI ); // half circle
 					context.lineTo(center.x, center.y);
@@ -236,38 +249,119 @@ function Draw()
 				}
 
 			} 
-			else if (board[i][j] == 1) 
+			else if (board[col][row] == 1) //5 points ball
 			{
 				context.beginPath();
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
 				context.fillStyle = fiveColor; //color
 				context.fill();
 			} 
-			else if (board[i][j] == 5) 
+			else if (board[col][row] == 5) //15 points ball
 			{
-
 				context.beginPath();
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
 				context.fillStyle = fifteenColor; //color
 				context.fill();
 			} 
-			else if (board[i][j] == 6) 
+			else if (board[col][row] == 6) //25 points ball
 			{
-
 				context.beginPath();
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
 				context.fillStyle = twentyFiveColor; //color
 				context.fill();
 			} 
-			else if (board[i][j] == 4) 
+			else if (board[col][row] == 4) //wall top 3 way
 			{
+				context.drawImage(connectorDown, center.x - 15, center.y - 15);
+			}
+			else if (board[col][row] == 7) //wall corner top left
+			{
+				var pattern = context.createPattern(cornerTopLeft, 'repeat');
+				context.fillStyle = pattern;
 				context.beginPath();
-				context.rect(center.x - 15, center.y - 15, 30, 30);
-				context.fillStyle = "grey"; //color
+				context.rect(center.x - 20, center.y - 20, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
 				context.fill();
+			}
+			else if (board[col][row] == 8) //wall corner bottom right
+			{
+				var pattern = context.createPattern(cornerBottomRight, 'repeat');
+				context.fillStyle = pattern;
+				context.beginPath();
+				context.rect(center.x - 20, center.y - 20, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
+				context.fill();
+			}
+			else if (board[col][row] == 9) //wall corner top right
+			{
+				var pattern = context.createPattern(cornerTopRight, 'repeat');
+				context.fillStyle = pattern;
+				context.beginPath();
+				context.rect(760, 0, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
+				context.fill();
+			}
+			else if (board[col][row] == 10) //wall corner bottom left
+			{
+				var pattern = context.createPattern(cornerBottomLeft, 'repeat');
+				context.fillStyle = pattern;
+				context.beginPath();
+				context.rect(0, 760, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
+				context.fill();
+			}
+			else if (board[col][row] == 11) //wall top and bottom border
+			{
+				var pattern = context.createPattern(bottomAndTopBorders, 'repeat');
+				context.fillStyle = pattern;
+				context.beginPath();
+				context.rect(center.x - 20, center.y - 20, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
+				context.fill();
+			}
+			else if (board[col][row] == 12) //wall right and left border
+			{
+				var pattern = context.createPattern(leftAndRightBorders, 'repeat');
+				context.fillStyle = pattern;
+				context.beginPath();
+				context.rect(center.x - 20, center.y - 20, 40, 40);
+				context.stroke();
+				// context.fillStyle = "grey"; //color
+				context.fill();
+			}
+			else if (board[col][row] == 13) //wall [
+			{
+				context.drawImage(leftCap, center.x - 20, center.y - 20);
+			}
+			else if (board[col][row] == 14) //wall ]
+			{
+				context.drawImage(rightCap, center.x - 20, center.y - 20);
+			}
+			else if (board[col][row] == 15) //bottom cap
+			{
+				context.drawImage(bottomCap, center.x - 20, center.y - 20);
+			}
+			else if (board[col][row] == 16) //top cap 
+			{
+				context.drawImage(topCap, center.x - 20, center.y - 20);
+			}
+			else if (board[col][row] == 17) //cross
+			{
+				context.drawImage(cross, center.x - 20, center.y - 20);
 			}
 		}
 	}
+}
+
+function isBorder(border)
+{
+	if ((border == 4) || (border == 7) || ((border >= 8) && (border <= 17))) { return true; }
+	else { return false;}
 }
 
 function UpdatePosition() 
@@ -277,22 +371,22 @@ function UpdatePosition()
 	if (x == 1) //move up
 	{
 		pacmanDirection='up'
-		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) { shape.j--; }
+		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
 	}
 	if (x == 2) //move down
 	{
 		pacmanDirection='down'
-		if (shape.j < 19 && board[shape.i][shape.j + 1] != 4) { shape.j++; }
+		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
 		pacmanDirection='left'
-		if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { shape.i--; }
+		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
 	}
 	if (x == 4) //move right
 	{
 		pacmanDirection='right'
-		if (shape.i < 19 && board[shape.i + 1][shape.j] != 4) { shape.i++; }
+		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
 	}
 	if (board[shape.i][shape.j] == 1) { 
 		ballsToEat--;
@@ -343,8 +437,6 @@ function switchContent(id)
 	if(id=="gamePage"){
 		Start();
 	}
-
-
 
 	// Show selected one
 	target.style.display = 'block';
