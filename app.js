@@ -1,5 +1,6 @@
 var context;
 var shape = new Object();
+var man_shape = new Object();
 var board;
 var score;
 var pacColor;
@@ -34,6 +35,11 @@ var leftAndRightBorders = new Image();
 leftAndRightBorders.src = 'images/pacmanAssets/pipeVertical.png'
 var connectorDown = new Image();
 connectorDown.src = 'images/pacmanAssets/pipeConnectorBottom.png'
+var cherry = new Image();
+cherry.src = 'images/pacmanAssets/cherry.jpg'
+var man = new Image();
+man.src = 'images/pacmanAssets/man.jpg'
+
 var leftCap = new Image();
 leftCap.src = 'images/pacmanAssets/capLeft.png'
 var rightCap = new Image();
@@ -60,6 +66,8 @@ function Start()
 	food_remain_15 = Math.round(food_remain_15);
 	var food_remain_5 = ballsNum * 0.6;
 	food_remain_5 = Math.round(food_remain_5);
+	var cherry_remain=1;
+	var man_remain=1;
 	if (food_remain_5 + food_remain_15 + food_remain_25 > ballsNum)
 	{
 		food_remain_5--;
@@ -90,6 +98,7 @@ function Start()
 			//wall borders:
 			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 12 && row == 6)) {board[col][row] = 11; }
 			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 12 && row == 6)) {board[col][row] = 12; }
+
 			else 
 			{
 				var randomNum = Math.random();
@@ -110,6 +119,17 @@ function Start()
 					board[col][row] = 6;
 
 				}
+				else if(randomNum <= 0.111 && randomNum >= 0.122 && cherry_remain==1){
+					cherry_remain--;
+					board[col][row]=18 //cherry
+				}
+
+				else if(randomNum <= 0.444 && randomNum >= 0.455 && man_remain==1){
+					man_remain--;
+					man_shape.i=col;
+					man_shape.j=row;
+					board[col][row]=19 //man
+				}
 
 				else if (randomNum > 0.9 && pacman_remain == 1) 
 				{
@@ -123,6 +143,19 @@ function Start()
 		}
 
 
+	}
+	if(cherry_remain == 1){
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 18;
+		cherry_remain--;
+	}
+
+	if(man_remain == 1){
+		var emptyCell = findRandomEmptyCell(board);
+		man_shape.i=col;
+		man_shape.j=row;
+		board[emptyCell[0]][emptyCell[1]] = 19;
+		man_remain--;
 	}
 	while (food_remain_5 > 0) 
 	{
@@ -354,6 +387,17 @@ function Draw()
 			{
 				context.drawImage(cross, center.x - 20, center.y - 20);
 			}
+
+
+			else if (board[col][row] == 18) //cherry
+			{
+				context.drawImage(cherry, center.x-20, center.y-20);
+			}
+
+			else if (board[col][row] == 19) //man
+			{
+				context.drawImage(man, center.x-20, center.y-20);
+			}
 		}
 	}
 }
@@ -401,13 +445,37 @@ function UpdatePosition()
 		ballsToEat--;
 	}
 
+	//man move rnadomly
+
+	manMovemin = Math.ceil(1);
+    manMovemaxin = Math.floor(4);
+	manMove = Math.floor(Math.random() * (manMovemaxin - manMovemin + 1)) + manMovemin;
+	if(manMove==1){//up
+		if (man_shape.j > 0 && !isBorder(board[man_shape.i][man_shape.j - 1])) { man_shape.j--; }
+
+
+	}
+	else if(manMove==2){//down
+		if (man_shape.j < 19 && !isBorder(board[man_shape.i][man_shape.j + 1])) { man_shape.j++; }
+
+
+	}
+	else if(manMove==3){//left
+		if (man_shape.i > 0 && !isBorder(board[man_shape.i - 1][man_shape.j])) { man_shape.i--; }
+
+
+	}
+	else if(manMove==4){//right
+		if (man_shape.i < 19 && !isBorder(board[man_shape.i + 1][man_shape.j])) { man_shape.i++; }
+
+
+	}
+
+
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
 	timeElapsed = (currentTime - startTime) / 1000;
-	if (score >= 20 && timeElapsed <= 10) 
-	{
-		pacColor = "green";
-	}
+
 	if (timeElapsed > gameTime)
 	{
 		window.clearInterval(interval);
