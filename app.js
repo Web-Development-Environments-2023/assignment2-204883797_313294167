@@ -20,7 +20,7 @@ var fifteenColor = 'red'
 var twentyFiveColor = 'green'
 var ballsToEat;
 var monster_time;
-var flag=false;
+var eatCherry=false;
 var man_alive=true;
 var monster_can_be_eat=0;
 var monstersNum = 4;
@@ -61,7 +61,7 @@ var monster3 = new Image();
 monster3.src = 'images/pacman-monster3.png'
 var monster4 = new Image();
 monster4.src = 'images/pacman-monster4.png'
-move=0;
+move = 0;
 
 
 function Start() 
@@ -72,7 +72,7 @@ function Start()
 	ballsToEat = ballsNum;
 	pacColor = "yellow";
 	var cnt = 400;
-	flag=false;
+	eatCherry=false;
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
 	var food_remain_15 = ballsNum * 0.3;
@@ -112,7 +112,6 @@ function Start()
 			//wall borders:
 			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 12 && row == 6)) {board[col][row] = 11; }
 			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 12 && row == 6)) {board[col][row] = 12; }
-
 			//monsters:
 			else if (col == 1 && row == 1) {board[col][row] = 20;}
 			else if ((col == 18 && row == 1) && ((monstersNum == 2) || (monstersNum == 3) || (monstersNum == 4))) {board[col][row] = 21;}
@@ -128,29 +127,28 @@ function Start()
 					food_remain_5--;
 					board[col][row] = 1;
 				} 
-				else if(randomNum > 0.25 && randomNum <= 0.27 && food_remain_15 > 0){
+				else if (randomNum > 0.25 && randomNum <= 0.27 && food_remain_15 > 0)
+				{
 					food_remain_15--;
 					board[col][row] = 5;
-
 				}
-
-				else if(randomNum <= 0.22 && randomNum>=0.21 && food_remain_25 > 0.24){
+				else if (randomNum <= 0.22 && randomNum>=0.21 && food_remain_25 > 0.24)
+				{
 					food_remain_25--;
 					board[col][row] = 6;
-
 				}
-				else if(randomNum <= 0.111 && randomNum >= 0.122 && cherry_remain==1){
+				else if (randomNum <= 0.111 && randomNum >= 0.122 && cherry_remain==1)
+				{
 					cherry_remain--;
-					board[col][row]=18 //cherry
+					board[col][row] = 18 //cherry
 				}
-
-				else if(randomNum <= 0.444 && randomNum >= 0.455 && man_remain==1){
+				else if (randomNum <= 0.444 && randomNum >= 0.455 && man_remain==1)
+				{
 					man_remain--;
-					man_shape.i=col;
-					man_shape.j=row;
-					board[col][row]=19 //man
+					man_shape.i = col;
+					man_shape.j = row;
+					board[col][row] = 19 //man
 				}
-
 				else if (randomNum > 0.9 && pacman_remain == 1) 
 				{
 					shape.i = col;
@@ -161,20 +159,20 @@ function Start()
 				cnt--;
 			}
 		}
-
-
 	}
-	if(cherry_remain == 1){
+	if(cherry_remain == 1)
+	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 18;
 		cherry_remain--;
 	}
 
-	if(man_remain == 1){
+	if(man_remain == 1)
+	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 19;
-		man_shape.i=emptyCell[0];
-		man_shape.j=emptyCell[1];
+		man_shape.i = emptyCell[0];
+		man_shape.j = emptyCell[1];
 		man_remain--;
 	}
 	while (food_remain_5 > 0) 
@@ -183,14 +181,12 @@ function Start()
 		board[emptyCell[0]][emptyCell[1]] = 1;
 		food_remain_5--;
 	}
-
 	while (food_remain_15 > 0) 
 	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 5;
 		food_remain_15--;
 	}
-
 	while (food_remain_25 > 0) 
 	{
 		var emptyCell = findRandomEmptyCell(board);
@@ -215,14 +211,15 @@ function Start()
 	interval = setInterval(UpdatePosition, intervalTime);
 }
 
-function findRandomEmptyCell(board) {
+function findRandomEmptyCell(board) 
+{
 	var i = Math.floor(Math.random() * 19 + 1);
 	var j = Math.floor(Math.random() * 19 + 1);
-	while (board[i][j] != 0) {
+	while (board[i][j] != 0) 
+	{
 		i = Math.floor(Math.random() * 19 + 1);
 		j = Math.floor(Math.random() * 19 + 1);
 	}
-
 	return [i, j];
 }
 
@@ -236,25 +233,21 @@ function GetKeyPressed()
 
 function Draw() 
 {
-	if(flag == true){
-		monster1.src = 'images/cant_eat_goust.jpg'
-		monster2.src = 'images/cant_eat_goust.jpg'
-		monster3.src = 'images/cant_eat_goust.jpg'
-		monster4.src = 'images/cant_eat_goust.jpg'
-
-
+	if (eatCherry == true)
+	{
+		monster1.src = 'images/ghost_sick.jpg'
+		monster2.src = 'images/ghost_sick.jpg'
+		monster3.src = 'images/ghost_sick.jpg'
+		monster4.src = 'images/ghost_sick.jpg'
 		monster_time--;
-		if(monster_time==0){
-			flag=false;
-		}
+		if (monster_time==0) { eatCherry = false; }
 	}
-	else{
+	else
+	{
 		monster1.src = 'images/pacman-monster1.png'
 		monster2.src = 'images/pacman-monster2.png'
 		monster3.src = 'images/pacman-monster3.png'
 		monster4.src = 'images/pacman-monster4.png'
-
-
 	}
 	canvas.width = canvas.width; //clean board
 	lblScore.value = score;
@@ -431,7 +424,6 @@ function Draw()
 			{
 				context.drawImage(cherry, center.x-20, center.y-20);
 			}
-
 			else if (board[col][row] == 19 ||  board[col][row] == 41 ||  board[col][row] == 45 ||  board[col][row] == 46 ||  board[col][row] == 48) //man
 			{
 				context.drawImage(man, center.x-20, center.y-20);
@@ -486,58 +478,65 @@ function UpdatePosition()
 		pacmanDirection='right'
 		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
 	}
-	if (board[shape.i][shape.j] == 1) { 
+	if (board[shape.i][shape.j] == 1) //eat 5 points ball
+	{ 
 		ballsToEat--;
-		score=score+5; 
+		score = score + 5; 
 	}
-	else if (board[shape.i][shape.j] == 5) { 
-		score=score+15; 
-		ballsToEat--;
-	}
-	else if (board[shape.i][shape.j] == 6) { 
-		score=score+25; 
+	else if (board[shape.i][shape.j] == 5) //eat 15 points ball
+	{ 
+		score = score + 15; 
 		ballsToEat--;
 	}
-
-	else if (board[shape.i][shape.j] == 19) { 
-		man_alive=false;
-		score=score+50; 
-	}
-	else if (board[shape.i][shape.j] == 41) { 
-		man_alive=false;
-		score=score+15; 
-		score=score+50; 
+	else if (board[shape.i][shape.j] == 6) //eat 25 points ball
+	{ 
+		score = score + 25; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 45) {
-		man_alive=false;
-		score=score+25; 
-		score=score+50; 
-		ballsToEat--;
+	else if (board[shape.i][shape.j] == 19) //eat character
+	{ 
+		man_alive = false;
+		score = score + 50; 
 	}
-	else if (board[shape.i][shape.j] == 46) { 
+	else if (board[shape.i][shape.j] == 41) 
+	{ 
 		man_alive=false;
 		score=score+15; 
 		score=score+50; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 48) { 
+	else if (board[shape.i][shape.j] == 45) 
+	{
 		man_alive=false;
 		score=score+25; 
 		score=score+50; 
 		ballsToEat--;
 	}
-
-
-	else if(board[shape.i][shape.j]==18){ 
-		flag=true;
+	else if (board[shape.i][shape.j] == 46) 
+	{ 
+		man_alive=false;
+		score=score+15; 
+		score=score+50; 
+		ballsToEat--;
+	}
+	else if (board[shape.i][shape.j] == 48) 
+	{ 
+		man_alive=false;
+		score=score+25; 
+		score=score+50; 
+		ballsToEat--;
+	}
+	else if (board[shape.i][shape.j] == 18)
+	{ 
+		eatCherry=true;
 		monster_time=100;
 	}
 
 	//man move randomly
-
-	if(man_alive==true){
-		if(move==6){
+	if(man_alive==true)
+	{
+		if(move == 6)
+		{
 		
 			if(board[man_shape.i][man_shape.j]==41){ //back to 5
 				board[man_shape.i][man_shape.j]=1
@@ -629,7 +628,6 @@ function UpdatePosition()
 			move++;
 		}
 	}
-
 
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
@@ -851,7 +849,7 @@ function setBallColor(pointsAmount)
 	{
 		case 5:
 			fiveColor = document.getElementById("fivePointsBall").value;
-			if (fiveColor == 'select color') {fiveColor = 'blue'; }
+			if (fiveColor == 'select color') {fiveColor = 'plum'; }
 			alert('5 point ball color is set to: ' + fiveColor)
 			break;
 		
@@ -957,244 +955,244 @@ function colorRandom(num){
 
 	switch (num){
 		case 1:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'red'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
 			break;
 			
 		case 2:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'red'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 3:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'red'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 4:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 5:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 6:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 7:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 8:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 		
 		case 9:
-			fiveColor = 'blue'
+			fiveColor = 'plum'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'blue';
+			fivePointsBall.value = 'plum';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 		
 		case 10:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'red'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
 			break;
 		
 		case 11:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'red'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 		
 		case 12:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'red'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 13:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 14:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 15:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 16:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 17:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 18:
-			fiveColor = 'Cyan'
+			fiveColor = 'purple'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'Cyan';
+			fivePointsBall.value = 'purple';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 19:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'red'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 20:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'red'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 21:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'red'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'red';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 22:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 23:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 24:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'orange'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'orange';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
 
 		case 25:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'green'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'green';
 			break;
 
 		case 26:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'DarkSeaGreen';
 			break;
 
 		case 27:
-			fiveColor = 'steelblue'
+			fiveColor = 'pink'
 			fifteenColor = 'Tomato'
 			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'steelblue';
+			fivePointsBall.value = 'pink';
 			fifteenPointsBall.value = 'Tomato';
 			twentyFivePointsBall.value = 'SpringGreen';
 			break;
