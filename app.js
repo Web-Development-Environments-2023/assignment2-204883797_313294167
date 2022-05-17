@@ -103,6 +103,7 @@ ghosts = [
 
 function Start() 
 {
+
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
@@ -288,6 +289,8 @@ function Draw()
 		monster3.src = 'images/pacman-monster3.png'
 		monster4.src = 'images/pacman-monster4.png'
 	}
+
+	
 	canvas.width = canvas.width; //clean board
 	lblPacmanLives.value = pacmanLives;
 	lblScore.value = score;
@@ -529,24 +532,28 @@ function UpdatePosition()
 	var x = GetKeyPressed();
 	if (x == 1) //move up
 	{
+		chomp_sound.play();
 		pacmanDirection='up'
 		chomp_sound.play();
 		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
 	}
 	if (x == 2) //move down
 	{
+		chomp_sound.play();
 		pacmanDirection='down'
 		chomp_sound.play();
 		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
+		chomp_sound.play();
 		pacmanDirection='left'
 		chomp_sound.play();
 		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
 	}
 	if (x == 4) //move right
 	{
+		chomp_sound.play();
 		pacmanDirection='right'
 		chomp_sound.play();
 		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
@@ -558,6 +565,7 @@ function UpdatePosition()
 	}
 	else if (board[shape.i][shape.j] == 5) //eat 15 points ball
 	{ 
+
 		score = score + 15; 
 		ballsToEat--;
 	}
@@ -644,6 +652,49 @@ function UpdatePosition()
 			flag_slow = false;
 			move_speed = 5;
 			move = 0;
+		}
+	}
+	else if (board[shape.i][shape.j] == 50) //eat slow
+	{ 
+		fruit_sound.play();
+		move_speed=10;
+		slow_time=100;
+		flag_slow=true;
+		slow_times=3;
+	}
+	else if (board[shape.i][shape.j] == 51) //eat slow and bucs
+	{ 
+		fruit_sound.play();
+		score=score+50; 
+		move_speed=10;
+		slow_time=100;
+		flag_slow=true;
+		slow_times=3;
+
+	}
+
+	else if (board[shape.i][shape.j] == 52) //eat clock
+	{ 
+		gameTime=gameTime+10;
+		fruit_sound.play();
+		
+	}
+
+	else if (board[shape.i][shape.j] == 53) //eat clock and bucs
+	{ 
+		score=score+50; 
+		gameTime=gameTime+10;
+		fruit_sound.play();
+
+
+	}
+
+	if(flag_slow == true){
+		slow_time--;
+		if(slow_time==0){
+			flag_slow=false;
+			move_speed=5;
+			move=0;
 		}
 	}
 
@@ -962,6 +1013,10 @@ function switchContent(id)
 	if (id == "gamePage") { Start(); }
 	if (id == "welcomePage") { welcome_sound.play(); }
 
+
+	if(id=="welcomePage"){
+		welcome_sound.play();
+	}
 
 	// Show selected one
 	target.style.display = 'block';
@@ -1512,7 +1567,20 @@ function colorRandom(num)
 }
 
 
-
+function sound(src) {
+	this.sound = document.createElement("audio");
+	this.sound.src = src;
+	this.sound.setAttribute("preload", "auto");
+	this.sound.setAttribute("controls", "none");
+	this.sound.style.display = "none";
+	document.body.appendChild(this.sound);
+	this.play = function(){
+	  this.sound.play();
+	}
+	this.stop = function(){
+	  this.sound.pause();
+	}
+  }
   
 
 
