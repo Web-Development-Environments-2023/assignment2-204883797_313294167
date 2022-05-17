@@ -1014,6 +1014,9 @@ function moveGhost(ghost)
 			moveBestVer(ghost,best_Vertical);
 			rand++;
 		}
+		else if(rand==2 &&((best_Horizontal == "mid")||(best_Vertical=="mid"))){
+			moveRand(ghost,ghostMove)
+		}
 		else if(rand<4){
 			rand++;
 
