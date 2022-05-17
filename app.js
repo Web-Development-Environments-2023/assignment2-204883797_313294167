@@ -1,6 +1,6 @@
 var context;
 var shape = new Object();
-var man_shape = new Object();
+var man_location = new Object();
 var board;
 var score;
 var pacColor;
@@ -22,7 +22,7 @@ var ballsToEat;
 var monster_time;
 var eatCherry=false;
 var man_alive=true;
-var monster_can_be_eat=0;
+var monster_can_be_eat = 0;
 var monstersNum = 4;
 var pacmanDirection='right';
 var cornerTopLeft = new Image();
@@ -62,16 +62,55 @@ monster3.src = 'images/pacman-monster3.png'
 var monster4 = new Image();
 monster4.src = 'images/pacman-monster4.png'
 move = 0;
+var pacmanLives = 3;
+var slow = new Image();
+slow.src = 'images/slow.jpg'
+var slow_time=0;
+var move_speed=5;
+var flag_slow=false;
+var slow_cell_i;
+var welcome_sound = new Audio('sounds/pacman_beginning.mp3');
+var death_sound = new Audio('sounds/pacman_death.mp3');
+var fruit_sound = new Audio('sounds/pacman_eatfruit.mp3');
+var chomp_sound = new Audio('sounds/pacman_chomp.mp3');
+var clock = new Image();
+clock.src = 'images/clock.jpg'
+var slow_cell_j;
+var clock_eat=0;
 
+class Ghost
+{
+	constructor(name, startIndexCol, startIndexRow, speed, id, srcImage)
+	{
+		this.name = name
+		this.startIndexCol = startIndexCol
+		this.startIndexRow = startIndexRow
+		this.currIndexCol = startIndexCol
+		this.currIndexRow = startIndexRow
+		this.image = new Image()
+		this.image.src = srcImage
+		this.speed = speed
+		this.id = id
+	}
+}
+
+ghosts = [
+	new Ghost('blinky', 1, 18, 3, 23, 'images/pacman-monster4.png'),
+	new Ghost('pinky', 18, 1, 4, 21, 'images/pacman-monster2.png'),
+	new Ghost('inky', 18, 18, 5, 22, 'images/pacman-monster3.png'),
+	new Ghost('clyde', 1, 1, 3, 20, 'images/pacman-monster1.png')
+]
 
 function Start() 
 {
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
+	clock_eat = 0;
 	ballsToEat = ballsNum;
 	pacColor = "yellow";
 	var cnt = 400;
+	slow_time = 0;
 	eatCherry=false;
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
@@ -145,8 +184,8 @@ function Start()
 				else if (randomNum <= 0.444 && randomNum >= 0.455 && man_remain==1)
 				{
 					man_remain--;
-					man_shape.i = col;
-					man_shape.j = row;
+					man_location.i = col;
+					man_location.j = row;
 					board[col][row] = 19 //man
 				}
 				else if (randomNum > 0.9 && pacman_remain == 1) 
@@ -171,8 +210,8 @@ function Start()
 	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 19;
-		man_shape.i = emptyCell[0];
-		man_shape.j = emptyCell[1];
+		man_location.i = emptyCell[0];
+		man_location.j = emptyCell[1];
 		man_remain--;
 	}
 	while (food_remain_5 > 0) 
@@ -250,9 +289,29 @@ function Draw()
 		monster4.src = 'images/pacman-monster4.png'
 	}
 	canvas.width = canvas.width; //clean board
+	lblPacmanLives.value = pacmanLives;
 	lblScore.value = score;
 	lblTime.value = (gameTime - timeElapsed).toFixed(3);
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
+	if (lblTime.value < 40 && slow_time == 0)
+	{
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 50;
+		slow_cell_i = emptyCell[0]
+		slow_cell_j = emptyCell[1]
+		slow_time = 1;
+	}
+	if (lblTime.value < 30 && slow_time == 1)
+	{
+		board[slow_cell_i][slow_cell_j] = 0;
+		slow_time = 2;
+	}
+	if (lblTime.value < 50 && clock_eat == 0)
+	{
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 52;
+		clock_eat = 1;
+	}
 	for (var col = 0; col < 20; col++) 
 	{
 		for (var row = 0; row < 20; row++) 
@@ -424,7 +483,8 @@ function Draw()
 			{
 				context.drawImage(cherry, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 19 ||  board[col][row] == 41 ||  board[col][row] == 45 ||  board[col][row] == 46 ||  board[col][row] == 48) //man
+			else if (board[col][row] == 19 || board[col][row] == 41 || board[col][row] == 45 || 
+				board[col][row] == 46 || board[col][row] == 48 || board[col][row] == 51 || board[col][row] == 53) //man
 			{
 				context.drawImage(man, center.x-20, center.y-20);
 			}
@@ -444,6 +504,15 @@ function Draw()
 			{
 				context.drawImage(monster4, center.x-20, center.y-20);
 			}
+			else if (board[col][row] == 50)
+			{
+				context.drawImage(slow, center.x-20, center.y-20);
+			}
+
+			else if (board[col][row] == 52)
+			{
+				context.drawImage(clock, center.x-20, center.y-20);
+			}
 		}
 	}
 }
@@ -461,21 +530,25 @@ function UpdatePosition()
 	if (x == 1) //move up
 	{
 		pacmanDirection='up'
+		chomp_sound.play();
 		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
 	}
 	if (x == 2) //move down
 	{
 		pacmanDirection='down'
+		chomp_sound.play();
 		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
 		pacmanDirection='left'
+		chomp_sound.play();
 		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
 	}
 	if (x == 4) //move right
 	{
 		pacmanDirection='right'
+		chomp_sound.play();
 		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
 	}
 	if (board[shape.i][shape.j] == 1) //eat 5 points ball
@@ -495,139 +568,91 @@ function UpdatePosition()
 	}
 	else if (board[shape.i][shape.j] == 19) //eat character
 	{ 
+		fruit_sound.play();
 		man_alive = false;
 		score = score + 50; 
 	}
-	else if (board[shape.i][shape.j] == 41) 
+	else if (board[shape.i][shape.j] == 41) //eat character and 15 point ball
 	{ 
-		man_alive=false;
-		score=score+15; 
-		score=score+50; 
+		fruit_sound.play();
+		man_alive = false;
+		score = score + 15; 
+		score = score + 100; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 45) 
+	else if (board[shape.i][shape.j] == 45) //eat character and 25 point ball
 	{
-		man_alive=false;
-		score=score+25; 
-		score=score+50; 
+		fruit_sound.play();
+		man_alive = false;
+		score = score + 25; 
+		score = score + 100; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 46) 
+	else if (board[shape.i][shape.j] == 46) //eat character and 5 point ball
 	{ 
-		man_alive=false;
-		score=score+15; 
-		score=score+50; 
+		fruit_sound.play();
+		man_alive = false;
+		score = score + 5; 
+		score = score + 100; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 48) 
+	else if (board[shape.i][shape.j] == 48) //monster collision
 	{ 
-		man_alive=false;
-		score=score+25; 
-		score=score+50; 
-		ballsToEat--;
+		pacmanLives--;
 	}
-	else if (board[shape.i][shape.j] == 18)
+	else if (board[shape.i][shape.j] == 18) //eat cherry
 	{ 
-		eatCherry=true;
-		monster_time=100;
+		fruit_sound.play();
+		eatCherry = true;
+		score = score + 50;
+		monster_time = 60;
 	}
+	else if (board[shape.i][shape.j] == 50) //eat slow
+	{ 
+		fruit_sound.play();
+		move_speed = 10;
+		slow_time = 60;
+		flag_slow = true;
+		slow_time = 3;
+	}
+	else if (board[shape.i][shape.j] == 51) //eat slow and character
+	{ 
+		fruit_sound.play();
+		score = score + 50; 
+		move_speed = 10;
+		slow_time = 60;
+		flag_slow = true;
+		slow_time = 3;
+	}
+	else if (board[shape.i][shape.j] == 52) //eat clock
+	{ 
+		gameTime = gameTime + 10;
+		fruit_sound.play();
+	}
+	else if (board[shape.i][shape.j] == 53) //eat clock and character
+	{ 
+		score = score + 50; 
+		gameTime = gameTime + 10;
+		fruit_sound.play();
+	}
+
+	if (flag_slow == true)
+	{
+		slow_time--;
+		if (slow_time == 0)
+		{
+			flag_slow = false;
+			move_speed = 5;
+			move = 0;
+		}
+	}
+
 
 	//man move randomly
-	if(man_alive==true)
-	{
-		if(move == 6)
-		{
-		
-			if(board[man_shape.i][man_shape.j]==41){ //back to 5
-				board[man_shape.i][man_shape.j]=1
-			}
-			else if(board[man_shape.i][man_shape.j]==45){ //back to 15
-				board[man_shape.i][man_shape.j]=5
-			}
-			else if(board[man_shape.i][man_shape.j]==46){ //back to 25
-				board[man_shape.i][man_shape.j]=6
-			}
-			else if(board[man_shape.i][man_shape.j]==48){ //back to cherry
-				board[man_shape.i][man_shape.j]=18
-			}
-			else if(board[man_shape.i][man_shape.j]==30){ //back to monster1
-				board[man_shape.i][man_shape.j]=20
-			}
-			else if(board[man_shape.i][man_shape.j]==31){ //back to monster2
-				board[man_shape.i][man_shape.j]=21
-			}
-			else if(board[man_shape.i][man_shape.j]==32){ //back to monster3
-				board[man_shape.i][man_shape.j]=22
-			}
-			else if(board[man_shape.i][man_shape.j]==33){ //back to monster4
-				board[man_shape.i][man_shape.j]=23
-			}
-			else{
-				board[man_shape.i][man_shape.j] = 0;
-			}
-			manMovemin = Math.ceil(1);
-			manMovemaxin = Math.floor(4);
-			manMove = Math.floor(Math.random() * (manMovemaxin - manMovemin + 1)) + manMovemin;
-			
+	moveMan();
 
-			if(manMove==1){//up
-				if (man_shape.j > 0 && !isBorder(board[man_shape.i][man_shape.j - 1])) { man_shape.j--; }
-
-
-			}
-			else if(manMove==2){//down
-
-				if (man_shape.j < 19 && !isBorder(board[man_shape.i][man_shape.j + 1])) { man_shape.j++; }
-
-
-			}
-			else if(manMove==3){//left
-
-				if (man_shape.i > 0 && !isBorder(board[man_shape.i - 1][man_shape.j])) { man_shape.i--; }
-
-
-			}
-			else if(manMove==4){//right
-
-				if (man_shape.i < 19 && !isBorder(board[man_shape.i + 1][man_shape.j])) { man_shape.i++; }
-
-
-			}
-			//check what was on that space 1,5,6,18 ,20,21,22,23
-			if(board[man_shape.i][man_shape.j]==1){ //5 point
-				board[man_shape.i][man_shape.j]=41
-			}
-			else if(board[man_shape.i][man_shape.j]==5){//15 point
-				board[man_shape.i][man_shape.j]=45
-			}
-			else if(board[man_shape.i][man_shape.j]==6){//25 point
-				board[man_shape.i][man_shape.j]=46
-			}
-			else if(board[man_shape.i][man_shape.j]==18){//cherry
-				board[man_shape.i][man_shape.j]=48
-			}
-			else if(board[man_shape.i][man_shape.j]==20){//monster1
-				board[man_shape.i][man_shape.j]=30
-			}
-			else if(board[man_shape.i][man_shape.j]==21){//monster2
-				board[man_shape.i][man_shape.j]=31
-			}
-			else if(board[man_shape.i][man_shape.j]==22){//monster3
-				board[man_shape.i][man_shape.j]=32
-			}
-			else if(board[man_shape.i][man_shape.j]==23){//monster4
-				board[man_shape.i][man_shape.j]=33
-			}
-			else{
-				board[man_shape.i][man_shape.j] = 19;
-			}
-			move=0;
-
-		}
-		else{
-			move++;
-		}
-	}
+	//move ghosts
+	// ghosts.forEach(ghost => moveGhost(ghost))
 
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
@@ -646,6 +671,281 @@ function UpdatePosition()
 	else { Draw(); }
 }
 
+
+function moveMan()
+{
+	if(man_alive == true)
+	{
+		if(move == move_speed)
+		{
+			var loc = board[man_location.i][man_location.j];
+			switch(loc)
+			{
+				case 41: //back to 5
+					board[man_location.i][man_location.j]=1;
+					break;
+
+				case 45: //back to 15
+					board[man_location.i][man_location.j]=5;
+					break;
+
+				case 46: //back to 25
+					board[man_location.i][man_location.j]=6;
+					break;	
+
+				case 48: //back to cherry
+					board[man_location.i][man_location.j]=18;
+					break;
+
+				case 30: //back to monster1
+					board[man_location.i][man_location.j]=20;
+					break;
+
+				case 31: //back to monster2
+					board[man_location.i][man_location.j]=21;
+					break;
+
+				case 32: //back to monster3
+					board[man_location.i][man_location.j]=22;
+					break;
+
+				case 33: //back to monster4
+					board[man_location.i][man_location.j]=23;
+					break;
+
+				case 51: //back to slow
+					board[man_shape.i][man_shape.j] = 50
+
+				case 53: //back to clock
+					board[man_shape.i][man_shape.j] = 52
+
+				default:
+					board[man_location.i][man_location.j] = 0;
+					break;
+
+			}
+
+			manMovemin = Math.ceil(1);
+			manMovemaxin = Math.floor(4);
+			manMove = Math.floor(Math.random() * (manMovemaxin - manMovemin + 1)) + manMovemin;
+			
+			switch(manMove)
+			{
+				case 1: //up
+					if (man_location.j > 0 && !isBorder(board[man_location.i][man_location.j - 1])) { man_location.j--; }
+					break;
+
+				case 2: //down
+					if (man_location.j < 19 && !isBorder(board[man_location.i][man_location.j + 1])) { man_location.j++; }
+					break;
+
+				case 3: //left
+					if (man_location.i > 0 && !isBorder(board[man_location.i - 1][man_location.j])) { man_location.i--; }
+					break;
+
+				case 4: //right
+					if (man_location.i < 19 && !isBorder(board[man_location.i + 1][man_location.j])) { man_location.i++; }
+					break;
+
+			}
+
+			//check what was on that space 1,5,6,18,20,21,22,23
+			var newLoc = board[man_location.i][man_location.j];
+			switch(newLoc)
+			{
+				case 1: //5 point
+					board[man_location.i][man_location.j] = 41;
+					break;
+				
+				case 5: //15 point
+					board[man_location.i][man_location.j] = 45;
+					break;
+
+				case 6: //25 point
+					board[man_location.i][man_location.j] = 46;
+					break;
+
+				case 18: //cherry
+					board[man_location.i][man_location.j] = 48;
+					break;
+
+				case 20: //monster1
+					board[man_location.i][man_location.j] = 30;
+					break;
+				
+				case 21: //monster2
+					board[man_location.i][man_location.j] = 31;
+					break;
+
+				case 22: //monster3
+					board[man_location.i][man_location.j] = 32;
+					break;
+
+				case 23: //monster4
+					board[man_location.i][man_location.j] = 33;
+					break;
+
+				case 50: //slow
+					board[man_shape.i][man_shape.j] = 51;
+					break;
+
+				case 52: //clock
+					board[man_shape.i][man_shape.j] = 53;
+					break;
+
+				default:
+					board[man_location.i][man_location.j] = 19;
+					break;
+			}
+			move=0;
+		}
+		else { move++; }
+	}
+}
+
+function moveGhost(ghost)
+{
+	var ghostsToSwap = new Array();
+	switch(ghost.id)
+	{
+		case 21: //pinky
+			ghostsToSwap.push(22);
+			ghostsToSwap.push(23);
+			ghostsToSwap.push(20);
+			break
+
+		case 20: //clyde
+		ghostsToSwap.push(22);
+		ghostsToSwap.push(23);
+		ghostsToSwap.push(21);
+		break
+
+		case 22: //inky
+			ghostsToSwap.push(21);
+			ghostsToSwap.push(23);
+			ghostsToSwap.push(20);
+			break
+
+		case 23: //blinky
+			ghostsToSwap.push(22);
+			ghostsToSwap.push(21);
+			ghostsToSwap.push(20);
+			break
+	}
+	if(move == ghost.speed)
+	{
+		var loc = board[ghost.currIndexCol][ghost.currIndexRow];
+		switch(loc)
+		{
+			case 50: //back to 5
+				board[ghost.currIndexCol][ghost.currIndexRow]=1;
+				break;
+
+			case 51: //back to 15
+				board[ghost.currIndexCol][ghost.currIndexRow]=5;
+				break;
+
+			case 52: //back to 25
+				board[ghost.currIndexCol][ghost.currIndexRow]=6;
+				break;	
+
+			case 53: //back to cherry
+				board[ghost.currIndexCol][ghost.currIndexRow]=18;
+				break;
+
+			case 30: //back to monster1
+				loc=20;
+				break;
+
+			case 31: //back to monster2
+				loc=21;
+				break;
+
+			case 32: //back to monster3
+				loc=22;
+				break;
+
+			case 33: //back to monster4
+				loc=23;
+				break;
+
+			default:
+				loc = 0;
+				break;
+
+		}
+		ghostMoveMin = Math.ceil(1);
+		ghostMoveMax = Math.floor(4);
+		ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
+		
+		switch(ghostMove)
+		{
+			case 1: //up
+				if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow - 1])) { ghost.currIndexCol--; }
+				break;
+
+			case 2: //down
+				if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow + 1])) { ghost.currIndexCol++; }
+				break;
+
+			case 3: //left
+				if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol - 1][ghost.currIndexRow])) { ghost.currIndexCol--; }
+				break;
+
+			case 4: //right
+				if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol + 1][ghost.currIndexRow])) { ghost.currIndexCol++; }
+				break;
+
+		}
+
+		//check what was on that space 1,5,6,18,20,21,22,23
+		var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
+		switch(newLoc)
+		{
+			case 1: //5 point
+				newLoc = 50;
+				break;
+			
+			case 5: //15 point
+				newLoc = 51;
+				break;
+
+			case 6: //25 point
+				newLoc = 52;
+				break;
+
+			case 18: //cherry
+				newLoc = 53;
+				break;
+
+			case 20: //monster1
+				newLoc = 30;
+				break;
+			
+			case 21: //monster2
+				newLoc = 31;
+				break;
+
+			case 22: //monster3
+				newLoc = 32;
+				break;
+
+			case 23: //monster4
+				newLoc = 33;
+				break;
+
+			default:
+				newLoc = 19;
+				break;
+		}
+		move=0;
+
+	}
+	else{
+		move++;
+	}
+}	
+
 function switchContent(id) 
 {
 	const target = document.getElementById(id);
@@ -659,16 +959,26 @@ function switchContent(id)
 	window.clearInterval(interval);
 
 
-	if(id=="gamePage"){
-		Start();
-	}
+	if (id == "gamePage") { Start(); }
+	if (id == "welcomePage") { welcome_sound.play(); }
+
 
 	// Show selected one
 	target.style.display = 'block';
 
 }
 
-
+function sound(src) 
+{
+	this.sound = document.createElement("audio");
+	this.sound.src = src;
+	this.sound.setAttribute("preload", "auto");
+	this.sound.setAttribute("controls", "none");
+	this.sound.style.display = "none";
+	document.body.appendChild(this.sound);
+	this.play = function() { this.sound.play(); }
+	this.stop = function() { this.sound.pause(); }
+  }
 
 function showSetter(direction)
 {
@@ -948,7 +1258,8 @@ function randomSelectSettings()
 	colorRandom(colorNum);
 }
 
-function colorRandom(num){
+function colorRandom(num)
+{
 	var fivePointsBall = document.getElementById("fivePointsBall");
 	var fifteenPointsBall = document.getElementById("fifteenPointsBall");
 	var twentyFivePointsBall = document.getElementById("twentyFivePointsBall");
