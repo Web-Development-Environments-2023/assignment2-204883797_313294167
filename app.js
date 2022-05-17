@@ -62,16 +62,34 @@ monster3.src = 'images/pacman-monster3.png'
 var monster4 = new Image();
 monster4.src = 'images/pacman-monster4.png'
 move = 0;
+var slow = new Image();
+slow.src = 'images/slow.jpg'
+var slow_times=0;
+var move_speed=5;
+var flag_slow=false;
+var slow_cell_i;
+var welcome_sound = new Audio('sounds/pacman_beginning.mp3');
+var death_sound = new Audio('sounds/pacman_death.mp3');
+var fruit_sound = new Audio('sounds/pacman_eatfruit.mp3');
+var chomp_sound = new Audio('sounds/pacman_chomp.mp3');
+var clock = new Image();
+clock.src = 'images/clock.jpg'
+var slow_cell_j;
+var clock_eat=0;
+
 
 
 function Start() 
 {
+
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
+	clock_eat=0;
 	ballsToEat = ballsNum;
 	pacColor = "yellow";
 	var cnt = 400;
+	slow_times=0;
 	eatCherry=false;
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
@@ -249,10 +267,29 @@ function Draw()
 		monster3.src = 'images/pacman-monster3.png'
 		monster4.src = 'images/pacman-monster4.png'
 	}
+
+	
 	canvas.width = canvas.width; //clean board
 	lblScore.value = score;
 	lblTime.value = (gameTime - timeElapsed).toFixed(3);
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
+	if (lblTime.value < 40 && slow_times==0){
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 50;
+		slow_cell_i=emptyCell[0]
+		slow_cell_j=emptyCell[1]
+		slow_times=1;
+	}
+	if (lblTime.value < 30 && slow_times==1){
+		board[slow_cell_i][slow_cell_j] = 0;
+		slow_times=2;
+	}
+
+	if (lblTime.value < 50 && clock_eat==0){
+		var emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 52;
+		clock_eat=1;
+	}
 	for (var col = 0; col < 20; col++) 
 	{
 		for (var row = 0; row < 20; row++) 
@@ -424,7 +461,7 @@ function Draw()
 			{
 				context.drawImage(cherry, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 19 ||  board[col][row] == 41 ||  board[col][row] == 45 ||  board[col][row] == 46 ||  board[col][row] == 48) //man
+			else if (board[col][row] == 19 ||  board[col][row] == 41 ||  board[col][row] == 45 ||  board[col][row] == 46 ||  board[col][row] == 48 || board[col][row]==51 || board[col][row]==53) //man
 			{
 				context.drawImage(man, center.x-20, center.y-20);
 			}
@@ -444,6 +481,13 @@ function Draw()
 			{
 				context.drawImage(monster4, center.x-20, center.y-20);
 			}
+			else if(board[col][row]==50){
+				context.drawImage(slow, center.x-20, center.y-20);
+			}
+
+			else if(board[col][row]==52){
+				context.drawImage(clock, center.x-20, center.y-20);
+			}
 		}
 	}
 }
@@ -460,21 +504,25 @@ function UpdatePosition()
 	var x = GetKeyPressed();
 	if (x == 1) //move up
 	{
+		chomp_sound.play();
 		pacmanDirection='up'
 		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
 	}
 	if (x == 2) //move down
 	{
+		chomp_sound.play();
 		pacmanDirection='down'
 		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
+		chomp_sound.play();
 		pacmanDirection='left'
 		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
 	}
 	if (x == 4) //move right
 	{
+		chomp_sound.play();
 		pacmanDirection='right'
 		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
 	}
@@ -485,6 +533,7 @@ function UpdatePosition()
 	}
 	else if (board[shape.i][shape.j] == 5) //eat 15 points ball
 	{ 
+
 		score = score + 15; 
 		ballsToEat--;
 	}
@@ -495,47 +544,95 @@ function UpdatePosition()
 	}
 	else if (board[shape.i][shape.j] == 19) //eat character
 	{ 
+		fruit_sound.play();
 		man_alive = false;
 		score = score + 50; 
 	}
 	else if (board[shape.i][shape.j] == 41) 
 	{ 
+		fruit_sound.play();
 		man_alive=false;
-		score=score+15; 
+		score=score+5; 
 		score=score+50; 
 		ballsToEat--;
 	}
 	else if (board[shape.i][shape.j] == 45) 
 	{
-		man_alive=false;
-		score=score+25; 
-		score=score+50; 
-		ballsToEat--;
-	}
-	else if (board[shape.i][shape.j] == 46) 
-	{ 
+		fruit_sound.play();
 		man_alive=false;
 		score=score+15; 
 		score=score+50; 
 		ballsToEat--;
 	}
-	else if (board[shape.i][shape.j] == 48) 
+	else if (board[shape.i][shape.j] == 46) 
 	{ 
+		fruit_sound.play();
 		man_alive=false;
 		score=score+25; 
 		score=score+50; 
 		ballsToEat--;
 	}
+	else if (board[shape.i][shape.j] == 48) 
+	{ 
+		fruit_sound.play();
+		man_alive=false;
+		score=score+50; 
+		ballsToEat--;
+	}
 	else if (board[shape.i][shape.j] == 18)
 	{ 
+		fruit_sound.play();
 		eatCherry=true;
 		monster_time=100;
+	}
+	else if (board[shape.i][shape.j] == 50) //eat slow
+	{ 
+		fruit_sound.play();
+		move_speed=10;
+		slow_time=100;
+		flag_slow=true;
+		slow_times=3;
+	}
+	else if (board[shape.i][shape.j] == 51) //eat slow and bucs
+	{ 
+		fruit_sound.play();
+		score=score+50; 
+		move_speed=10;
+		slow_time=100;
+		flag_slow=true;
+		slow_times=3;
+
+	}
+
+	else if (board[shape.i][shape.j] == 52) //eat clock
+	{ 
+		gameTime=gameTime+10;
+		fruit_sound.play();
+		
+	}
+
+	else if (board[shape.i][shape.j] == 53) //eat clock and bucs
+	{ 
+		score=score+50; 
+		gameTime=gameTime+10;
+		fruit_sound.play();
+
+
+	}
+
+	if(flag_slow == true){
+		slow_time--;
+		if(slow_time==0){
+			flag_slow=false;
+			move_speed=5;
+			move=0;
+		}
 	}
 
 	//man move randomly
 	if(man_alive==true)
 	{
-		if(move == 6)
+		if(move == move_speed)
 		{
 		
 			if(board[man_shape.i][man_shape.j]==41){ //back to 5
@@ -561,6 +658,12 @@ function UpdatePosition()
 			}
 			else if(board[man_shape.i][man_shape.j]==33){ //back to monster4
 				board[man_shape.i][man_shape.j]=23
+			}
+			else if(board[man_shape.i][man_shape.j]==51){ //back to slow
+				board[man_shape.i][man_shape.j]=50
+			}
+			else if(board[man_shape.i][man_shape.j]==53){ //back to clock
+				board[man_shape.i][man_shape.j]=52
 			}
 			else{
 				board[man_shape.i][man_shape.j] = 0;
@@ -618,6 +721,13 @@ function UpdatePosition()
 			else if(board[man_shape.i][man_shape.j]==23){//monster4
 				board[man_shape.i][man_shape.j]=33
 			}
+			else if(board[man_shape.i][man_shape.j]==50){//slow
+				board[man_shape.i][man_shape.j]=51
+			}
+			else if(board[man_shape.i][man_shape.j]==52){//clock
+				board[man_shape.i][man_shape.j]=53
+			}
+
 			else{
 				board[man_shape.i][man_shape.j] = 19;
 			}
@@ -661,6 +771,10 @@ function switchContent(id)
 
 	if(id=="gamePage"){
 		Start();
+	}
+
+	if(id=="welcomePage"){
+		welcome_sound.play();
 	}
 
 	// Show selected one
@@ -1201,7 +1315,20 @@ function colorRandom(num){
 }
 
 
-
+function sound(src) {
+	this.sound = document.createElement("audio");
+	this.sound.src = src;
+	this.sound.setAttribute("preload", "auto");
+	this.sound.setAttribute("controls", "none");
+	this.sound.style.display = "none";
+	document.body.appendChild(this.sound);
+	this.play = function(){
+	  this.sound.play();
+	}
+	this.stop = function(){
+	  this.sound.pause();
+	}
+  }
   
 
 
