@@ -285,7 +285,7 @@ function Draw()
 		slow_times=2;
 	}
 
-	if (lblTime.value < 50 && clock_eat==0){
+	if (lblTime.value < 10 && clock_eat==0){
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 52;
 		clock_eat=1;
