@@ -61,7 +61,7 @@ var monster3 = new Image();
 monster3.src = 'images/pacman-monster3.png'
 var monster4 = new Image();
 monster4.src = 'images/pacman-monster4.png'
-move = 0;
+move_man = 0;
 var pacmanLives = 3;
 var slow = new Image();
 slow.src = 'images/slow.jpg'
@@ -91,6 +91,7 @@ class Ghost
 		this.image.src = srcImage
 		this.speed = speed
 		this.id = id
+		this.move = 0
 	}
 }
 
@@ -101,9 +102,20 @@ ghosts = [
 	new Ghost('clyde', 1, 1, 3, 20, 'images/pacman-monster1.png')
 ]
 
+function sound(src) 
+{
+	this.sound = document.createElement("audio");
+	this.sound.src = src;
+	this.sound.setAttribute("preload", "auto");
+	this.sound.setAttribute("controls", "none");
+	this.sound.style.display = "none";
+	document.body.appendChild(this.sound);
+	this.play = function(){ this.sound.play(); }
+	this.stop = function() { this.sound.pause(); }
+}
+
 function Start() 
 {
-
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
@@ -290,7 +302,6 @@ function Draw()
 		monster4.src = 'images/pacman-monster4.png'
 	}
 
-	
 	canvas.width = canvas.width; //clean board
 	lblPacmanLives.value = pacmanLives;
 	lblScore.value = score;
@@ -491,19 +502,19 @@ function Draw()
 			{
 				context.drawImage(man, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 20 || board[col][row] == 30) //orange ghost
+			else if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 64))) //orange ghost
 			{
 				context.drawImage(monster1, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 21 || board[col][row] == 31) //pink ghost
+			else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 74))) //pink ghost
 			{
 				context.drawImage(monster2, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 22 || board[col][row] == 32) //blue ghost
+			else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 84))) //blue ghost
 			{
 				context.drawImage(monster3, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 23 || board[col][row] == 33) //red ghost
+			else if (board[col][row] == 23 || board[col][row] == 33 || ((board[col][row] >= 90) && (board[col][row] <= 94))) //red ghost
 			{
 				context.drawImage(monster4, center.x-20, center.y-20);
 			}
@@ -511,7 +522,6 @@ function Draw()
 			{
 				context.drawImage(slow, center.x-20, center.y-20);
 			}
-
 			else if (board[col][row] == 52)
 			{
 				context.drawImage(clock, center.x-20, center.y-20);
@@ -532,28 +542,24 @@ function UpdatePosition()
 	var x = GetKeyPressed();
 	if (x == 1) //move up
 	{
-		chomp_sound.play();
 		pacmanDirection='up'
 		chomp_sound.play();
 		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
 	}
 	if (x == 2) //move down
 	{
-		chomp_sound.play();
 		pacmanDirection='down'
 		chomp_sound.play();
 		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
 	}
 	if (x == 3) //move left
 	{
-		chomp_sound.play();
 		pacmanDirection='left'
 		chomp_sound.play();
 		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
 	}
 	if (x == 4) //move right
 	{
-		chomp_sound.play();
 		pacmanDirection='right'
 		chomp_sound.play();
 		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
@@ -651,7 +657,7 @@ function UpdatePosition()
 		{
 			flag_slow = false;
 			move_speed = 5;
-			move = 0;
+			move_man = 0;
 		}
 	}
 	else if (board[shape.i][shape.j] == 50) //eat slow
@@ -670,14 +676,11 @@ function UpdatePosition()
 		slow_time=100;
 		flag_slow=true;
 		slow_times=3;
-
 	}
-
 	else if (board[shape.i][shape.j] == 52) //eat clock
 	{ 
 		gameTime=gameTime+10;
 		fruit_sound.play();
-		
 	}
 
 	else if (board[shape.i][shape.j] == 53) //eat clock and bucs
@@ -685,16 +688,15 @@ function UpdatePosition()
 		score=score+50; 
 		gameTime=gameTime+10;
 		fruit_sound.play();
-
-
 	}
-
-	if(flag_slow == true){
+	if(flag_slow == true)
+	{
 		slow_time--;
-		if(slow_time==0){
+		if(slow_time==0)
+		{
 			flag_slow=false;
 			move_speed=5;
-			move=0;
+			move_man=0;
 		}
 	}
 
@@ -703,7 +705,10 @@ function UpdatePosition()
 	moveMan();
 
 	//move ghosts
-	// ghosts.forEach(ghost => moveGhost(ghost))
+	moveGhost(ghosts[0]);
+	moveGhost(ghosts[1]);
+	moveGhost(ghosts[2]);
+	moveGhost(ghosts[3]);
 
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
@@ -722,12 +727,11 @@ function UpdatePosition()
 	else { Draw(); }
 }
 
-
 function moveMan()
 {
 	if(man_alive == true)
 	{
-		if(move == move_speed)
+		if(move_man == move_speed)
 		{
 			var loc = board[man_location.i][man_location.j];
 			switch(loc)
@@ -848,153 +852,351 @@ function moveMan()
 					board[man_location.i][man_location.j] = 19;
 					break;
 			}
-			move=0;
+			move_man=0;
 		}
-		else { move++; }
+		else { move_man++; }
 	}
 }
 
+function isGhost(ghost)
+{
+	if ((ghost == 20) || (ghost == 21) || (ghost == 22) || (ghost == 23)) { return true; }
+	else { return false;}
+}
+
+function isRowCloser(ghost, direction)
+{
+	switch(direction)
+	{
+		case 1: // up
+			if (Math.abs((ghost.currIndexRow - 1 - shape.j)) > Math.abs((ghost.currIndexRow - shape.j))) { return true; }
+			else { return false; }
+
+		case 2: //down
+			if (Math.abs((ghost.currIndexRow + 1 - shape.j)) > Math.abs((ghost.currIndexRow - shape.j))) { return true; }
+			else { return false; }		
+	}
+}
+
+function isColCloser(ghost, direction)
+{
+	switch(direction)
+	{
+		case 3: // left
+			if (Math.abs((ghost.currIndexCol - 1 - shape.i)) > Math.abs((ghost.currIndexCol - shape.i))) { return true; }
+			else { return false; }
+
+		case 4: //right
+			if (Math.abs((ghost.currIndexCol + 1 - shape.i)) > Math.abs((ghost.currIndexCol - shape.i))) { return true; }
+			else { return false; }
+	}
+}
+
+// function checkDirection(ghost)
+// {
+// 	if ((ghost.currIndexRow - 1 - shape.j) > (ghost.currIndexRow - shape.j)) { return "up"; }
+// 	else if ((ghost.currIndexRow + 1 - shape.j) > (ghost.currIndexRow - shape.j)) { return "down"; }
+// 	else if ((ghost.currIndexCol - 1 - shape.i) > (ghost.currIndexCol - shape.i)) { return "left"; }
+// 	else if ((ghost.currIndexCol + 1 - shape.i) > (ghost.currIndexCol - shape.i)) { return "right"; }
+// }
+
 function moveGhost(ghost)
 {
-	var ghostsToSwap = new Array();
-	switch(ghost.id)
+	if (ghost.move == ghost.speed)
 	{
-		case 21: //pinky
-			ghostsToSwap.push(22);
-			ghostsToSwap.push(23);
-			ghostsToSwap.push(20);
-			break
-
-		case 20: //clyde
-		ghostsToSwap.push(22);
-		ghostsToSwap.push(23);
-		ghostsToSwap.push(21);
-		break
-
-		case 22: //inky
-			ghostsToSwap.push(21);
-			ghostsToSwap.push(23);
-			ghostsToSwap.push(20);
-			break
-
-		case 23: //blinky
-			ghostsToSwap.push(22);
-			ghostsToSwap.push(21);
-			ghostsToSwap.push(20);
-			break
-	}
-	if(move == ghost.speed)
-	{
-		var loc = board[ghost.currIndexCol][ghost.currIndexRow];
-		switch(loc)
+		if (ghost.id == 20)
 		{
-			case 50: //back to 5
-				board[ghost.currIndexCol][ghost.currIndexRow]=1;
-				break;
+			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(loc)
+			{
+				case 60: //back to 5
+					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
+					break;
 
-			case 51: //back to 15
-				board[ghost.currIndexCol][ghost.currIndexRow]=5;
-				break;
+				case 61: //back to 15
+					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
+					break;
 
-			case 52: //back to 25
-				board[ghost.currIndexCol][ghost.currIndexRow]=6;
-				break;	
+				case 62: //back to 25
+					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
+					break;	
 
-			case 53: //back to cherry
-				board[ghost.currIndexCol][ghost.currIndexRow]=18;
-				break;
+				case 63: //back to cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
+					break;
 
-			case 30: //back to monster1
-				loc=20;
-				break;
+				case 64: //back to character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
 
-			case 31: //back to monster2
-				loc=21;
-				break;
-
-			case 32: //back to monster3
-				loc=22;
-				break;
-
-			case 33: //back to monster4
-				loc=23;
-				break;
-
-			default:
-				loc = 0;
-				break;
-
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
+					break;
+			}
 		}
-		ghostMoveMin = Math.ceil(1);
-		ghostMoveMax = Math.floor(4);
-		ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
+
+		if (ghost.id == 21)
+		{
+			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(loc)
+			{
+				case 70: //back to 5
+					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
+					break;
+
+				case 71: //back to 15
+					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
+					break;
+
+				case 72: //back to 25
+					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
+					break;	
+
+				case 73: //back to cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
+					break;
+
+				case 74: //back to character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
+
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
+					break;
+			}
+		}
+
+		if (ghost.id == 22)
+		{
+			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(loc)
+			{
+				case 80: //back to 5
+					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
+					break;
+
+				case 81: //back to 15
+					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
+					break;
+
+				case 82: //back to 25
+					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
+					break;	
+
+				case 83: //back to cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
+					break;
+
+				case 84: //back to character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
+
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
+					break;
+			}
+		}
+
+		if (ghost.id == 23)
+		{
+			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(loc)
+			{
+				case 90: //back to 5
+					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
+					break;
+
+				case 91: //back to 15
+					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
+					break;
+
+				case 92: //back to 25
+					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
+					break;	
+
+				case 93: //back to cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
+					break;
+
+				case 94: //back to character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
+
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
+					break;
+			}
+		}
 		
-		switch(ghostMove)
+		// ghostMoveMin = Math.ceil(1);
+		// ghostMoveMax = Math.floor(4);
+		// ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
+		notMove = true
+		tries = 5
+		while(notMove && tries)
+		{	
+			ghostMove = Math.floor(Math.random() * 4) + 1;
+			
+			// bestMove = checkDirection(ghost)
+			if (isRowCloser(ghost, ghostMove) || isColCloser(ghost, ghostMove))
+			{
+				switch(ghostMove)
+				{
+					case 1: //up
+						if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow - 1]) 
+							&& !isGhost(board[ghost.currIndexCol][ghost.currIndexRow - 1])) { ghost.currIndexRow--; notMove = false; }
+						break;
+
+					case 2: //down
+						if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow + 1])
+							&& !isGhost(board[ghost.currIndexCol][ghost.currIndexRow + 1])) { ghost.currIndexRow++;  notMove = false; }
+						break;
+
+					case 3: //left
+						if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol - 1][ghost.currIndexRow])
+							&& !isGhost(board[ghost.currIndexCol - 1][ghost.currIndexRow])) { ghost.currIndexCol--;  notMove = false; }
+						break;
+
+					case 4: //right
+						if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol + 1][ghost.currIndexRow])
+							&& !isGhost(board[ghost.currIndexCol + 1][ghost.currIndexRow])) { ghost.currIndexCol++;  notMove = false; }
+						break;
+				}
+			}
+			tries--;
+		}
+		
+		if (ghost.id == 20)
 		{
-			case 1: //up
-				if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow - 1])) { ghost.currIndexCol--; }
-				break;
+			//check what was on that space 1,5,6,18,20,21,22,23
+			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(newLoc)
+			{
+				case 1: //5 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 60; 
+					break;
+				
+				case 5: //15 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 61;
+					break;
 
-			case 2: //down
-				if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow + 1])) { ghost.currIndexCol++; }
-				break;
+				case 6: //25 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 62;
+					break;
 
-			case 3: //left
-				if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol - 1][ghost.currIndexRow])) { ghost.currIndexCol--; }
-				break;
+				case 18: //cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 63;
+					break;
 
-			case 4: //right
-				if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol + 1][ghost.currIndexRow])) { ghost.currIndexCol++; }
-				break;
+				case 19: //character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 64;
+					break;
 
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
+					break;
+			}
 		}
 
-		//check what was on that space 1,5,6,18,20,21,22,23
-		var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
-		switch(newLoc)
+		if (ghost.id == 21)
 		{
-			case 1: //5 point
-				newLoc = 50;
-				break;
-			
-			case 5: //15 point
-				newLoc = 51;
-				break;
+			//check what was on that space 1,5,6,18,20,21,22,23
+			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(newLoc)
+			{
+				case 1: //5 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 70; 
+					break;
+				
+				case 5: //15 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 71;
+					break;
 
-			case 6: //25 point
-				newLoc = 52;
-				break;
+				case 6: //25 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 72;
+					break;
 
-			case 18: //cherry
-				newLoc = 53;
-				break;
+				case 18: //cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 73;
+					break;
 
-			case 20: //monster1
-				newLoc = 30;
-				break;
-			
-			case 21: //monster2
-				newLoc = 31;
-				break;
+				case 19: //character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 74;
+					break;
 
-			case 22: //monster3
-				newLoc = 32;
-				break;
-
-			case 23: //monster4
-				newLoc = 33;
-				break;
-
-			default:
-				newLoc = 19;
-				break;
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
+					break;
+			}
 		}
-		move=0;
 
+		if (ghost.id == 22)
+		{
+			//check what was on that space 1,5,6,18,20,21,22,23
+			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(newLoc)
+			{
+				case 1: //5 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 80; 
+					break;
+				
+				case 5: //15 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 81;
+					break;
+
+				case 6: //25 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 82;
+					break;
+
+				case 18: //cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 83;
+					break;
+
+				case 19: //character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 84;
+					break;
+
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
+					break;
+			}
+		}
+
+		if (ghost.id == 23)
+		{
+			//check what was on that space 1,5,6,18,20,21,22,23
+			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
+			switch(newLoc)
+			{
+				case 1: //5 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 90; 
+					break;
+				
+				case 5: //15 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 91;
+					break;
+
+				case 6: //25 point
+					board[ghost.currIndexCol][ghost.currIndexRow] = 92;
+					break;
+
+				case 18: //cherry
+					board[ghost.currIndexCol][ghost.currIndexRow] = 93;
+					break;
+
+				case 19: //character
+					board[ghost.currIndexCol][ghost.currIndexRow] = 94;
+					break;
+
+				default:
+					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
+					break;
+			}
+		}
+		
+		ghost.move = 0
 	}
-	else{
-		move++;
-	}
+	else { ghost.move++; }
 }	
 
 function switchContent(id) 
@@ -1008,15 +1210,8 @@ function switchContent(id)
 	  div.style.display = 'none';
 	}
 	window.clearInterval(interval);
-
-
 	if (id == "gamePage") { Start(); }
 	if (id == "welcomePage") { welcome_sound.play(); }
-
-
-	if(id=="welcomePage"){
-		welcome_sound.play();
-	}
 
 	// Show selected one
 	target.style.display = 'block';
@@ -1567,21 +1762,7 @@ function colorRandom(num)
 }
 
 
-function sound(src) {
-	this.sound = document.createElement("audio");
-	this.sound.src = src;
-	this.sound.setAttribute("preload", "auto");
-	this.sound.setAttribute("controls", "none");
-	this.sound.style.display = "none";
-	document.body.appendChild(this.sound);
-	this.play = function(){
-	  this.sound.play();
-	}
-	this.stop = function(){
-	  this.sound.pause();
-	}
-  }
-  
+
 
 
 
