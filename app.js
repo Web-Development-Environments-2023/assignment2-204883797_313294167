@@ -24,6 +24,7 @@ var eatCherry=false;
 var man_alive=true;
 var monster_can_be_eat = 0;
 var monstersNum = 4;
+var rand=0
 var pacmanDirection='right';
 var cornerTopLeft = new Image();
 cornerTopLeft.src = 'images/pacmanAssets/pipeCorner1.png'
@@ -66,6 +67,7 @@ var pacmanLives = 3;
 var slow = new Image();
 slow.src = 'images/slow.jpg'
 var slow_time=0;
+var slow_time_left=0;
 var move_speed=5;
 var flag_slow=false;
 var slow_cell_i;
@@ -96,10 +98,10 @@ class Ghost
 }
 
 ghosts = [
-	new Ghost('blinky', 1, 18, 3, 23, 'images/pacman-monster4.png'),
-	new Ghost('pinky', 18, 1, 4, 21, 'images/pacman-monster2.png'),
-	new Ghost('inky', 18, 18, 5, 22, 'images/pacman-monster3.png'),
-	new Ghost('clyde', 1, 1, 3, 20, 'images/pacman-monster1.png')
+	new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png'),
+	new Ghost('pinky', 18, 1, 2, 21, 'images/pacman-monster2.png'),
+	new Ghost('inky', 18, 18, 2, 22, 'images/pacman-monster3.png'),
+	new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
 ]
 
 function sound(src) 
@@ -116,6 +118,8 @@ function sound(src)
 
 function Start() 
 {
+
+	gameTime=60
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
@@ -124,7 +128,9 @@ function Start()
 	pacColor = "yellow";
 	var cnt = 400;
 	slow_time = 0;
+	slow_time_left=0;
 	eatCherry=false;
+	rand=0
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
 	var food_remain_15 = ballsNum * 0.3;
@@ -320,7 +326,7 @@ function Draw()
 		board[slow_cell_i][slow_cell_j] = 0;
 		slow_time = 2;
 	}
-	if (lblTime.value < 50 && clock_eat == 0)
+	if (lblTime.value < 10 && clock_eat == 0)
 	{
 		var emptyCell = findRandomEmptyCell(board);
 		board[emptyCell[0]][emptyCell[1]] = 52;
@@ -621,61 +627,27 @@ function UpdatePosition()
 		score = score + 50;
 		monster_time = 60;
 	}
-	else if (board[shape.i][shape.j] == 50) //eat slow
-	{ 
-		fruit_sound.play();
-		move_speed = 10;
-		slow_time = 60;
-		flag_slow = true;
-		slow_time = 3;
-	}
-	else if (board[shape.i][shape.j] == 51) //eat slow and character
-	{ 
-		fruit_sound.play();
-		score = score + 50; 
-		move_speed = 10;
-		slow_time = 60;
-		flag_slow = true;
-		slow_time = 3;
-	}
-	else if (board[shape.i][shape.j] == 52) //eat clock
-	{ 
-		gameTime = gameTime + 10;
-		fruit_sound.play();
-	}
-	else if (board[shape.i][shape.j] == 53) //eat clock and character
-	{ 
-		score = score + 50; 
-		gameTime = gameTime + 10;
-		fruit_sound.play();
-	}
 
-	if (flag_slow == true)
-	{
-		slow_time--;
-		if (slow_time == 0)
-		{
-			flag_slow = false;
-			move_speed = 5;
-			move_man = 0;
-		}
-	}
 	else if (board[shape.i][shape.j] == 50) //eat slow
 	{ 
 		fruit_sound.play();
 		move_speed=10;
-		slow_time=100;
+		slow_time_left=100;
 		flag_slow=true;
-		slow_times=3;
+		for(var i in ghosts){
+			ghosts[i].speed=ghosts[i].speed*2
+		}
 	}
 	else if (board[shape.i][shape.j] == 51) //eat slow and bucs
 	{ 
 		fruit_sound.play();
 		score=score+50; 
 		move_speed=10;
-		slow_time=100;
+		slow_time_left=100;
 		flag_slow=true;
-		slow_times=3;
+		for(var i in ghosts){
+			ghosts[i].speed=ghosts[i].speed*2
+		}
 	}
 	else if (board[shape.i][shape.j] == 52) //eat clock
 	{ 
@@ -691,12 +663,15 @@ function UpdatePosition()
 	}
 	if(flag_slow == true)
 	{
-		slow_time--;
-		if(slow_time==0)
+		slow_time_left--;
+		if(slow_time_left==0)
 		{
 			flag_slow=false;
 			move_speed=5;
 			move_man=0;
+			for(var i in ghosts){
+				ghosts[i].speed=ghosts[i].speed/2
+			}
 		}
 	}
 
@@ -705,10 +680,9 @@ function UpdatePosition()
 	moveMan();
 
 	//move ghosts
-	moveGhost(ghosts[0]);
-	moveGhost(ghosts[1]);
-	moveGhost(ghosts[2]);
-	moveGhost(ghosts[3]);
+	for(var i in ghosts){
+		moveGhost(ghosts[i]);
+	}
 
 	board[shape.i][shape.j] = 2;
 	var currentTime = new Date();
@@ -892,13 +866,11 @@ function isColCloser(ghost, direction)
 	}
 }
 
-// function checkDirection(ghost)
-// {
-// 	if ((ghost.currIndexRow - 1 - shape.j) > (ghost.currIndexRow - shape.j)) { return "up"; }
-// 	else if ((ghost.currIndexRow + 1 - shape.j) > (ghost.currIndexRow - shape.j)) { return "down"; }
-// 	else if ((ghost.currIndexCol - 1 - shape.i) > (ghost.currIndexCol - shape.i)) { return "left"; }
-// 	else if ((ghost.currIndexCol + 1 - shape.i) > (ghost.currIndexCol - shape.i)) { return "right"; }
-// }
+function checkDirection(ghost){
+
+}
+
+	
 
 function moveGhost(ghost)
 {
@@ -1027,44 +999,33 @@ function moveGhost(ghost)
 					break;
 			}
 		}
-		
-		// ghostMoveMin = Math.ceil(1);
-		// ghostMoveMax = Math.floor(4);
-		// ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
-		notMove = true
-		tries = 5
-		while(notMove && tries)
-		{	
-			ghostMove = Math.floor(Math.random() * 4) + 1;
-			
-			// bestMove = checkDirection(ghost)
-			if (isRowCloser(ghost, ghostMove) || isColCloser(ghost, ghostMove))
-			{
-				switch(ghostMove)
-				{
-					case 1: //up
-						if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow - 1]) 
-							&& !isGhost(board[ghost.currIndexCol][ghost.currIndexRow - 1])) { ghost.currIndexRow--; notMove = false; }
-						break;
 
-					case 2: //down
-						if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow + 1])
-							&& !isGhost(board[ghost.currIndexCol][ghost.currIndexRow + 1])) { ghost.currIndexRow++;  notMove = false; }
-						break;
 
-					case 3: //left
-						if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol - 1][ghost.currIndexRow])
-							&& !isGhost(board[ghost.currIndexCol - 1][ghost.currIndexRow])) { ghost.currIndexCol--;  notMove = false; }
-						break;
-
-					case 4: //right
-						if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol + 1][ghost.currIndexRow])
-							&& !isGhost(board[ghost.currIndexCol + 1][ghost.currIndexRow])) { ghost.currIndexCol++;  notMove = false; }
-						break;
-				}
-			}
-			tries--;
+		ghostMoveMin = Math.ceil(1);
+		ghostMoveMax = Math.floor(4);
+		ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
+		best_Horizontal=bestHorizontal(ghost.currIndexCol);
+		best_Vertical=bestVertical(ghost.currIndexRow);
+		if(rand==0){		
+			moveBestHor(ghost,best_Horizontal);
+			rand++;
 		}
+		else if(rand==1){
+			moveBestVer(ghost,best_Vertical);
+			rand++;
+		}
+		else if(rand<4){
+			rand++;
+
+		}
+		else{
+			rand=0;
+		}		
+
+	
+
+
+
 		
 		if (ghost.id == 20)
 		{
@@ -1765,8 +1726,79 @@ function colorRandom(num)
 
 
 
+function bestHorizontal(ghostCol){
+	if(ghostCol>shape.i){
+		return "left";
+	}
+	else if(ghostCol<shape.i){
+		return "right";
+	}
+	else{
+		return "mid";
+	}
+
+}
 
 
 
+function bestVertical(ghostRow){
+	if(ghostRow>shape.j){
+		return "up";
+	}
+	else if(ghostRow<shape.j){
+		return "down";
+	}
+	else{
+		return "mid";
+	}
+	
+}
 
 
+function moveBestVer(ghost,move){
+
+
+	if(move=="up"){
+		if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexRow-1][ghost.currIndexCol])){
+			ghost.currIndexRow--;
+		}
+
+	}
+	if(move=="down"){
+		if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexRow+1][ghost.currIndexCol])){
+			ghost.currIndexRow++;
+		}
+	}
+}
+function moveBestHor(ghost,move){
+	if(move=="right"){
+		if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexRow][ghost.currIndexCol+1])){
+			ghost.currIndexCol++;
+		}
+
+	}
+	if(move=="left"){
+		if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexRow][ghost.currIndexCol-1])){
+			ghost.currIndexCol--;
+		}
+	}
+}
+function moveRand(ghost,move){
+	switch (move){
+		case 1: //up
+			if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexRow][ghost.currIndexCol - 1])) { ghost.currIndexCol--; }
+				break;
+
+		case 2: //down
+			if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexRow][ghost.currIndexCol + 1])) { ghost.currIndexCol++; }
+				break;
+
+		case 3: //left
+			if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexRow - 1][ghost.currIndexCol])) { ghost.currIndexRow--; }
+				break;
+
+		case 4: //right
+			if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexRow + 1][ghost.currIndexCol])) { ghost.currIndexRow++; }
+				break;
+	}
+}
