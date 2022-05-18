@@ -252,6 +252,11 @@ function switchContent(id)
 	window.clearInterval(interval);
 	if (id == "gamePage") { Start(); }
 	if (id == "welcomePage") { welcome_sound.play(); }
+	if (id != "welcomePage") 
+	{	
+		welcome_sound.pause();
+		welcome_sound.currentTime = 0; 
+	}
 
 	// Show selected one
 	target.style.display = 'block';
