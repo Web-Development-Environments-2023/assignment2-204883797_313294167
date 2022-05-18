@@ -717,10 +717,23 @@ function UpdatePosition()
 		fruit_sound.play();
 	}
 
-	else if ((board[shape.i][shape.j] == 20) || (board[shape.i][shape.j] == 60) || (board[shape.i][shape.j] == 61)  || (board[shape.i][shape.j] == 62) || (board[shape.i][shape.j] == 63) || (board[shape.i][shape.j] == 64) || (board[shape.i][shape.j] == 65) || (board[shape.i][shape.j] == 66)
-    || (board[shape.i][shape.j] == 21) || (board[shape.i][shape.j] == 70) || (board[shape.i][shape.j] == 71)  || (board[shape.i][shape.j] == 72) || (board[shape.i][shape.j] == 73) || (board[shape.i][shape.j] == 74) || (board[shape.i][shape.j] == 75) || (board[shape.i][shape.j] == 76)
-	|| (board[shape.i][shape.j] == 22) || (board[shape.i][shape.j] == 80) || (board[shape.i][shape.j] == 81)  || (board[shape.i][shape.j] == 82) || (board[shape.i][shape.j] == 83) || (board[shape.i][shape.j] == 84) || (board[shape.i][shape.j] == 85) || (board[shape.i][shape.j] == 86)
-	|| (board[shape.i][shape.j] == 23) || (board[shape.i][shape.j] == 90) || (board[shape.i][shape.j] == 91)  || (board[shape.i][shape.j] == 92) || (board[shape.i][shape.j] == 93) || (board[shape.i][shape.j] == 94) || (board[shape.i][shape.j] == 95) || (board[shape.i][shape.j] == 96)) //dead
+	else if((board[shape.i][shape.j] == 60) || (board[shape.i][shape.j] == 61)  || (board[shape.i][shape.j] == 62) || (board[shape.i][shape.j] == 70) || (board[shape.i][shape.j] == 71)  || (board[shape.i][shape.j] == 72)
+	|| (board[shape.i][shape.j] == 80) || (board[shape.i][shape.j] == 81)  || (board[shape.i][shape.j] == 82) || (board[shape.i][shape.j] == 90) || (board[shape.i][shape.j] == 91)  || (board[shape.i][shape.j] == 92)
+	){
+		ballsToEat--;
+		if(cant_die==false){
+			if(pacmanLives==1){
+				lose();
+			}
+			board[shape.i][shape.j] = 0;
+			restart();
+		}
+	}
+
+	else if ((board[shape.i][shape.j] == 20)  || (board[shape.i][shape.j] == 63) || (board[shape.i][shape.j] == 64) || (board[shape.i][shape.j] == 65) || (board[shape.i][shape.j] == 66)
+    || (board[shape.i][shape.j] == 21) || (board[shape.i][shape.j] == 73) || (board[shape.i][shape.j] == 74) || (board[shape.i][shape.j] == 75) || (board[shape.i][shape.j] == 76)
+	|| (board[shape.i][shape.j] == 22) || (board[shape.i][shape.j] == 83) || (board[shape.i][shape.j] == 84) || (board[shape.i][shape.j] == 85) || (board[shape.i][shape.j] == 86)
+	|| (board[shape.i][shape.j] == 23) || (board[shape.i][shape.j] == 93) || (board[shape.i][shape.j] == 94) || (board[shape.i][shape.j] == 95) || (board[shape.i][shape.j] == 96)) //dead
 	{
 		if(cant_die==false){
 			if(pacmanLives==1){
