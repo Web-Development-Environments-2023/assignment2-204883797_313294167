@@ -67,6 +67,7 @@ var pacmanLives = 5;
 var slow = new Image();
 slow.src = 'images/slow.jpg'
 var slow_time=0;
+var cant_die=false;
 var slow_time_left=0;
 var move_speed=5;
 var flag_slow=false;
@@ -270,6 +271,8 @@ function Start()
 	interval = setInterval(UpdatePosition, intervalTime);
 }
 
+
+
 function restart(){
 	death_sound.play();
 	ghosts = [
@@ -312,9 +315,6 @@ function restart(){
 				board[col][row]=19
 			}
 			
-
-
-
 		}
 	}
 
@@ -322,7 +322,6 @@ function restart(){
 	board[emptyCell[0]][emptyCell[1]] = 2;
 	shape.i=emptyCell[0];
 	shape.j = emptyCell[1];
-
 			
 }
 
@@ -354,6 +353,7 @@ function Draw()
 		monster2.src = 'images/ghost_sick.jpg'
 		monster3.src = 'images/ghost_sick.jpg'
 		monster4.src = 'images/ghost_sick.jpg'
+		cant_die=true;
 		monster_time--;
 		if (monster_time==0) { eatCherry = false; }
 	}
@@ -363,6 +363,7 @@ function Draw()
 		monster2.src = 'images/pacman-monster2.png'
 		monster3.src = 'images/pacman-monster3.png'
 		monster4.src = 'images/pacman-monster4.png'
+		cant_die=false;
 	}
 
 	canvas.width = canvas.width; //clean board
@@ -565,19 +566,19 @@ function Draw()
 			{
 				context.drawImage(man, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 64))) //orange ghost
+			else if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 			{
 				context.drawImage(monster1, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 74))) //pink ghost
+			else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 76))) //pink ghost
 			{
 				context.drawImage(monster2, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 84))) //blue ghost
+			else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 86))) //blue ghost
 			{
 				context.drawImage(monster3, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 23 || board[col][row] == 33 || ((board[col][row] >= 90) && (board[col][row] <= 94))) //red ghost
+			else if (board[col][row] == 23 || board[col][row] == 33 || ((board[col][row] >= 90) && (board[col][row] <= 96))) //red ghost
 			{
 				context.drawImage(monster4, center.x-20, center.y-20);
 			}
@@ -716,16 +717,18 @@ function UpdatePosition()
 		fruit_sound.play();
 	}
 
-	else if ((board[shape.i][shape.j] == 20) || (board[shape.i][shape.j] == 60) || (board[shape.i][shape.j] == 61)  || (board[shape.i][shape.j] == 62) || (board[shape.i][shape.j] == 63) || (board[shape.i][shape.j] == 64)
-    || (board[shape.i][shape.j] == 21) || (board[shape.i][shape.j] == 70) || (board[shape.i][shape.j] == 71)  || (board[shape.i][shape.j] == 72) || (board[shape.i][shape.j] == 73) || (board[shape.i][shape.j] == 74)
-	|| (board[shape.i][shape.j] == 22) || (board[shape.i][shape.j] == 80) || (board[shape.i][shape.j] == 81)  || (board[shape.i][shape.j] == 82) || (board[shape.i][shape.j] == 83) || (board[shape.i][shape.j] == 84)
-	|| (board[shape.i][shape.j] == 23) || (board[shape.i][shape.j] == 90) || (board[shape.i][shape.j] == 91)  || (board[shape.i][shape.j] == 92) || (board[shape.i][shape.j] == 93) || (board[shape.i][shape.j] == 94)) //dead
+	else if ((board[shape.i][shape.j] == 20) || (board[shape.i][shape.j] == 60) || (board[shape.i][shape.j] == 61)  || (board[shape.i][shape.j] == 62) || (board[shape.i][shape.j] == 63) || (board[shape.i][shape.j] == 64) || (board[shape.i][shape.j] == 65) || (board[shape.i][shape.j] == 66)
+    || (board[shape.i][shape.j] == 21) || (board[shape.i][shape.j] == 70) || (board[shape.i][shape.j] == 71)  || (board[shape.i][shape.j] == 72) || (board[shape.i][shape.j] == 73) || (board[shape.i][shape.j] == 74) || (board[shape.i][shape.j] == 75) || (board[shape.i][shape.j] == 76)
+	|| (board[shape.i][shape.j] == 22) || (board[shape.i][shape.j] == 80) || (board[shape.i][shape.j] == 81)  || (board[shape.i][shape.j] == 82) || (board[shape.i][shape.j] == 83) || (board[shape.i][shape.j] == 84) || (board[shape.i][shape.j] == 85) || (board[shape.i][shape.j] == 86)
+	|| (board[shape.i][shape.j] == 23) || (board[shape.i][shape.j] == 90) || (board[shape.i][shape.j] == 91)  || (board[shape.i][shape.j] == 92) || (board[shape.i][shape.j] == 93) || (board[shape.i][shape.j] == 94) || (board[shape.i][shape.j] == 95) || (board[shape.i][shape.j] == 96)) //dead
 	{
-		if(pacmanLives==1){
-			lose();
+		if(cant_die==false){
+			if(pacmanLives==1){
+				lose();
+			}
+			board[shape.i][shape.j] = 0;
+			restart();
 		}
-		board[shape.i][shape.j] = 0;
-		restart();
 	}
 
 
@@ -941,6 +944,14 @@ function moveGhost(ghost)
 					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
 					break;
 
+				case 65: //back to slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
+					break;
+
+				case 66: //back to time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
+					break;
+
 				default:
 					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
 					break;
@@ -970,6 +981,14 @@ function moveGhost(ghost)
 
 				case 74: //back to character
 					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
+
+				case 75: //back to slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
+					break;
+
+				case 76: //back to time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
 					break;
 
 				default:
@@ -1003,6 +1022,14 @@ function moveGhost(ghost)
 					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
 					break;
 
+				case 85: //back to slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
+					break;
+
+				case 86: //back to time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
+					break;
+
 				default:
 					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
 					break;
@@ -1032,6 +1059,14 @@ function moveGhost(ghost)
 
 				case 94: //back to character
 					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
+					break;
+
+				case 95: //back to slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
+					break;
+
+				case 96: //back to time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
 					break;
 
 				default:
@@ -1083,7 +1118,6 @@ function moveGhost(ghost)
 				case 2: //dead
 					restart();
 					break;
-
 				
 				case 5: //15 point
 					board[ghost.currIndexCol][ghost.currIndexRow] = 61;
@@ -1099,6 +1133,14 @@ function moveGhost(ghost)
 
 				case 19: //character
 					board[ghost.currIndexCol][ghost.currIndexRow] = 64;
+					break;
+
+				case 50: //slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 65;
+					break;
+
+				case 52: //time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 66;
 					break;
 
 				default:
@@ -1137,6 +1179,14 @@ function moveGhost(ghost)
 					board[ghost.currIndexCol][ghost.currIndexRow] = 74;
 					break;
 
+				case 50: //slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 75;
+					break;
+
+				case 52: //time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 76;
+					break;
+
 				default:
 					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
 					break;
@@ -1171,6 +1221,14 @@ function moveGhost(ghost)
 
 				case 19: //character
 					board[ghost.currIndexCol][ghost.currIndexRow] = 84;
+					break;
+				
+				case 50: //slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 85;
+					break;
+
+				case 52: //time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 86;
 					break;
 
 				default:
@@ -1207,6 +1265,14 @@ function moveGhost(ghost)
 
 				case 19: //character
 					board[ghost.currIndexCol][ghost.currIndexRow] = 94;
+					break;
+
+				case 50: //slow
+					board[ghost.currIndexCol][ghost.currIndexRow] = 95;
+					break;
+
+				case 52: //time
+					board[ghost.currIndexCol][ghost.currIndexRow] = 96;
 					break;
 
 				default:
