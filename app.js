@@ -1,19 +1,25 @@
+import { Ghost, moveGhost } from "./ghost.js";
+import { moveMan, man_location } from "./man.js";
+import { ButtonChanger, ButtonSetter, ButtonShower, ButtonDefault } from "./buttons.js"
+import { drawPacman } from "./pacman.js"
+import { setKey } from "./keys.js";
+import { colorRandom, setBallsNum, setBallColor } from './balls.js'
+
+var keyUp = '38';
+var keyDown = '40';
+var keyRight = '39';
+var keyLeft = '37';
+var ghosts;
 var context;
 var shape = new Object();
-var man_location = new Object();
 var board;
 var score;
-var pacColor;
 var gameTime = 60;
 var startTime;
 var timeElapsed;
 var interval;
 var intervalTime = 120;
-var currentPage;
-var keyUp = '38';
-var keyDown = '40';
-var keyRight = '39';
-var keyLeft = '37';
+var keysDown;
 var ballsNum = 50;
 var fiveColor = 'plum'
 var fifteenColor = 'red'
@@ -22,9 +28,7 @@ var ballsToEat;
 var monster_time;
 var eatCherry=false;
 var man_alive=true;
-var monster_can_be_eat = 0;
 var monstersNum = 4;
-var rand=0
 var pacmanDirection='right';
 var cornerTopLeft = new Image();
 cornerTopLeft.src = 'images/pacmanAssets/pipeCorner1.png'
@@ -62,7 +66,7 @@ var monster3 = new Image();
 monster3.src = 'images/pacman-monster3.png'
 var monster4 = new Image();
 monster4.src = 'images/pacman-monster4.png'
-move_man = 0;
+var move_man = 0;
 var pacmanLives = 5;
 var slow = new Image();
 slow.src = 'images/slow.jpg'
@@ -81,36 +85,189 @@ clock.src = 'images/clock.jpg'
 var slow_cell_j;
 var clock_eat=0;
 
-class Ghost
+var setRandomSettings = document.getElementById('setRandomSettings');
+setRandomSettings.addEventListener("click", function()
 {
-	constructor(name, startIndexCol, startIndexRow, speed, id, srcImage)
+	randomSelectSettings();
+})
+
+var setMonstersButton = document.getElementById('setMonsters');
+setMonstersButton.addEventListener("click", function()
+{
+	setMonsters();
+})
+
+var clearTimeButton = document.getElementById('clearTimeButton');
+clearTimeButton.addEventListener("click", function()
+{
+	clearBoxes['enterTime'];
+})
+
+var setTimeButton = document.getElementById('setTimeButton');
+setTimeButton.addEventListener("click", function()
+{
+	setTime();
+})
+
+var buttonsetBallsNum = document.getElementById('setBallsNum');
+buttonsetBallsNum.addEventListener("click", function()
+{
+	ballsNum = setBallsNum(ballsNum);
+})
+
+var buttonenterBallsCancel = document.getElementById('enterBallsCancel');
+buttonenterBallsCancel.addEventListener("click", function()
+{
+	clearBoxes(['enterBalls']);
+})
+
+var buttonsetBall5Color = document.getElementById('setBall5Color');
+buttonsetBall5Color.addEventListener("click", function()
+{
+	fiveColor = setBallColor(5, fiveColor, fifteenColor, twentyFiveColor);
+})
+
+var buttonsetBall15Color = document.getElementById('setBall15Color');
+buttonsetBall15Color.addEventListener("click", function()
+{
+	fifteenColor = setBallColor(15, fiveColor, fifteenColor, twentyFiveColor);
+})
+
+var buttonsetBall25Color = document.getElementById('setBall25Color');
+buttonsetBall25Color.addEventListener("click", function()
+{
+	twentyFiveColor = setBallColor(25, fiveColor, fifteenColor, twentyFiveColor);
+})
+
+var buttonChangers = [
+	new ButtonChanger('WelcomeRegisterButton', 'registerPage'), 
+	new ButtonChanger('WelcomeLoginButton', 'loginPage'), 
+	new ButtonChanger('welcomeButton', 'welcomePage'), 
+	new ButtonChanger('registerButton', 'registerPage'), 
+	new ButtonChanger('loginButton', 'loginPage'), 
+	new ButtonChanger('startGame', 'gamePage'), 
+]
+
+buttonChangers.forEach(button => {
+	var b = document.getElementById(button.name);
+	b.addEventListener("click", function()
 	{
-		this.name = name
-		this.startIndexCol = startIndexCol
-		this.startIndexRow = startIndexRow
-		this.currIndexCol = startIndexCol
-		this.currIndexRow = startIndexRow
-		this.image = new Image()
-		this.image.src = srcImage
-		this.speed = speed
-		this.id = id
-		this.move = 0
+		switchContent(button.changeTo);
+	});
+});
+
+var buttonDefaults = [
+	new ButtonDefault('setDefaultUp', 'up'),
+	new ButtonDefault('setDefaultLeft', 'left'),
+	new ButtonDefault('setDefaultRight', 'right'),
+	new ButtonDefault('setDefaultDown', 'down'),
+]
+
+buttonDefaults.forEach(button => {
+	var b = document.getElementById(button.name);
+	b.addEventListener("click", function()
+	{
+		setDefault(button.direction, false);
+	});
+});
+
+var buttonShowers = [
+	new ButtonShower('up', 'up'),
+	new ButtonShower('cancelUp', 'up'),
+	new ButtonShower('left', 'left'),
+	new ButtonShower('cancelLeft', 'left'),
+	new ButtonShower('right', 'right'),
+	new ButtonShower('cancelRight', 'right'),
+	new ButtonShower('down', 'down'),
+	new ButtonShower('cancelDown', 'down'),
+]
+
+buttonShowers.forEach(button => {
+	var b = document.getElementById(button.name);
+	b.addEventListener("click", function()
+	{
+		showSetter(button.direction)
+	});
+});
+
+var buttonSetters = [
+	new ButtonSetter('setKeyUp', 'up'),
+	new ButtonSetter('setKeyLeft', 'left'),
+	new ButtonSetter('setKeyRight', 'right'),
+	new ButtonSetter('setKeyDown', 'down'),
+]
+
+buttonSetters.forEach(button => {
+	var b = document.getElementById(button.name);
+	b.addEventListener("click", function()
+	{
+		setKey(button.direction, keyDown, keyLeft, keyRight, keyUp);
+	});
+});
+
+function showSetter(direction)
+{
+	var section;
+	switch (direction) 
+	{
+		case 'up':
+			section = document.getElementById("enterKeySectionUp");
+			break;
+
+		case 'left':
+			section = document.getElementById("enterKeySectionLeft");
+			break;
+
+		case 'right':
+			section = document.getElementById("enterKeySectionRight");
+			break;
+
+		case 'down':
+			section = document.getElementById("enterKeySectionDown");
+			break;
+	}
+	if (section.className == 'hide')
+	{
+		section.style.display = 'block';
+		section.className = 'show';
+	}
+	else
+	{
+		section.style.display = 'none';
+		section.className = 'hide';
 	}
 }
 
-
-
-function sound(src) 
+function switchContent(id) 
 {
-	this.sound = document.createElement("audio");
-	this.sound.src = src;
-	this.sound.setAttribute("preload", "auto");
-	this.sound.setAttribute("controls", "none");
-	this.sound.style.display = "none";
-	document.body.appendChild(this.sound);
-	this.play = function(){ this.sound.play(); }
-	this.stop = function() { this.sound.pause(); }
-}
+	const target = document.getElementById(id);
+	if (!target) return;
+	
+	// Hide all other div elements.
+	const divs = document.querySelectorAll('.toggle');
+	for (const div of divs) 
+	{
+	  div.style.display = 'none';
+	}
+	window.clearInterval(interval);
+	if (id == "gamePage") { Start(); }
+	if (id == "welcomePage") { welcome_sound.play(); }
+
+	// Show selected one
+	target.style.display = 'block';
+};
+
+// function sound(src) 
+// {
+// 	this.sound = document.createElement("audio");
+// 	this.sound.src = src;
+// 	this.sound.setAttribute("preload", "auto");
+// 	this.sound.setAttribute("controls", "none");
+// 	this.sound.style.display = "none";
+// 	document.body.appendChild(this.sound);
+// 	this.play = function(){ this.sound.play(); }
+// 	this.stop = function() { this.sound.pause(); }
+// }
 
 function Start() 
 {
@@ -120,18 +277,15 @@ function Start()
 		new Ghost('inky', 18, 18, 2, 22, 'images/pacman-monster3.png'),
 		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
 	]
-	gameTime=60
 	context = canvas.getContext("2d");
 	board = new Array();
 	score = 0;
 	clock_eat = 0;
 	ballsToEat = ballsNum;
-	pacColor = "yellow";
 	var cnt = 400;
 	slow_time = 0;
 	slow_time_left=0;
 	eatCherry=false;
-	rand=0
 	var food_remain_25 = ballsNum * 0.1;
 	food_remain_25 = Math.round(food_remain_25);
 	var food_remain_15 = ballsNum * 0.3;
@@ -271,9 +425,8 @@ function Start()
 	interval = setInterval(UpdatePosition, intervalTime);
 }
 
-
-
-function restart(){
+function restart()
+{
 	death_sound.play();
 	ghosts = [
 		new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png'),
@@ -345,6 +498,24 @@ function GetKeyPressed()
 	if (keysDown[keyRight]) { return 4; } //right
 }
 
+function drawBorder(context, image, locX, locY, size)
+{
+	var pattern = context.createPattern(image, 'repeat');
+	context.fillStyle = pattern;
+	context.beginPath();
+	context.rect(locX, locY, size, size);
+	context.stroke();
+	context.fill();
+}
+
+function drawBall(color, context, center)
+{
+	context.beginPath();
+	context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
+	context.fillStyle = color; //color
+	context.fill();
+}
+
 function Draw() 
 {
 	if (eatCherry == true)
@@ -397,174 +568,28 @@ function Draw()
 			var center = new Object();
 			center.x = col * 40 + 20;
 			center.y = row * 40 + 20;
-			if (board[col][row] == 2) //pacman
-			{
-				if(pacmanDirection=='up')
-				{
-					context.beginPath();
-					context.arc(center.x, center.y, 15, 1.65 * Math.PI, 3.35 * Math.PI); // half circle
-					context.lineTo(center.x, center.y);
-					context.fillStyle = pacColor; //color
-					context.fill();
-					context.beginPath();
-					context.arc(center.x + 7.5, center.y - 2.5, 2.5, 0, 2 * Math.PI); // circle
-					context.fillStyle = "black"; //color
-					context.fill();
-				}
+			var loc = board[col][row];
 
-				else if(pacmanDirection=='down')
-				{
-					context.beginPath();
-					context.arc(center.x, center.y, 15, 0.65 * Math.PI, 2.35 * Math.PI ); // half circle
-					context.lineTo(center.x, center.y);
-					context.fillStyle = pacColor; //color
-					context.fill();
-					context.beginPath();
-					context.arc(center.x + 7.5, center.y + 2.5, 2.5, 0, 2 * Math.PI); // circle
-					context.fillStyle = "black"; //color
-					context.fill();
-				}
-
-				else if(pacmanDirection=='right')
-				{
-					context.beginPath();
-					context.arc(center.x, center.y, 15, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
-					context.lineTo(center.x, center.y);
-					context.fillStyle = pacColor; //color
-					context.fill();
-					context.beginPath();
-					context.arc(center.x + 2.5, center.y - 7.5, 2.5, 0, 2 * Math.PI); // circle
-					context.fillStyle = "black"; //color
-					context.fill();
-				}
-
-				else if(pacmanDirection=='left')
-				{
-					context.beginPath();
-					context.arc(center.x, center.y, 15, 1.15 * Math.PI, 2.85 * Math.PI ); // half circle
-					context.lineTo(center.x, center.y);
-					context.fillStyle = pacColor; //color
-					context.fill();
-					context.beginPath();
-					context.arc(center.x - 2.5, center.y - 7.5, 2.5, 0, 2 * Math.PI); // circle
-					context.fillStyle = "black"; //color
-					context.fill();
-				}
-
-			} 
-			else if (board[col][row] == 1) //5 points ball
+			if (loc == 2) { drawPacman(pacmanDirection, context, center); } //pacman
+			else if (loc == 1) { drawBall(fiveColor, context, center); } //5 points ball
+			else if (loc == 5) { drawBall(fifteenColor, context, center); } //15 points ball
+			else if (loc == 6) { drawBall(twentyFiveColor, context, center); } //25 points ball
+			else if (loc == 4) { context.drawImage(connectorDown, center.x - 20, center.y - 20); } //wall top 3 way
+			else if (loc == 7) { drawBorder(context, cornerTopLeft, center.x - 20, center.y - 20, 40); } //wall corner top left
+			else if (loc == 8) { drawBorder(context, cornerBottomRight, center.x - 20, center.y - 20, 40); } //wall corner bottom right
+			else if (loc == 9) { drawBorder(context, cornerTopRight, 760, 0, 40); } //wall corner top right
+			else if (loc == 10) { drawBorder(context, cornerBottomLeft, 0, 760, 40); } //wall top and bottom border
+			else if (loc == 11) { drawBorder(context, bottomAndTopBorders, center.x - 20, center.y - 20, 40); } //wall top and bottom border
+			else if (loc == 12) { drawBorder(context, leftAndRightBorders, center.x - 20, center.y - 20, 40); } //wall right and left border
+			else if (loc == 13) { context.drawImage(leftCap, center.x - 20, center.y - 20); } //wall [
+			else if (loc == 14) { context.drawImage(rightCap, center.x - 20, center.y - 20); } //wall ]
+			else if (loc == 15) { context.drawImage(bottomCap, center.x - 20, center.y - 20); } //bottom cap
+			else if (loc == 16) { context.drawImage(topCap, center.x - 20, center.y - 20); } //top cap 
+			else if (loc == 17) { context.drawImage(cross, center.x - 20, center.y - 20); } //cross
+			else if (loc == 18) { context.drawImage(cherry, center.x-20, center.y-20); } //cherry
+			else if ((loc == 19) || (loc == 41) || (loc == 45) || (loc == 46) || (loc == 48) || (loc == 51) || (loc == 53)) //man
 			{
-				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = fiveColor; //color
-				context.fill();
-			} 
-			else if (board[col][row] == 5) //15 points ball
-			{
-				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = fifteenColor; //color
-				context.fill();
-			} 
-			else if (board[col][row] == 6) //25 points ball
-			{
-				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = twentyFiveColor; //color
-				context.fill();
-			} 
-			else if (board[col][row] == 4) //wall top 3 way
-			{
-				context.drawImage(connectorDown, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 7) //wall corner top left
-			{
-				var pattern = context.createPattern(cornerTopLeft, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(center.x - 20, center.y - 20, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 8) //wall corner bottom right
-			{
-				var pattern = context.createPattern(cornerBottomRight, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(center.x - 20, center.y - 20, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 9) //wall corner top right
-			{
-				var pattern = context.createPattern(cornerTopRight, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(760, 0, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 10) //wall corner bottom left
-			{
-				var pattern = context.createPattern(cornerBottomLeft, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(0, 760, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 11) //wall top and bottom border
-			{
-				var pattern = context.createPattern(bottomAndTopBorders, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(center.x - 20, center.y - 20, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 12) //wall right and left border
-			{
-				var pattern = context.createPattern(leftAndRightBorders, 'repeat');
-				context.fillStyle = pattern;
-				context.beginPath();
-				context.rect(center.x - 20, center.y - 20, 40, 40);
-				context.stroke();
-				// context.fillStyle = "grey"; //color
-				context.fill();
-			}
-			else if (board[col][row] == 13) //wall [
-			{
-				context.drawImage(leftCap, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 14) //wall ]
-			{
-				context.drawImage(rightCap, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 15) //bottom cap
-			{
-				context.drawImage(bottomCap, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 16) //top cap 
-			{
-				context.drawImage(topCap, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 17) //cross
-			{
-				context.drawImage(cross, center.x - 20, center.y - 20);
-			}
-			else if (board[col][row] == 18) //cherry
-			{
-				context.drawImage(cherry, center.x-20, center.y-20);
-			}
-			else if (board[col][row] == 19 || board[col][row] == 41 || board[col][row] == 45 || 
-				board[col][row] == 46 || board[col][row] == 48 || board[col][row] == 51 || board[col][row] == 53) //man
-			{
-				context.drawImage(man, center.x-20, center.y-20);
+					context.drawImage(man, center.x-20, center.y-20);
 			}
 			else if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 			{
@@ -717,35 +742,30 @@ function UpdatePosition()
 		fruit_sound.play();
 	}
 
-	else if((board[shape.i][shape.j] == 60) || (board[shape.i][shape.j] == 61)  || (board[shape.i][shape.j] == 62) || (board[shape.i][shape.j] == 70) || (board[shape.i][shape.j] == 71)  || (board[shape.i][shape.j] == 72)
-	|| (board[shape.i][shape.j] == 80) || (board[shape.i][shape.j] == 81)  || (board[shape.i][shape.j] == 82) || (board[shape.i][shape.j] == 90) || (board[shape.i][shape.j] == 91)  || (board[shape.i][shape.j] == 92)
+	else if(((board[shape.i][shape.j] >= 60) && (board[shape.i][shape.j] <= 62)) || ((board[shape.i][shape.j] >= 70) && (board[shape.i][shape.j] <= 72))
+	|| ((board[shape.i][shape.j] >= 80) && (board[shape.i][shape.j] <= 82)) || ((board[shape.i][shape.j] >= 90) && (board[shape.i][shape.j] <= 92))
 	){
 		ballsToEat--;
-		if(cant_die==false){
-			if(pacmanLives==1){
-				lose();
-			}
+		if(cant_die==false)
+		{
+			if (pacmanLives == 1) { lose(); }
 			board[shape.i][shape.j] = 0;
 			restart();
 		}
 	}
 
-	else if ((board[shape.i][shape.j] == 20)  || (board[shape.i][shape.j] == 63) || (board[shape.i][shape.j] == 64) || (board[shape.i][shape.j] == 65) || (board[shape.i][shape.j] == 66)
-    || (board[shape.i][shape.j] == 21) || (board[shape.i][shape.j] == 73) || (board[shape.i][shape.j] == 74) || (board[shape.i][shape.j] == 75) || (board[shape.i][shape.j] == 76)
-	|| (board[shape.i][shape.j] == 22) || (board[shape.i][shape.j] == 83) || (board[shape.i][shape.j] == 84) || (board[shape.i][shape.j] == 85) || (board[shape.i][shape.j] == 86)
-	|| (board[shape.i][shape.j] == 23) || (board[shape.i][shape.j] == 93) || (board[shape.i][shape.j] == 94) || (board[shape.i][shape.j] == 95) || (board[shape.i][shape.j] == 96)) //dead
+	else if ((board[shape.i][shape.j] == 20)  || ((board[shape.i][shape.j] >= 63) && (board[shape.i][shape.j] <= 66))
+    || (board[shape.i][shape.j] == 21) || ((board[shape.i][shape.j] >= 73) && (board[shape.i][shape.j] <= 76))
+	|| (board[shape.i][shape.j] == 22) || ((board[shape.i][shape.j] >= 83) && (board[shape.i][shape.j] <= 86))
+	|| (board[shape.i][shape.j] == 23) || ((board[shape.i][shape.j] >= 93) && (board[shape.i][shape.j] <= 96))) //dead
 	{
-		if(cant_die==false){
-			if(pacmanLives==1){
-				lose();
-			}
+		if(cant_die==false)
+		{
+			if(pacmanLives==1) { lose(); }
 			board[shape.i][shape.j] = 0;
 			restart();
 		}
 	}
-
-
-
 
 	if(flag_slow == true)
 	{
@@ -755,21 +775,18 @@ function UpdatePosition()
 			flag_slow=false;
 			move_speed=5;
 			move_man=0;
-			for(var i in ghosts){
-				ghosts[i].speed=ghosts[i].speed/2
-			}
+			for(var i in ghosts) { ghosts[i].speed=ghosts[i].speed/2 }
 		}
 	}
-
 
 	board[shape.i][shape.j] = 2;
 
 	//man move randomly
-	moveMan();
+	move_man = moveMan(man_alive, move_man, move_speed, board);
 
 	//move ghosts
 	for(var i in ghosts){
-		moveGhost(ghosts[i]);
+		moveGhost(board, ghosts[i], shape);
 	}
 
 	var currentTime = new Date();
@@ -788,651 +805,6 @@ function UpdatePosition()
 	else { Draw(); }
 }
 
-function moveMan()
-{
-	if(man_alive == true)
-	{
-		if(move_man == move_speed)
-		{
-			var loc = board[man_location.i][man_location.j];
-			switch(loc)
-			{
-				case 41: //back to 5
-					board[man_location.i][man_location.j]=1;
-					break;
-
-				case 45: //back to 15
-					board[man_location.i][man_location.j]=5;
-					break;
-
-				case 46: //back to 25
-					board[man_location.i][man_location.j]=6;
-					break;	
-
-				case 48: //back to cherry
-					board[man_location.i][man_location.j]=18;
-					break;
-
-				case 30: //back to monster1
-					board[man_location.i][man_location.j]=20;
-					break;
-
-				case 31: //back to monster2
-					board[man_location.i][man_location.j]=21;
-					break;
-
-				case 32: //back to monster3
-					board[man_location.i][man_location.j]=22;
-					break;
-
-				case 33: //back to monster4
-					board[man_location.i][man_location.j]=23;
-					break;
-
-				case 51: //back to slow
-					board[man_shape.i][man_shape.j] = 50
-
-				case 53: //back to clock
-					board[man_shape.i][man_shape.j] = 52
-
-				default:
-					board[man_location.i][man_location.j] = 0;
-					break;
-
-			}
-
-			manMovemin = Math.ceil(1);
-			manMovemaxin = Math.floor(4);
-			manMove = Math.floor(Math.random() * (manMovemaxin - manMovemin + 1)) + manMovemin;
-			
-			switch(manMove)
-			{
-				case 1: //up
-					if (man_location.j > 0 && !isBorder(board[man_location.i][man_location.j - 1])) { man_location.j--; }
-					break;
-
-				case 2: //down
-					if (man_location.j < 19 && !isBorder(board[man_location.i][man_location.j + 1])) { man_location.j++; }
-					break;
-
-				case 3: //left
-					if (man_location.i > 0 && !isBorder(board[man_location.i - 1][man_location.j])) { man_location.i--; }
-					break;
-
-				case 4: //right
-					if (man_location.i < 19 && !isBorder(board[man_location.i + 1][man_location.j])) { man_location.i++; }
-					break;
-
-			}
-
-			//check what was on that space 1,5,6,18,20,21,22,23
-			var newLoc = board[man_location.i][man_location.j];
-			switch(newLoc)
-			{
-				case 1: //5 point
-					board[man_location.i][man_location.j] = 41;
-					break;
-				
-				case 5: //15 point
-					board[man_location.i][man_location.j] = 45;
-					break;
-
-				case 6: //25 point
-					board[man_location.i][man_location.j] = 46;
-					break;
-
-				case 18: //cherry
-					board[man_location.i][man_location.j] = 48;
-					break;
-
-				case 20: //monster1
-					board[man_location.i][man_location.j] = 30;
-					break;
-				
-				case 21: //monster2
-					board[man_location.i][man_location.j] = 31;
-					break;
-
-				case 22: //monster3
-					board[man_location.i][man_location.j] = 32;
-					break;
-
-				case 23: //monster4
-					board[man_location.i][man_location.j] = 33;
-					break;
-
-				case 50: //slow
-					board[man_shape.i][man_shape.j] = 51;
-					break;
-
-				case 52: //clock
-					board[man_shape.i][man_shape.j] = 53;
-					break;
-
-				default:
-					board[man_location.i][man_location.j] = 19;
-					break;
-			}
-			move_man=0;
-		}
-		else { move_man++; }
-	}
-}
-
-function isGhost(ghost)
-{
-	if ((ghost == 20) || (ghost == 21) || (ghost == 22) || (ghost == 23)) { return true; }
-	else { return false;}
-}
-
-
-	
-
-function moveGhost(ghost)
-{
-	if (ghost.move == ghost.speed)
-	{
-		if (ghost.id == 20)
-		{
-			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(loc)
-			{
-				case 60: //back to 5
-					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
-					break;
-
-				case 61: //back to 15
-					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
-					break;
-
-				case 62: //back to 25
-					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
-					break;	
-
-				case 63: //back to cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
-					break;
-
-				case 64: //back to character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
-					break;
-
-				case 65: //back to slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
-					break;
-
-				case 66: //back to time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
-					break;
-			}
-		}
-
-		if (ghost.id == 21)
-		{
-			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(loc)
-			{
-				case 70: //back to 5
-					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
-					break;
-
-				case 71: //back to 15
-					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
-					break;
-
-				case 72: //back to 25
-					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
-					break;	
-
-				case 73: //back to cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
-					break;
-
-				case 74: //back to character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
-					break;
-
-				case 75: //back to slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
-					break;
-
-				case 76: //back to time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
-					break;
-			}
-		}
-
-		if (ghost.id == 22)
-		{
-			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(loc)
-			{
-				case 80: //back to 5
-					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
-					break;
-
-				case 81: //back to 15
-					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
-					break;
-
-				case 82: //back to 25
-					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
-					break;	
-
-				case 83: //back to cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
-					break;
-
-				case 84: //back to character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
-					break;
-
-				case 85: //back to slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
-					break;
-
-				case 86: //back to time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
-					break;
-			}
-		}
-
-		if (ghost.id == 23)
-		{
-			var loc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(loc)
-			{
-				case 90: //back to 5
-					board[ghost.currIndexCol][ghost.currIndexRow] = 1;
-					break;
-
-				case 91: //back to 15
-					board[ghost.currIndexCol][ghost.currIndexRow] = 5;
-					break;
-
-				case 92: //back to 25
-					board[ghost.currIndexCol][ghost.currIndexRow] = 6;
-					break;	
-
-				case 93: //back to cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 18;
-					break;
-
-				case 94: //back to character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 19;
-					break;
-
-				case 95: //back to slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 50;
-					break;
-
-				case 96: //back to time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 52;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = 0;
-					break;
-			}
-		}
-
-
-		ghostMoveMin = Math.ceil(1);
-		ghostMoveMax = Math.floor(4);
-		ghostMove = Math.floor(Math.random() * (ghostMoveMax - ghostMoveMin + 1)) + ghostMoveMin;
-		best_Horizontal=bestHorizontal(ghost.currIndexCol);
-		best_Vertical=bestVertical(ghost.currIndexRow);
-		if(rand==0){		
-			moveBestHor(ghost,best_Horizontal);
-			rand++;
-		}
-		else if(rand==1){
-			moveBestVer(ghost,best_Vertical);
-			rand++;
-		}
-		else if(rand==2 &&((best_Horizontal == "mid")||(best_Vertical=="mid"))){
-			moveRand(ghost,ghostMove)
-		}
-		else if(rand<4){
-			rand++;
-
-		}
-		else{
-			rand=0;
-		}		
-
-	
-
-
-
-		
-		if (ghost.id == 20)
-		{
-			//check what was on that space 1,5,6,18,20,21,22,23
-			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(newLoc)
-			{
-				case 1: //5 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 60; 
-					break;
-
-				case 2: //dead
-					restart();
-					break;
-				
-				case 5: //15 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 61;
-					break;
-
-				case 6: //25 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 62;
-					break;
-
-				case 18: //cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 63;
-					break;
-
-				case 19: //character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 64;
-					break;
-
-				case 50: //slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 65;
-					break;
-
-				case 52: //time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 66;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
-					break;
-			}
-		}
-
-		if (ghost.id == 21)
-		{
-			//check what was on that space 1,5,6,18,20,21,22,23
-			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(newLoc)
-			{
-				case 1: //5 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 70; 
-					break;
-
-				case 2: //dead
-					restart();
-					break;
-				
-				case 5: //15 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 71;
-					break;
-
-				case 6: //25 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 72;
-					break;
-
-				case 18: //cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 73;
-					break;
-
-				case 19: //character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 74;
-					break;
-
-				case 50: //slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 75;
-					break;
-
-				case 52: //time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 76;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
-					break;
-			}
-		}
-
-		if (ghost.id == 22)
-		{
-			//check what was on that space 1,5,6,18,20,21,22,23
-			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(newLoc)
-			{
-				case 1: //5 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 80; 
-					break;
-
-				case 2: //dead
-					restart();
-					break;
-				
-				case 5: //15 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 81;
-					break;
-
-				case 6: //25 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 82;
-					break;
-
-				case 18: //cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 83;
-					break;
-
-				case 19: //character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 84;
-					break;
-				
-				case 50: //slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 85;
-					break;
-
-				case 52: //time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 86;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
-					break;
-			}
-		}
-
-		if (ghost.id == 23)
-		{
-			//check what was on that space 1,5,6,18,20,21,22,23
-			var newLoc = board[ghost.currIndexCol][ghost.currIndexRow];
-			switch(newLoc)
-			{
-				case 1: //5 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 90; 
-					break;
-
-				case 2: //dead
-					restart();
-					break;
-				
-				case 5: //15 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 91;
-					break;
-
-				case 6: //25 point
-					board[ghost.currIndexCol][ghost.currIndexRow] = 92;
-					break;
-
-				case 18: //cherry
-					board[ghost.currIndexCol][ghost.currIndexRow] = 93;
-					break;
-
-				case 19: //character
-					board[ghost.currIndexCol][ghost.currIndexRow] = 94;
-					break;
-
-				case 50: //slow
-					board[ghost.currIndexCol][ghost.currIndexRow] = 95;
-					break;
-
-				case 52: //time
-					board[ghost.currIndexCol][ghost.currIndexRow] = 96;
-					break;
-
-				default:
-					board[ghost.currIndexCol][ghost.currIndexRow] = ghost.id;
-					break;
-			}
-		}
-		
-		ghost.move = 0
-	}
-	else { ghost.move++; }
-}	
-
-function switchContent(id) 
-{
-	const target = document.getElementById(id);
-	if (!target) return;
-	
-	// Hide all other div elements.
-	const divs = document.querySelectorAll('.toggle');
-	for (const div of divs) {
-	  div.style.display = 'none';
-	}
-	window.clearInterval(interval);
-	if (id == "gamePage") { Start(); }
-	if (id == "welcomePage") { welcome_sound.play(); }
-
-	// Show selected one
-	target.style.display = 'block';
-
-}
-
-function sound(src) 
-{
-	this.sound = document.createElement("audio");
-	this.sound.src = src;
-	this.sound.setAttribute("preload", "auto");
-	this.sound.setAttribute("controls", "none");
-	this.sound.style.display = "none";
-	document.body.appendChild(this.sound);
-	this.play = function() { this.sound.play(); }
-	this.stop = function() { this.sound.pause(); }
-  }
-
-function showSetter(direction)
-{
-	var section;
-	switch (direction) 
-	{
-		case 'up':
-			section = document.getElementById("enterKeySectionUp");
-			break;
-
-		case 'left':
-			section = document.getElementById("enterKeySectionLeft");
-			break;
-
-		case 'right':
-			section = document.getElementById("enterKeySectionRight");
-			break;
-
-		case 'down':
-			section = document.getElementById("enterKeySectionDown");
-			break;
-	}
-	if (section.className == 'hide')
-	{
-		section.style.display = 'block';
-		section.className = 'show';
-	}
-	else
-	{
-		section.style.display = 'none';
-		section.className = 'hide';
-	}
-}
-
-function validateChar(char)
-{
-	if (char == '')
-	{ 
-		alert("no key selected"); 
-		return false;
-	}
-	if (char.length > 1)
-	{
-		alert("please select only one character"); 
-		return false;
-	} 
-	return true;
-}
-
-function setKey(direction)
-{
-	var char;
-	var button;
-	var status;
-	switch(direction)
-	{
-		case 'up':
-			char = document.getElementById("enterKeyUp").value.substring(0,1).toUpperCase();
-			status = validateChar(char)
-			if (status == true)
-			{
-				keyUp = String(document.getElementById("enterKeyUp").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("up");
-				button.textContent = "up : " + char;
-			}
-			break;
-
-		case 'left':
-			char = document.getElementById("enterKeyLeft").value.substring(0,1).toUpperCase();
-			status = validateChar(char)
-			if (status == true)
-			{
-				keyLeft = String(document.getElementById("enterKeyLeft").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("left");
-				button.textContent = "left : " + char;
-			}
-			break;
-
-		case 'right':
-			char = document.getElementById("enterKeyRight").value.substring(0,1).toUpperCase();
-			status = validateChar(char)
-			if (status == true)
-			{
-				keyRight = String(document.getElementById("enterKeyRight").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("right");
-				button.textContent = "right : " + char;
-			}
-			break;
-
-		case 'down':
-			char = document.getElementById("enterKeyDown").value.substring(0,1).toUpperCase();
-			status = validateChar(char)
-			if (status == true)
-			{
-				keyDown = String(document.getElementById("enterKeyDown").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("down");
-				button.textContent = "down : " + char;
-			}
-			break;	
-		
-	}
-	showSetter(direction)
-}
-
 function setDefault(direction, isRandom)
 {
 	var button;
@@ -1441,7 +813,7 @@ function setDefault(direction, isRandom)
 		case 'up':
 			keyUp = '38';
 			button = document.getElementById("up");
-			button.textContent = "UP : " + "↑";
+			button.textContent = "up : " + "↑";
 			break;
 
 		case 'left':
@@ -1465,37 +837,10 @@ function setDefault(direction, isRandom)
 	if (isRandom == false) { showSetter(direction); }
 }
 
-function setBallsNum()
-{
-	var inputBalls = document.getElementById("enterBalls").value;
-	if (/^\d+$/.test(inputBalls))
-	{
-		inputBalls = parseInt(document.getElementById("enterTime").value);
-	}
-	if (isNaN(inputBalls) || !(Number.isInteger(inputBalls)))
-	{
-		alert("please choose an integer number between 50 and 90");
-		clearBoxes(['enterBalls'])
-	}
-	else if (inputBalls < 50)
-	{
-		alert("please choose at least 50 balls");
-		clearBoxes(['enterBalls'])
-	}
-	else if (inputBalls > 90)
-	{
-		alert("please choose at most 90 balls");
-		clearBoxes(['enterBalls'])
-	}
-	else 
-	{
-		ballsNum = inputBalls; 
-		alert("balls num successfully set to: " + ballsNum)
-	}
-}
 
 function clearBoxes(ids)
 {
+	var i;
 	for (i=0; i<ids.length; i++)
 	{
 		var boxToClear = document.getElementById(ids[i]);
@@ -1503,29 +848,7 @@ function clearBoxes(ids)
 	}
 }
 
-function setBallColor(pointsAmount)
-{
-	switch (pointsAmount)
-	{
-		case 5:
-			fiveColor = document.getElementById("fivePointsBall").value;
-			if (fiveColor == 'select color') {fiveColor = 'plum'; }
-			alert('5 point ball color is set to: ' + fiveColor)
-			break;
-		
-		case 15:
-			fifteenColor = document.getElementById("fifteenPointsBall").value;
-			if (fifteenColor == 'select color') {fifteenColor = 'red'; }
-			alert('15 point ball color is set to: ' + fifteenColor)
-			break;
-
-		case 25:
-			twentyFiveColor = document.getElementById("twentyFivePointsBall").value;
-			if (twentyFiveColor == 'select color') {twentyFiveColor = 'green'; }
-			alert('25 point ball color is set to: ' + twentyFiveColor)
-			break;
-	}
-}
+function lose() { alert("You lost"); }
 
 function setTime()
 {
@@ -1587,363 +910,29 @@ function randomSelectSettings()
 	setDefault('left');
 	setDefault('right');
 	setDefault('down');
-	minBallsNum = Math.ceil(50);
-    maxBallsNum = Math.floor(90);
+	var minBallsNum = Math.ceil(50);
+    var maxBallsNum = Math.floor(90);
 	ballsNum = Math.floor(Math.random() * (maxBallsNum - minBallsNum + 1)) + minBallsNum;
 	var inputBalls = document.getElementById("enterBalls");
 	inputBalls.value = ballsNum;
-	minTime = Math.ceil(60);
-    maxTime = Math.floor(120);
+	var minTime = Math.ceil(60);
+    var maxTime = Math.floor(120);
 	gameTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
 	var time = document.getElementById("enterTime");
 	time.value = gameTime;
-	minMonsters = Math.ceil(1);
-    maxMonsters = Math.floor(4);
+	var minMonsters = Math.ceil(1);
+    var maxMonsters = Math.floor(4);
 	monstersNum = Math.floor(Math.random() * (maxMonsters - minMonsters + 1)) + minMonsters;
 	var inputMonsters = document.getElementById("enterMonsters");
 	inputMonsters.value = monstersNum;
-	colorRandomMin = Math.ceil(1);
-	colorRandomMax = Math.floor(27);
-	colorNum = Math.floor(Math.random() * (colorRandomMax - colorRandomMin + 1)) + colorRandomMin;
-	colorRandom(colorNum);
-}
-
-function colorRandom(num)
-{
-	var fivePointsBall = document.getElementById("fivePointsBall");
-	var fifteenPointsBall = document.getElementById("fifteenPointsBall");
-	var twentyFivePointsBall = document.getElementById("twentyFivePointsBall");
-
-	switch (num){
-		case 1:
-			fiveColor = 'plum'
-			fifteenColor = 'red'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'green';
-			break;
-			
-		case 2:
-			fiveColor = 'plum'
-			fifteenColor = 'red'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 3:
-			fiveColor = 'plum'
-			fifteenColor = 'red'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 4:
-			fiveColor = 'plum'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 5:
-			fiveColor = 'plum'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 6:
-			fiveColor = 'plum'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 7:
-			fiveColor = 'plum'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 8:
-			fiveColor = 'plum'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-		
-		case 9:
-			fiveColor = 'plum'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'plum';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-		
-		case 10:
-			fiveColor = 'purple'
-			fifteenColor = 'red'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'green';
-			break;
-		
-		case 11:
-			fiveColor = 'purple'
-			fifteenColor = 'red'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-		
-		case 12:
-			fiveColor = 'purple'
-			fifteenColor = 'red'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 13:
-			fiveColor = 'purple'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 14:
-			fiveColor = 'purple'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 15:
-			fiveColor = 'purple'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 16:
-			fiveColor = 'purple'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 17:
-			fiveColor = 'purple'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 18:
-			fiveColor = 'purple'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'purple';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 19:
-			fiveColor = 'pink'
-			fifteenColor = 'red'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 20:
-			fiveColor = 'pink'
-			fifteenColor = 'red'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 21:
-			fiveColor = 'pink'
-			fifteenColor = 'red'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'red';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 22:
-			fiveColor = 'pink'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 23:
-			fiveColor = 'pink'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 24:
-			fiveColor = 'pink'
-			fifteenColor = 'orange'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'orange';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-
-		case 25:
-			fiveColor = 'pink'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'green'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'green';
-			break;
-
-		case 26:
-			fiveColor = 'pink'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'DarkSeaGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'DarkSeaGreen';
-			break;
-
-		case 27:
-			fiveColor = 'pink'
-			fifteenColor = 'Tomato'
-			twentyFiveColor = 'SpringGreen'
-			fivePointsBall.value = 'pink';
-			fifteenPointsBall.value = 'Tomato';
-			twentyFivePointsBall.value = 'SpringGreen';
-			break;
-	}
-
+	var colorRandomMin = Math.ceil(1);
+	var colorRandomMax = Math.floor(27);
+	var colorNum = Math.floor(Math.random() * (colorRandomMax - colorRandomMin + 1)) + colorRandomMin;
+	var colorsDict = colorRandom(colorNum, fiveColor, fifteenColor, twentyFiveColor);
+	fiveColor = colorsDict['5'];
+	fifteenColor = colorsDict['15'];
+	twentyFiveColor = colorsDict['25'];
 }
 
 
-
-
-
-function bestHorizontal(ghostCol){
-	if(ghostCol>shape.i){
-		return "left";
-	}
-	else if(ghostCol<shape.i){
-		return "right";
-	}
-	else{
-		return "mid";
-	}
-
-}
-
-
-
-function bestVertical(ghostRow){
-	if(ghostRow>shape.j){
-		return "up";
-	}
-	else if(ghostRow<shape.j){
-		return "down";
-	}
-	else{
-		return "mid";
-	}
-	
-}
-
-
-function moveBestVer(ghost,move){
-
-
-	if(move=="up"){
-		if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow-1])){
-			ghost.currIndexRow--;
-		}
-
-	}
-	if(move=="down"){
-		if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow+1])){
-			ghost.currIndexRow++;
-		}
-	}
-}
-function moveBestHor(ghost,move){
-	if(move=="right"){
-		if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol+1][ghost.currIndexRow])){
-			ghost.currIndexCol++;
-		}
-
-	}
-	if(move=="left"){
-		if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol-1][ghost.currIndexRow])){
-			ghost.currIndexCol--;
-		}
-	}
-}
-function moveRand(ghost,move){
-	switch (move){
-		case 1: //up
-			if (ghost.currIndexRow > 0 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow-1])) { ghost.currIndexRow--; }
-				break;
-
-		case 2: //down
-			if (ghost.currIndexRow < 19 && !isBorder(board[ghost.currIndexCol][ghost.currIndexRow+1])) { ghost.currIndexRow++; }
-				break;
-
-		case 3: //left
-			if (ghost.currIndexCol > 0 && !isBorder(board[ghost.currIndexCol-1][ghost.currIndexRow])) { ghost.currIndexCol--; }
-				break;
-
-		case 4: //right
-			if (ghost.currIndexCol < 19 && !isBorder(board[ghost.currIndexCol+1][ghost.currIndexRow])) { ghost.currIndexCol++; }
-				break;
-	}
-}
-
-function lose(){
-	alert("You lost");
-}
-
-
+export {showSetter, isBorder, restart, clearBoxes}
