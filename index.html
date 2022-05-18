@@ -30,34 +30,42 @@
 		<div id="content">
 			<div id="welcomePage" class="toggle">
 				<!-- <audio id="welcomeMusic" src="sounds/pacman_beginning.mp3"></audio>  -->
-				<img id="pacmanWelcome" src="backgrounds\pacman-background.gif"></img> <br>
+				<img id="pacmanWelcome" src="backgrounds\pacman-background.gif"></img>   
 				<button id="WelcomeRegisterButton">Register</button>
 				<button id="WelcomeLoginButton">Login</button> 
 			</div> 
 
 			<div id="loginPage" class="toggle" style="display: none;">
-				<form class="login-form">
-					<label for="userNameLog"><b>User Name:</b></label>
-					<input type="text" placeholder="Enter User Name" name="userNameLog" id="userNameLog" required></input>
-					<label for="passwordLog"><b>Password:</b></label>
-					<input type="password" placeholder="Enter Password" name="passwordLog" id="passwordLog" required></input>
-					<button type="reset" id="reset-button">Reset</button>
-					<button name="login-button" type="button" id="login-button">Login</button>
-				</form>
+				<div id="formContainer">
+					<h1>Login</h1> <br>
+					<form class="login-form">
+						<label id="userNameLbl" for="userNameLog"><b>User Name:</b></label><br>
+						<input type="text" placeholder="Enter User Name" name="userNameLog" id="userNameLog" required></input><br><br>
+						<label id="passwordLbl" for="passwordLog"><b>Password:</b></label><br>
+						<input type="password" placeholder="Enter Password" name="passwordLog" id="passwordLog" required></input><br><br>
+						<button type="reset" id="reset-button">Reset</button>
+						<button name="login-button" type="button" id="login-button">Login</button>
+					</form>
+				</div>
 			</div>
 
 			<div id="registerPage" class="toggle" style="display: none;">
 				<form id="signUp-form">
-					<label for="userNameReg"><b>User Name:</b></label>
+					<label id="userNameRegLbl" for="userNameReg"><b>User Name:</b></label> <br>
 					<input type="text" placeholder="Enter User Name" name="userNameReg" id="userNameReg" required></input>
-					<label for="passwordReg"><b>Password:</b></label>
+					<br> <br>
+					<label id="passwordRegLbl" for="passwordReg"><b>Password:</b></label> <br>
 					<input type="text" placeholder="Enter Password" name="passwordReg" id="passwordReg" required></input>
-					<label for="name"><b>Enter Full Name:</b></label>
+					<br> <br>
+					<label id="NameLbl" for="name"><b>Enter Full Name:</b></label> <br>
 					<input type="text" placeholder="Enter Your Name" name="name" id="name" required></input>
-					<label for="email"><b>Enter Email:</b></label>
+					<br> <br>
+					<label id="emailLbl" for="email"><b>Enter Email:</b></label> <br>
 					<input type="text" placeholder="Enter Email" name="email" id="email" required>
-					<label for="birthDay"><b>Select Your Birth Date:</b></label> 	
+					<br> <br>
+					<label id="birthdayLbl" for="birthDay"><b>Select Your Birth Date:</b></label>  <br>	
 					<input type="date" id="birthday" name="birthday">
+					<br> <br>
 					<button type="reset" id="reset-button">Reset</button>
 					<button name="submit-button" type="button" id="submit-button">Submit</button>
 				</form>
@@ -65,11 +73,12 @@
 
 			<div id="settingsPage" class="toggle" style="display: none;">
 				<h2> settings </h2>
-				<div id="settingKeys"> <p> click the keys buttons to set a key for movement: <br>
+				<div id="settingKeys"> 
+					<p> click the keys buttons to set a key for movement: <br>
 					<button id="up">up : &#8593;</button>
 					<div id="enterKeySectionUp" style="display: none;" class="hide">
 						<label>Type the keyboard key for moving up:</label>
-						<input type="text" id="enterKeyUp"></input><br>
+						<input type="text" id="enterKeyUp"></input>
 						<button id="setKeyUp">ok</button><button id="cancelUp">cancel</button><button id="setDefaultUp">default</button>
 					</div> 
 					<button id="left">left : &#8592;</button>
@@ -91,11 +100,12 @@
 						<input type="text" id="enterKeyDown"></input><br>
 						<button id="setKeyDown">ok</button><button id="cancelDown">cancel</button><button id="setDefaultDown">default</button> 
 					</div>
-				</p> </div>
+				</p> 
+				</div>
 				<div id="settingBallsNum">
 					<p>
 						choose the amount of balls for the game(50-90): <br>
-						<input type="text" id="enterBalls"></input>
+						<input type="text" id="enterBalls"></input> <br>
 						<button id="setBallsNum">ok</button><button id="enterBallsCancel">cancel</button>
 					</p>
 				</div>
@@ -167,21 +177,31 @@
 			</div>
 
 			<div id="gamePage" class="toggle" hidden>
-				<canvas id="canvas" height="800" width="800"></canvas>
-				<div id="score">
-					<label id="scoreLabel" for="lblScore">SCORE:</label>
-					<input id="lblScore" type="text" />
+				<div id="game">
+					<canvas id="canvas" height="800" width="800"></canvas>
+					<div id="score">
+						<label id="scoreLabel" for="lblScore">SCORE:</label>
+						<input id="lblScore" type="text" />
+					</div>
+					<div id="time">
+						<label id="timeLabel" for="lblTime">TIME:</label>
+						<input id="lblTime" type="text" />
+					</div>
+					<div id="lives">
+						<label id="livesLabel" for="lblPacmanLives">LIVES:</label>
+						<input id="lblPacmanLives" type="text" />
+					</div>
 				</div>
-				<div id="time">
-					<label id="timeLabel" for="lblTime">TIME:</label>
-					<input id="lblTime" type="text" />
-				</div>
-				<div id="lives">
-					<label id="livesLabel" for="lblPacmanLives">LIVES:</label>
-					<input id="lblPacmanLives" type="text" />
+				<div id="gameSettings">
+					<button id="upGame"></button> 
+					<button id="leftGame"></button>
+					<button id="rightGame"></button>
+					<button id="downGame"></button>
+					
 				</div>
 			</div>
-			</div>
+
+		</div>
 
 		<div id="footer">
 			<p id="contactUs">Contact Us At: leahma@post.bgu.ac.il</p>

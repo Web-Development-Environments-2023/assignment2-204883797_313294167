@@ -828,13 +828,13 @@ function setDefault(direction, isRandom)
 			break;
 
 		case 'right':
-			keyLeft = '39';
+			keyRight = '39';
 			button = document.getElementById("right");
 			button.textContent = "right : " + "→";
 			break;
 
 		case 'down':
-			keyLeft = '40';
+			keyDown = '40';
 			button = document.getElementById("down");
 			button.textContent = "down : " + "↓";
 			break;
