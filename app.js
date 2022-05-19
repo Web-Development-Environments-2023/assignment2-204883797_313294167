@@ -91,6 +91,7 @@ var slow_cell_j;
 var clock_eat=0;
 var startMove = false;
 var userNameLog;
+var starttimer=false;
 
 var loginButton = document.getElementById('login-button');
 loginButton.addEventListener("click", function()
@@ -450,9 +451,12 @@ function Start()
 		},
 		false
 	);
-	interval = setInterval(UpdatePosition, intervalTime);
+
+	
 	drawSetting();
 	drawUserDetails();
+	interval = setInterval(UpdatePosition, intervalTime);
+
 }
 
 function restart()
@@ -696,6 +700,11 @@ function UpdatePosition()
 {
 	board[shape.i][shape.j] = 0;
 	var x = GetKeyPressed();
+	if((1<=x || x<=4)&&(starttimer==false)){
+		starttimer=true;
+		startTime = new Date();
+
+	}
 	if (x == 1) //move up
 	{
 		pacmanDirection='up'
@@ -858,8 +867,11 @@ function UpdatePosition()
 			moveGhost(board, ghosts[i], shape);
 		}
 	}
-	var currentTime = new Date();
-	timeElapsed = (currentTime - startTime) / 1000;
+	if(starttimer==true){
+		var currentTime = new Date();
+		timeElapsed = (currentTime - startTime) / 1000;
+
+	}
 
 	if (timeElapsed > gameTime)
 	{
