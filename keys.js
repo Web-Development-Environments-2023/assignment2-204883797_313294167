@@ -1,4 +1,9 @@
-import { showSetter, clearBoxes } from './app.js'
+import { showSetter } from './app.js'
+
+var leftChar = "←";
+var rightChar = "→";
+var downChar = "↓";
+var upChar = "↑";
 
 function setKey(direction, keyDown, keyLeft, keyRight, keyUp)
 {
@@ -12,8 +17,9 @@ function setKey(direction, keyDown, keyLeft, keyRight, keyUp)
 			status = validateChar(char)
 			if (status == true)
 			{
+                upChar = char;
 				keyUp = String(document.getElementById("enterKeyUp").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("up");
+				button = document.getElementById("keyUpButton");
 				button.textContent = "up : " + char;
 			}
 			break;
@@ -23,8 +29,9 @@ function setKey(direction, keyDown, keyLeft, keyRight, keyUp)
 			status = validateChar(char)
 			if (status == true)
 			{
+                leftChar = char;
 				keyLeft = String(document.getElementById("enterKeyLeft").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("left");
+				button = document.getElementById("keyLeftButton");
 				button.textContent = "left : " + char;
 			}
 			break;
@@ -34,8 +41,9 @@ function setKey(direction, keyDown, keyLeft, keyRight, keyUp)
 			status = validateChar(char)
 			if (status == true)
 			{
+                rightChar = char;
 				keyRight = String(document.getElementById("enterKeyRight").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("right");
+				button = document.getElementById("keyRightButton");
 				button.textContent = "right : " + char;
 			}
 			break;
@@ -45,14 +53,16 @@ function setKey(direction, keyDown, keyLeft, keyRight, keyUp)
 			status = validateChar(char)
 			if (status == true)
 			{
+                downChar = char;
 				keyDown = String(document.getElementById("enterKeyDown").value.toUpperCase().charCodeAt(0));
-				button = document.getElementById("down");
+				button = document.getElementById("keyDownButton");
 				button.textContent = "down : " + char;
 			}
 			break;	
 		
 	}
 	showSetter(direction)
+    return {'up' : keyUp, 'down' : keyDown, 'right' : keyRight, 'left' : keyLeft}
 }
 
 function validateChar(char)
@@ -71,4 +81,4 @@ function validateChar(char)
 	return true;
 }
 
-export {setKey}
+export {setKey, upChar, downChar, leftChar, rightChar }

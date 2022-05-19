@@ -24,7 +24,7 @@
 			<button id="welcomeButton">Welcome</button>
 			<button id="registerButton">Register</button>
 			<button id="loginButton">Login</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">About us</button>		
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">About us</button>	
 		</div>
 
 		<div id="content">
@@ -51,11 +51,12 @@
 
 			<div id="registerPage" class="toggle" style="display: none;">
 				<form id="signUp-form">
+					<h1>Register</h1> <br>
 					<label id="userNameRegLbl" for="userNameReg"><b>User Name:</b></label> <br>
 					<input type="text" placeholder="Enter User Name" name="userNameReg" id="userNameReg" required></input>
 					<br> <br>
 					<label id="passwordRegLbl" for="passwordReg"><b>Password:</b></label> <br>
-					<input type="text" placeholder="Enter Password" name="passwordReg" id="passwordReg" required></input>
+					<input type="password" placeholder="Enter Password" name="passwordReg" id="passwordReg" required></input>
 					<br> <br>
 					<label id="NameLbl" for="name"><b>Enter Full Name:</b></label> <br>
 					<input type="text" placeholder="Enter Your Name" name="name" id="name" required></input>
@@ -72,46 +73,60 @@
 			</div>
 
 			<div id="settingsPage" class="toggle" style="display: none;">
-				<h2> settings </h2>
-				<div id="settingKeys"> 
-					<p> click the keys buttons to set a key for movement: <br>
-					<button id="up">up : &#8593;</button>
-					<div id="enterKeySectionUp" style="display: none;" class="hide">
-						<label>Type the keyboard key for moving up:</label>
-						<input type="text" id="enterKeyUp"></input>
-						<button id="setKeyUp">ok</button><button id="cancelUp">cancel</button><button id="setDefaultUp">default</button>
-					</div> 
-					<button id="left">left : &#8592;</button>
-					<div id="enterKeySectionLeft" style="display: none;" class="hide">
-						<label>Type the keyboard key for moving left:</label>
-						<input type="text" id="enterKeyLeft"></input><br>
-						<button id="setKeyLeft">ok</button><button id="cancelLeft">cancel</button><button id="setDefaultLeft">default</button> 
+				<h2> settings </h2> <br>
+				<div id="right" class="column">
+					<div id="settingTime">
+						<label>select time (in seconds) per game:</label>
+						<br>
+						<input type="text" id="enterTime"></input><br>
+						<button id="setTimeButton">ok</button><button id="clearTimeButton">cancel</button>
+					</div> <br> <br>
+					<div id="settingMonsters">
+						<label>select amount of monsters per game: </label>
+						<br>
+						<input type="text" id="enterMonsters"></input> <br>
+						<button id="setMonsters">ok</button><button id="clearSetMonsters">cancel</button>
+						<br> <br>
 					</div>
-					<button id="right">right : &#8594;</button> 
-					<div id="enterKeySectionRight" style="display: none;" class="hide">
-						<label>Type the keyboard key for moving right:</label>
-						<input type="text" id="enterKeyRight"></input><br>
-						<button id="setKeyRight">ok</button><button id="cancelRight">cancel</button><button id="setDefaultRight">default</button> 
+					<div id="settingKeys"> 
+						<label> click the keys buttons to set a key for movement: </label> <br>
+						<div id="keysContainer">
+							<button id="keyUpButton">up : &#8593;</button>
+							<div id="enterKeySectionUp" style="display: none;" class="hide">
+								<label>Type the keyboard key for moving up:</label>
+								<input type="text" id="enterKeyUp"></input><br>
+								<button id="setKeyUp">ok</button><button id="cancelUp">cancel</button><button id="setDefaultUp">default</button>
+							</div> <br>
+							<button id="keyLeftButton">left : &#8592;</button>
+							<div id="enterKeySectionLeft" style="display: none;" class="hide">
+								<label>Type the keyboard key for moving left:</label>
+								<input type="text" id="enterKeyLeft"></input><br>
+								<button id="setKeyLeft">ok</button><button id="cancelLeft">cancel</button><button id="setDefaultLeft">default</button> 
+							</div>
+							<button id="keyRightButton">right : &#8594;</button> 
+							<div id="enterKeySectionRight" style="display: none;" class="hide">
+								<label>Type the keyboard key for moving right:</label>
+								<input type="text" id="enterKeyRight"></input><br>
+								<button id="setKeyRight">ok</button><button id="cancelRight">cancel</button><button id="setDefaultRight">default</button> 
+							</div> 
+							<br> 
+							<button id="keyDownButton">down : &#8595;</button>
+							<div id="enterKeySectionDown" style="display: none;" class="hide">
+								<label>Type the keyboard key for moving down:</label>
+								<input type="text" id="enterKeyDown"></input><br>
+								<button id="setKeyDown">ok</button><button id="cancelDown">cancel</button><button id="setDefaultDown">default</button> 
+							</div> 
+						</div>
 					</div>
-					<br>
-					<button id="down">down : &#8595;</button>
-					<div id="enterKeySectionDown" style="display: none;" class="hide">
-						<label>Type the keyboard key for moving down:</label>
-						<input type="text" id="enterKeyDown"></input><br>
-						<button id="setKeyDown">ok</button><button id="cancelDown">cancel</button><button id="setDefaultDown">default</button> 
-					</div>
-				</p> 
-				</div>
-				<div id="settingBallsNum">
-					<p>
-						choose the amount of balls for the game(50-90): <br>
+				</div> 
+				<div id="left" class="column">
+					<div id="settingBallsNum">
+						<label>choose the amount of balls for  <br>  the game(50-90): </label><br>
 						<input type="text" id="enterBalls"></input> <br>
 						<button id="setBallsNum">ok</button><button id="enterBallsCancel">cancel</button>
-					</p>
-				</div>
-				<div id="settingBallsColors">
-					<p>
-						choose the color for each ball: <br>
+					</div> <br> <br>
+					<div id="settingBallsColors">
+						<label>choose the color for each ball:</label> <br>
 						<label id="fivePoints">Select for 5 points:</label> 
 						<!-- <br> <input type="color" value='#0000FF'> -->
 						<br/> <select name="fivePointsBall" id="fivePointsBall">
@@ -137,24 +152,14 @@
 							<option style="color: SpringGreen;">SpringGreen</option>
 						</select>
 						<button id="setBall25Color">ok</button>
-					</p>
+						<br> <br>
+					</div> 
+				</div> <br>
+				<img id="pacmanSettings" src="images\pacman-settings.gif"></img> 
+				<div id="settingsButtons" class="column">
+					<button id="setRandomSettings">choose random <br> values</button>
+					<button id='startGame'>start game </button>
 				</div>
-				<div id="settingTime">
-					<p>
-						select time (in seconds) per game: <br>
-						<input type="text" id="enterTime"></input>
-						<button id="setTimeButton">ok</button><button id="clearTimeButton">cancel</button>
-					</p>
-				</div>
-				<div id="settingMonsters">
-					<p>
-						select amount of monsters per game: <br>
-						<input type="text" id="enterMonsters"></input>
-						<button id="setMonsters">ok</button><button onclick="clearBoxes(['enterMonsters'])">cancel</button>
-					</p>
-				</div>
-				<button id="setRandomSettings">choose random values</button>
-				<button id='startGame'>start game</button>
 			</div>
 				
 				<!-- Modal -->
@@ -168,38 +173,40 @@
 						</button>
 					  </div>
 					  <div class="modal-body">
-						bla bla
-					  </div>
+						Creators Names: Leah & Shachar <br>
 
+					  </div>
 					</div>
 				  </div>
 				</div>
-			</div>
+		
 
 			<div id="gamePage" class="toggle" hidden>
-				<div id="game">
-					<canvas id="canvas" height="800" width="800"></canvas>
-					<div id="score">
-						<label id="scoreLabel" for="lblScore">SCORE:</label>
-						<input id="lblScore" type="text" />
+				<div id="gameColumn" class="gameColumn">
+					<div id="userDetails">
+						<canvas id="canvasUserDetails" height="50" width="800"></canvas>
 					</div>
-					<div id="time">
-						<label id="timeLabel" for="lblTime">TIME:</label>
-						<input id="lblTime" type="text" />
-					</div>
-					<div id="lives">
-						<label id="livesLabel" for="lblPacmanLives">LIVES:</label>
-						<input id="lblPacmanLives" type="text" />
+					<div id="game" class="gameColumn">
+						<canvas id="canvas" height="800" width="800"></canvas>
+						<div id="score">
+							<label id="scoreLabel" for="lblScore">SCORE:</label>
+							<input id="lblScore" type="text" />
+						</div>
+						<div id="time">
+							<label id="timeLabel" for="lblTime">TIME:</label>
+							<input id="lblTime" type="text" />
+						</div>
+						<div id="lives">
+							<label id="livesLabel" for="lblPacmanLives">LIVES:</label>
+							<input id="lblPacmanLives" type="text" />
+						</div>
 					</div>
 				</div>
-				<div id="gameSettings">
-					<button id="upGame"></button> 
-					<button id="leftGame"></button>
-					<button id="rightGame"></button>
-					<button id="downGame"></button>
-					
+				<div id="gameSettings"  class="gameColumn">
+					<canvas id="canvasSettings" height="800" width="400"></canvas>
 				</div>
 			</div>
+			
 
 		</div>
 

@@ -36,5 +36,14 @@ class ButtonDefault
 	}
 }
 
-export {ButtonChanger, ButtonShower, ButtonSetter, ButtonDefault }
+class ButtonClear
+{
+    constructor(name, textFeild)
+	{
+		this.name = name
+        this.textFeild = textFeild
+	}
+}
+
+export {ButtonChanger, ButtonShower, ButtonSetter, ButtonDefault, ButtonClear }
 

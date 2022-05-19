@@ -1,14 +1,13 @@
 import { Ghost, moveGhost } from "./ghost.js";
 import { moveMan, man_location } from "./man.js";
-import { ButtonChanger, ButtonSetter, ButtonShower, ButtonDefault } from "./buttons.js"
+import { ButtonChanger, ButtonSetter, ButtonShower, ButtonDefault, ButtonClear } from "./buttons.js"
 import { drawPacman } from "./pacman.js"
-import { setKey } from "./keys.js";
+import { setKey, upChar, downChar, leftChar, rightChar } from "./keys.js";
 import { colorRandom, setBallsNum, setBallColor } from './balls.js'
 
-var keyUp = '38';
-var keyDown = '40';
-var keyRight = '39';
-var keyLeft = '37';
+var contextUser;
+var contextSettings;
+
 var ghosts;
 var context;
 var shape = new Object();
@@ -19,6 +18,10 @@ var startTime;
 var timeElapsed;
 var interval;
 var intervalTime = 120;
+var keyUp = '38';
+var keyDown = '40';
+var keyRight = '39';
+var keyLeft = '37';
 var keysDown;
 var ballsNum = 50;
 var fiveColor = 'plum'
@@ -54,6 +57,8 @@ var topCap = new Image();
 topCap.src = 'images/pacmanAssets/capTop.png'
 var cross = new Image();
 cross.src = 'images/pacmanAssets/pipeCross.png'
+var block = new Image();
+block.src = 'images/pacmanAssets/block.png'
 var cherry = new Image();
 cherry.src = 'images/cherry.png'
 var man = new Image();
@@ -84,6 +89,14 @@ var clock = new Image();
 clock.src = 'images/clock.jpg'
 var slow_cell_j;
 var clock_eat=0;
+var startMove = false;
+var userNameLog;
+
+var loginButton = document.getElementById('login-button');
+loginButton.addEventListener("click", function()
+{
+	userNameLog = document.getElementById('userNameLog').value;
+})
 
 var setRandomSettings = document.getElementById('setRandomSettings');
 setRandomSettings.addEventListener("click", function()
@@ -97,12 +110,6 @@ setMonstersButton.addEventListener("click", function()
 	setMonsters();
 })
 
-var clearTimeButton = document.getElementById('clearTimeButton');
-clearTimeButton.addEventListener("click", function()
-{
-	clearBoxes['enterTime'];
-})
-
 var setTimeButton = document.getElementById('setTimeButton');
 setTimeButton.addEventListener("click", function()
 {
@@ -113,12 +120,6 @@ var buttonsetBallsNum = document.getElementById('setBallsNum');
 buttonsetBallsNum.addEventListener("click", function()
 {
 	ballsNum = setBallsNum(ballsNum);
-})
-
-var buttonenterBallsCancel = document.getElementById('enterBallsCancel');
-buttonenterBallsCancel.addEventListener("click", function()
-{
-	clearBoxes(['enterBalls']);
 })
 
 var buttonsetBall5Color = document.getElementById('setBall5Color');
@@ -138,6 +139,20 @@ buttonsetBall25Color.addEventListener("click", function()
 {
 	twentyFiveColor = setBallColor(25, fiveColor, fifteenColor, twentyFiveColor);
 })
+
+var buttonClearers = [
+	new ButtonClear('enterBallsCancel', 'enterBalls'),
+	new ButtonClear('clearTimeButton', 'enterTime'),
+	new ButtonClear('clearSetMonsters', 'enterMonsters'),
+]
+
+buttonClearers.forEach(button => {
+	var b = document.getElementById(button.name);
+	b.addEventListener("click", function()
+	{
+		clearBoxes([button.textFeild]);
+	});
+});
 
 var buttonChangers = [
 	new ButtonChanger('WelcomeRegisterButton', 'registerPage'), 
@@ -172,13 +187,13 @@ buttonDefaults.forEach(button => {
 });
 
 var buttonShowers = [
-	new ButtonShower('up', 'up'),
+	new ButtonShower('keyUpButton', 'up'),
 	new ButtonShower('cancelUp', 'up'),
-	new ButtonShower('left', 'left'),
+	new ButtonShower('keyLeftButton', 'left'),
 	new ButtonShower('cancelLeft', 'left'),
-	new ButtonShower('right', 'right'),
+	new ButtonShower('keyRightButton', 'right'),
 	new ButtonShower('cancelRight', 'right'),
-	new ButtonShower('down', 'down'),
+	new ButtonShower('keyDownButton', 'down'),
 	new ButtonShower('cancelDown', 'down'),
 ]
 
@@ -201,7 +216,11 @@ buttonSetters.forEach(button => {
 	var b = document.getElementById(button.name);
 	b.addEventListener("click", function()
 	{
-		setKey(button.direction, keyDown, keyLeft, keyRight, keyUp);
+		var keysDict = setKey(button.direction, keyDown, keyLeft, keyRight, keyUp);
+		keyUp = keysDict['up'];
+		keyDown = keysDict['down'];
+		keyRight = keysDict['right'];
+		keyLeft = keysDict['left'];
 	});
 });
 
@@ -284,6 +303,7 @@ function Start()
 	]
 	context = canvas.getContext("2d");
 	board = new Array();
+	startMove = false;
 	score = 0;
 	clock_eat = 0;
 	ballsToEat = ballsNum;
@@ -317,20 +337,23 @@ function Start()
 		board[col] = new Array();
 		for (var row = 0; row < 20; row++) 
 		{
-			if ((col == 6 && row == 2) || (col == 12 && row == 12)) { board[col][row] = 4; } //top 3 way
-			else if ((col == 5 && row == 2) || (col == 11 && row == 12) || (col == 2 && row == 10) || (col == 11 && row == 6)) {board[col][row] = 13; } //wall [
-			else if (col == 3 && row == 9) {board[col][row] = 16; } //top cap
-			else if ((col == 7 && row == 2) || (col == 13 && row == 12) || (col == 4 && row == 10) || (col == 13 && row == 6)) {board[col][row] = 14; } //wall ]
-			else if ((col == 6 && row == 3) || (col == 12 && row == 13) || col == 3 && row == 11) {board[col][row] = 15; } //bottom cap
-			else if ((col == 3 && row == 10)) {board[col][row] = 17} //cross
+			if ((col == 5 && row == 14)) { board[col][row] = 4; } //top 3 way
+			else if ((col == 2 && row == 7) || (col == 4 && row == 14) || (col == 9 && row == 3) || (col == 14 && row == 4) || ((col == 15 && row == 8)) 
+				|| (col == 12 && row == 9)) {board[col][row] = 13; } //wall [
+			else if ((col == 3 && row == 6) || (col == 12 && row == 15) || ((col == 16 && row == 7)) || (col == 17 && row == 3)
+				|| (col == 7 && row == 4)) {board[col][row] = 16; } //top cap
+			else if ((col == 4 && row == 7) || (col == 6 && row == 14) || (col == 13 && row == 9) || (col == 10 && row == 3) || (col == 17 && row == 8)) {board[col][row] = 14; } //wall ]
+			else if ((col == 3 && row == 8) || (col == 7 && row == 8) || (col == 12 && row == 16) || (col == 16 && row == 9) || (col == 5 && row == 15)) {board[col][row] = 15; } //bottom cap
+			else if ((col == 3 && row == 7) || (col == 16 && row == 8)) {board[col][row] = 17} //cross
+			else if ((col == 8 && row == 12) || (col == 16 && row == 14)) {board[col][row] = 100} //block
 			//wall corners:
 			else if ((col == 0 && row == 0)) {board[col][row] = 7; } // top left
-			else if ((col == 19 && row == 19)) {board[col][row] = 8; } //botoom right
-			else if (col == 0 && row == 19) {board[col][row] = 9; }
-			else if (col == 19 && row == 0) {board[col][row] = 10; }
+			else if ((col == 19 && row == 19) || ((col == 17 && row == 4))) {board[col][row] = 8; } //botoom right
+			else if ((col == 0 && row == 19)) {board[col][row] = 9; } // bottom left
+			else if ((col == 19 && row == 0) || (col == 11 && row == 4)) {board[col][row] = 10; } //top right
 			//wall borders:
-			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 12 && row == 6)) {board[col][row] = 11; }
-			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 12 && row == 6)) {board[col][row] = 12; }
+			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 15 && row == 4) || (col == 16 && row == 4)) {board[col][row] = 11; }
+			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 7 && row == 5) || (col == 7 && row == 6) || (col == 7 && row == 7)) {board[col][row] = 12; }
 			//monsters:
 			else if (col == 1 && row == 1) {board[col][row] = 20;}
 			else if ((col == 18 && row == 1) && ((monstersNum == 2) || (monstersNum == 3) || (monstersNum == 4))) {board[col][row] = 21;}
@@ -428,6 +451,8 @@ function Start()
 		false
 	);
 	interval = setInterval(UpdatePosition, intervalTime);
+	drawSetting();
+	drawUserDetails();
 }
 
 function restart()
@@ -447,7 +472,8 @@ function restart()
 	{
 		for (var row = 0; row < 20; row++) 
 		{
-			if(board[col][row]==2){//clear pacman
+			if(board[col][row]==2) //clear pacman
+			{
 				board[shape.i][shape.j] = 0
 			}
 			else if((board[col][row]==20)||(board[col][row]==21)||(board[col][row]==22)||(board[col][row]==23)){//clear monsters
@@ -521,6 +547,38 @@ function drawBall(color, context, center)
 	context.fill();
 }
 
+function drawSetting()
+{
+	contextSettings = canvasSettings.getContext("2d");
+	contextSettings.clearRect(0, 0, canvasSettings.width, canvasSettings.height);
+	contextSettings.font = "30px Dancing Script";
+	contextSettings.fillStyle = "blue";
+	contextSettings.fillText("Settings", 200, 50);
+	contextSettings.fillStyle = "white";
+	contextSettings.textAlign = "center";
+	contextSettings.font = "20px Dancing Script";
+	contextSettings.fillText(`Total Time: ${gameTime}`, 250, 100);
+	contextSettings.fillText(`Number Of Ghosts: ${monstersNum}`, 250, 150);
+	contextSettings.fillText(`Key Up: ${upChar}`, 250, 200);
+	contextSettings.fillText(`Key Left: ${leftChar}`, 250, 250);
+	contextSettings.fillText(`Key Right: ${rightChar}`, 250, 300);
+	contextSettings.fillText(`Key Down: ${downChar}`, 250, 350);
+	contextSettings.fillText(`Total Balls: ${ballsNum}`, 250, 400);
+	contextSettings.fillText(`5 Points Ball Color: ${fiveColor}`, 250, 450);
+	contextSettings.fillText(`15 Points Ball Color: ${fifteenColor}`, 250, 500);
+	contextSettings.fillText(`25 Points Ball Color: ${twentyFiveColor}`, 250, 550);
+}
+
+function drawUserDetails()
+{
+	contextUser = canvasUserDetails.getContext("2d");
+	contextUser.clearRect(0, 0, canvasUserDetails.width, canvasUserDetails.height);
+	contextUser.font = "15px Dancing Script";
+	contextUser.fillStyle = "white";
+	contextUser.textAlign = "center";
+	contextUser.fillText(`User Name: ${userNameLog}`, 150, 25);
+}
+
 function Draw() 
 {
 	if (eatCherry == true)
@@ -545,7 +603,7 @@ function Draw()
 	canvas.width = canvas.width; //clean board
 	lblPacmanLives.value = pacmanLives;
 	lblScore.value = score;
-	lblTime.value = (gameTime - timeElapsed).toFixed(3);
+	lblTime.value = (gameTime - timeElapsed).toFixed(3); 
 	if (lblTime.value * 1000 < intervalTime) { lblTime.value = 0; }
 	if (lblTime.value < 40 && slow_time == 0)
 	{
@@ -620,13 +678,17 @@ function Draw()
 			{
 				context.drawImage(clock, center.x-20, center.y-20);
 			}
+			else if (board[col][row] == 100)
+			{
+				context.drawImage(block, center.x-20, center.y-20);
+			}
 		}
 	}
 }
 
 function isBorder(border)
 {
-	if ((border == 4) || (border == 7) || ((border >= 8) && (border <= 17))) { return true; }
+	if ((border == 4) || (border == 7) || ((border >= 8) && (border <= 17)) || (border == 100)) { return true; }
 	else { return false;}
 }
 
@@ -638,25 +700,25 @@ function UpdatePosition()
 	{
 		pacmanDirection='up'
 		chomp_sound.play();
-		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; }
+		if (shape.j > 0 && !isBorder(board[shape.i][shape.j - 1])) { shape.j--; startMove = true;}
 	}
 	if (x == 2) //move down
 	{
 		pacmanDirection='down'
 		chomp_sound.play();
-		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; }
+		if (shape.j < 19 && !isBorder(board[shape.i][shape.j + 1])) { shape.j++; startMove = true;}
 	}
 	if (x == 3) //move left
 	{
 		pacmanDirection='left'
 		chomp_sound.play();
-		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; }
+		if (shape.i > 0 && !isBorder(board[shape.i - 1][shape.j])) { shape.i--; startMove = true;}
 	}
 	if (x == 4) //move right
 	{
 		pacmanDirection='right'
 		chomp_sound.play();
-		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; }
+		if (shape.i < 19 && !isBorder(board[shape.i + 1][shape.j])) { shape.i++; startMove = true;}
 	}
 	if (board[shape.i][shape.j] == 1) //eat 5 points ball
 	{ 
@@ -789,11 +851,13 @@ function UpdatePosition()
 	//man move randomly
 	move_man = moveMan(man_alive, move_man, move_speed, board);
 
-	//move ghosts
-	for(var i in ghosts){
-		moveGhost(board, ghosts[i], shape);
+	if (startMove == true)
+	{
+		//move ghosts
+		for(var i in ghosts){
+			moveGhost(board, ghosts[i], shape);
+		}
 	}
-
 	var currentTime = new Date();
 	timeElapsed = (currentTime - startTime) / 1000;
 
@@ -812,31 +876,31 @@ function UpdatePosition()
 
 function setDefault(direction, isRandom)
 {
-	var button;
+	
 	switch(direction)
 	{
 		case 'up':
 			keyUp = '38';
-			button = document.getElementById("up");
-			button.textContent = "up : " + "↑";
+			var button = document.getElementById("keyUpButton");
+			button.innerText  = "up : ↑";
 			break;
 
 		case 'left':
 			keyLeft = '37';
-			button = document.getElementById("left");
-			button.textContent = "left : " + "←";
+			var button = document.getElementById("keyLeftButton");
+			button.innerText  = "left : ←";
 			break;
 
 		case 'right':
 			keyRight = '39';
-			button = document.getElementById("right");
-			button.textContent = "right : " + "→";
+			var button = document.getElementById("keyRightButton");
+			button.innerText  = "right : →";
 			break;
 
 		case 'down':
 			keyDown = '40';
-			button = document.getElementById("down");
-			button.textContent = "down : " + "↓";
+			var button = document.getElementById("keyDownButton");
+			button.innerText  = "down : ↓";
 			break;
 	}
 	if (isRandom == false) { showSetter(direction); }
@@ -911,10 +975,10 @@ function setMonsters()
 
 function randomSelectSettings()
 {
-	setDefault('up');
-	setDefault('left');
-	setDefault('right');
-	setDefault('down');
+	setDefault('up', true);
+	setDefault('left', true);
+	setDefault('right', true);
+	setDefault('down', true);
 	var minBallsNum = Math.ceil(50);
     var maxBallsNum = Math.floor(90);
 	ballsNum = Math.floor(Math.random() * (maxBallsNum - minBallsNum + 1)) + minBallsNum;
