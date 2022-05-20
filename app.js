@@ -317,13 +317,18 @@ function switchContent(id)
 // 	this.stop = function() { this.sound.pause(); }
 // }
 
+
+
+
+
 function Start() 
 {
 	ghosts = [
-		new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png'),
+		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png'),
 		new Ghost('pinky', 18, 1, 2, 21, 'images/pacman-monster2.png'),
 		new Ghost('inky', 18, 18, 2, 22, 'images/pacman-monster3.png'),
-		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
+		new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png')
+
 	]
 	gameMusic.play();
 	playPauseMusic.textContent = "ON";
@@ -487,10 +492,11 @@ function restart()
 {
 	death_sound.play();
 	ghosts = [
-		new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png'),
+		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png'),
 		new Ghost('pinky', 18, 1, 2, 21, 'images/pacman-monster2.png'),
 		new Ghost('inky', 18, 18, 2, 22, 'images/pacman-monster3.png'),
-		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
+		new Ghost('blinky', 1, 18, 1, 23, 'images/pacman-monster4.png')
+
 	]
 
 	score=score-10;
@@ -686,22 +692,71 @@ function Draw()
 			{
 					context.drawImage(man, center.x-20, center.y-20);
 			}
-			else if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
-			{
-				context.drawImage(monster1, center.x-20, center.y-20);
+
+
+
+
+			if (monstersNum==1){
+				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
+				{
+						context.drawImage(monster1, center.x-20, center.y-20);
+				}
 			}
-			else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 76))) //pink ghost
-			{
-				context.drawImage(monster2, center.x-20, center.y-20);
+
+			else if (monstersNum==2){
+				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
+				{
+						context.drawImage(monster1, center.x-20, center.y-20);
+				}
+				else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 76))) //pink ghost
+				{
+					context.drawImage(monster2, center.x-20, center.y-20);
+				}
 			}
-			else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 86))) //blue ghost
-			{
-				context.drawImage(monster3, center.x-20, center.y-20);
+
+			else if (monstersNum==3){
+				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
+				{
+						context.drawImage(monster1, center.x-20, center.y-20);
+				}
+				else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 76))) //pink ghost
+				{
+					context.drawImage(monster2, center.x-20, center.y-20);
+				}
+
+				else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 86))) //blue ghost
+				{
+					context.drawImage(monster3, center.x-20, center.y-20);
+				}
 			}
-			else if (board[col][row] == 23 || board[col][row] == 33 || ((board[col][row] >= 90) && (board[col][row] <= 96))) //red ghost
-			{
-				context.drawImage(monster4, center.x-20, center.y-20);
+
+			else if (monstersNum==4){
+				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
+				{
+						context.drawImage(monster1, center.x-20, center.y-20);
+				}
+				else if (board[col][row] == 21 || board[col][row] == 31 || ((board[col][row] >= 70) && (board[col][row] <= 76))) //pink ghost
+				{
+					context.drawImage(monster2, center.x-20, center.y-20);
+				}
+
+				else if (board[col][row] == 22 || board[col][row] == 32 || ((board[col][row] >= 80) && (board[col][row] <= 86))) //blue ghost
+				{
+					context.drawImage(monster3, center.x-20, center.y-20);
+				}
+
+				else if (board[col][row] == 23 || board[col][row] == 33 || ((board[col][row] >= 90) && (board[col][row] <= 96))) //red ghost
+				{
+					context.drawImage(monster4, center.x-20, center.y-20);
+				}
 			}
+
+
+
+
+
+
+
 			else if (board[col][row] == 50)
 			{
 				context.drawImage(slow, center.x-20, center.y-20);
@@ -812,7 +867,8 @@ function UpdatePosition()
 		move_speed=10;
 		slow_time_left=100;
 		flag_slow=true;
-		for(var i in ghosts){
+		for(var i=0; i<monstersNum;i++)
+		{
 			ghosts[i].speed=ghosts[i].speed*2
 		}
 	}
@@ -823,7 +879,8 @@ function UpdatePosition()
 		move_speed=10;
 		slow_time_left=100;
 		flag_slow=true;
-		for(var i in ghosts){
+		for(var i=0; i<monstersNum;i++)
+		{
 			ghosts[i].speed=ghosts[i].speed*2
 		}
 	}
@@ -883,7 +940,8 @@ function UpdatePosition()
 			flag_slow=false;
 			move_speed=5;
 			move_man=0;
-			for(var i in ghosts) { ghosts[i].speed=ghosts[i].speed/2 }
+			for(var i=0; i<monstersNum;i++)
+			{ ghosts[i].speed=ghosts[i].speed/2 }
 		}
 	}
 
@@ -895,7 +953,7 @@ function UpdatePosition()
 	if (startMove == true)
 	{
 		//move ghosts
-		for(var i in ghosts)
+		for(var i=0; i<monstersNum;i++)
 		{
 			moveGhost(board, ghosts[i], shape);
 		}
