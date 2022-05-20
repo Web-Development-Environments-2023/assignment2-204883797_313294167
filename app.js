@@ -4,10 +4,10 @@ import { ButtonChanger, ButtonSetter, ButtonShower, ButtonDefault, ButtonClear }
 import { drawPacman } from "./pacman.js"
 import { setKey, upChar, downChar, leftChar, rightChar } from "./keys.js";
 import { colorRandom, setBallsNum, setBallColor } from './balls.js'
+import { isBorder, drawBorder } from "./border.js";
 
 var contextUser;
 var contextSettings;
-
 var ghosts;
 var context;
 var shape = new Object();
@@ -85,6 +85,7 @@ var welcome_sound = new Audio('sounds/pacman_beginning.mp3');
 var death_sound = new Audio('sounds/pacman_death.mp3');
 var fruit_sound = new Audio('sounds/pacman_eatfruit.mp3');
 var chomp_sound = new Audio('sounds/pacman_chomp.mp3');
+var gameMusic = document.getElementById('gameMusic');
 var clock = new Image();
 clock.src = 'images/clock.jpg'
 var slow_cell_j;
@@ -277,6 +278,11 @@ function switchContent(id)
 		welcome_sound.pause();
 		welcome_sound.currentTime = 0; 
 	}
+	if (id != "gamePage") 
+	{	
+		gameMusic.pause();
+		gameMusic.currentTime = 0; 
+	}
 
 	// Show selected one
 	target.style.display = 'block';
@@ -302,6 +308,7 @@ function Start()
 		new Ghost('inky', 18, 18, 2, 22, 'images/pacman-monster3.png'),
 		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
 	]
+	gameMusic.play();
 	context = canvas.getContext("2d");
 	board = new Array();
 	startMove = false;
@@ -532,15 +539,15 @@ function GetKeyPressed()
 	if (keysDown[keyRight]) { return 4; } //right
 }
 
-function drawBorder(context, image, locX, locY, size)
-{
-	var pattern = context.createPattern(image, 'repeat');
-	context.fillStyle = pattern;
-	context.beginPath();
-	context.rect(locX, locY, size, size);
-	context.stroke();
-	context.fill();
-}
+// function drawBorder(context, image, locX, locY, size)
+// {
+// 	var pattern = context.createPattern(image, 'repeat');
+// 	context.fillStyle = pattern;
+// 	context.beginPath();
+// 	context.rect(locX, locY, size, size);
+// 	context.stroke();
+// 	context.fill();
+// }
 
 function drawBall(color, context, center)
 {
@@ -687,12 +694,6 @@ function Draw()
 			}
 		}
 	}
-}
-
-function isBorder(border)
-{
-	if ((border == 4) || (border == 7) || ((border >= 8) && (border <= 17)) || (border == 100)) { return true; }
-	else { return false;}
 }
 
 function UpdatePosition() 

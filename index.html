@@ -28,7 +28,9 @@
 
 		<div id="content">
 			<div id="welcomePage" class="toggle">
-				<!-- <audio id="welcomeMusic" src="sounds/pacman_beginning.mp3"></audio>  -->
+				<audio id="welcomeMusic" loop autoplay>
+					<source src="sounds/pacman_beginning.mp3" type="audio/mpeg">
+				</audio>
 				<img id="pacmanWelcome" src="backgrounds\pacman-background.gif"></img>   
 				<button id="WelcomeRegisterButton">Register</button>
 				<button id="WelcomeLoginButton">Login</button> 
@@ -157,7 +159,7 @@
 				<img id="pacmanSettings" src="images\pacman-settings.gif"></img> 
 				<div id="settingsButtons" class="column">
 					<button id="setRandomSettings">choose random <br> values</button>
-					<button id='startGame'>start game </button>
+					<button id='startGame'>start game</button>
 				</div>
 			</div>
 				
@@ -173,7 +175,12 @@
 					  </div>
 					  <div class="modal-body">
 						Creators Names: Leah & Shachar <br>
-
+						We used jQuery and regexes for validating the different fields <br>
+						in the submission form and for validating the sign in process. <br>
+						Some of our difficulties were: <br>
+						&ensp; - making each ghost move smartly towards pacman with its own speed <br>
+						&ensp; - splitting the code into mutiple files with imports and exports <br>
+						&ensp; - allowing exiting the about screen with clicking outside the module 
 					  </div>
 					</div>
 				  </div>
@@ -181,12 +188,12 @@
 		
 
 			<div id="gamePage" class="toggle" hidden>
+				<audio id="gameMusic" autoplay loop>
+					<source src="sounds\pacman-game.mp3" type="audio/mpeg">
+				</audio>
 				<div id="gameColumn" class="gameColumn">
 					<div id="userDetails">
 						<canvas id="canvasUserDetails" height="50" width="800"></canvas>
-					</div>
-					<div id="game" class="gameColumn">
-						<canvas id="canvas" height="800" width="800"></canvas>
 						<div id="score">
 							<label id="scoreLabel" for="lblScore">SCORE:</label>
 							<input id="lblScore" type="text" />
@@ -200,8 +207,13 @@
 							<input id="lblPacmanLives" type="text" />
 						</div>
 					</div>
+					<div id="game" class="gameColumn">
+						<canvas id="canvas" height="800" width="800"></canvas>
+					</div>
 				</div>
 				<div id="gameSettings"  class="gameColumn">
+					<label id="musicPlay" style="float: left;">Press To Play Or Stop Music:</label>
+					<button id="playPauseMusic" style="float: left;">ON</button>
 					<canvas id="canvasSettings" height="800" width="400"></canvas>
 				</div>
 			</div>
