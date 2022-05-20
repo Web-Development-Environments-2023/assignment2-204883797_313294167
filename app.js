@@ -381,7 +381,7 @@ function Start()
 			else if ((col == 0 && row == 0)) {board[col][row] = 7; } // top left
 			else if ((col == 19 && row == 19) || ((col == 17 && row == 4))) {board[col][row] = 8; } //botoom right
 			else if ((col == 0 && row == 19)) {board[col][row] = 9; } // bottom left
-			else if ((col == 19 && row == 0) || (col == 11 && row == 4)) {board[col][row] = 10; } //top right
+			else if (col == 19 && row == 0) {board[col][row] = 10; } //top right
 			//wall borders:
 			else if ((row == 0 && col >= 1) || (row == 19 && col >= 1) || (col == 15 && row == 4) || (col == 16 && row == 4)) {board[col][row] = 11; }
 			else if ((col == 0 && row >= 1) || (col == 19 && row >= 1) || (col == 7 && row == 5) || (col == 7 && row == 6) || (col == 7 && row == 7)) {board[col][row] = 12; }
@@ -693,6 +693,19 @@ function Draw()
 					context.drawImage(man, center.x-20, center.y-20);
 			}
 
+			else if (board[col][row] == 50)
+			{
+				context.drawImage(slow, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 52)
+			{
+				context.drawImage(clock, center.x-20, center.y-20);
+			}
+			else if (board[col][row] == 100)
+			{
+				context.drawImage(block, center.x-20, center.y-20);
+			}
+
 
 
 
@@ -757,18 +770,7 @@ function Draw()
 
 
 
-			else if (board[col][row] == 50)
-			{
-				context.drawImage(slow, center.x-20, center.y-20);
-			}
-			else if (board[col][row] == 52)
-			{
-				context.drawImage(clock, center.x-20, center.y-20);
-			}
-			else if (board[col][row] == 100)
-			{
-				context.drawImage(block, center.x-20, center.y-20);
-			}
+
 		}
 	}
 }
