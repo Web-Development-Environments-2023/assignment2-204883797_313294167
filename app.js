@@ -1040,6 +1040,8 @@ function clearBoxes(ids)
 
 function endGame() 
 { 
+	gameMusic.pause();
+	gameMusic.currentTime = 0;
 	if (pacmanLives == 0)
 	{
 		alert("Loser!");
