@@ -23,7 +23,7 @@
 			<button id="welcomeButton">Welcome</button>
 			<button id="registerButton">Register</button>
 			<button id="loginButton">Login</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">About us</button>	
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">About Us</button>	
 		</div>
 
 		<div id="content">
@@ -77,58 +77,62 @@
 				<h2> settings </h2> <br>
 				<div id="right" class="column">
 					<div id="settingTime">
-						<label>select time (in seconds) per game:</label>
-						<br>
+						<label>select time per game (in minutes):</label><br>
 						<input type="text" id="enterTime"></input><br>
 						<button id="setTimeButton">ok</button><button id="clearTimeButton">cancel</button>
-					</div> <br> <br>
+					</div> <br> 
 					<div id="settingMonsters">
-						<label>select amount of monsters per game: </label>
+						<label>select amount of monsters per game (1-4): </label>
 						<br>
 						<input type="text" id="enterMonsters"></input> <br>
 						<button id="setMonsters">ok</button><button id="clearSetMonsters">cancel</button>
 						<br> <br>
 					</div>
 					<div id="settingKeys"> 
-						<label> click the keys buttons to set a key for movement: </label> <br>
+						<label> select the button to set key for movement: </label> <br>
 						<div id="keysContainer">
 							<button id="keyUpButton">up : &#8593;</button>
 							<div id="enterKeySectionUp" style="display: none;" class="hide">
-								<label>Type the keyboard key for moving up:</label>
+								<label>Type the key for moving up:</label>
 								<input type="text" id="enterKeyUp"></input><br>
-								<button id="setKeyUp">ok</button><button id="cancelUp">cancel</button><button id="setDefaultUp">default</button>
+								<button id="setKeyUp">ok</button><button id="cancelUp">cancel</button><button id="setDefaultUp">up</button>
 							</div> <br>
 							<button id="keyLeftButton">left : &#8592;</button>
 							<div id="enterKeySectionLeft" style="display: none;" class="hide">
-								<label>Type the keyboard key for moving left:</label>
+								<label>Type the key for moving left:</label>
 								<input type="text" id="enterKeyLeft"></input><br>
-								<button id="setKeyLeft">ok</button><button id="cancelLeft">cancel</button><button id="setDefaultLeft">default</button> 
+								<button id="setKeyLeft">ok</button><button id="cancelLeft">cancel</button><button id="setDefaultLeft">left</button> 
 							</div>
 							<button id="keyRightButton">right : &#8594;</button> 
 							<div id="enterKeySectionRight" style="display: none;" class="hide">
-								<label>Type the keyboard key for moving right:</label>
+								<label>Type the key for moving right:</label>
 								<input type="text" id="enterKeyRight"></input><br>
-								<button id="setKeyRight">ok</button><button id="cancelRight">cancel</button><button id="setDefaultRight">default</button> 
+								<button id="setKeyRight">ok</button><button id="cancelRight">cancel</button><button id="setDefaultRight">right</button> 
 							</div> 
 							<br> 
 							<button id="keyDownButton">down : &#8595;</button>
 							<div id="enterKeySectionDown" style="display: none;" class="hide">
-								<label>Type the keyboard key for moving down:</label>
+								<label>Type the key for moving down:</label>
 								<input type="text" id="enterKeyDown"></input><br>
-								<button id="setKeyDown">ok</button><button id="cancelDown">cancel</button><button id="setDefaultDown">default</button> 
+								<button id="setKeyDown">ok</button><button id="cancelDown">cancel</button><button id="setDefaultDown">down</button> 
 							</div> 
 						</div>
 					</div>
 				</div> 
+				<div id="center" class="column">
+					<img id="pacmanSettings" src="images\pacman-settings.gif" width="80%"></img> 
+					<button id="setRandomSettings">select random <br> values</button> <br> <br>
+					<button id='startGame'>start game</button>
+				</div>
 				<div id="left" class="column">
 					<div id="settingBallsNum">
-						<label>choose the amount of balls for  <br>  the game(50-90): </label><br>
+						<label>select the number of balls for <br> the game(50-90): </label><br>
 						<input type="text" id="enterBalls"></input> <br>
 						<button id="setBallsNum">ok</button><button id="enterBallsCancel">cancel</button>
 					</div> <br> <br>
 					<div id="settingBallsColors">
-						<label>choose the color for each ball:</label> <br>
-						<label id="fivePoints">Select for 5 points:</label> 
+						<label>select the color for each ball:</label> <br>
+						<label id="fivePoints">5 points:</label> 
 						<!-- <br> <input type="color" value='#0000FF'> -->
 						<br/> <select name="fivePointsBall" id="fivePointsBall">
 							<option>select color</option>
@@ -137,7 +141,7 @@
 							<option style="color: pink">pink</option>
 						</select>
 						<button id="setBall5Color">ok</button> <br>
-						<label id="fifteenPoints">Select for 15 points:</label> 	
+						<label id="fifteenPoints">15 points:</label> 	
 						<br/> <select name="fifteenPointsBall" id="fifteenPointsBall">
 							<option>select color</option>
 							<option style="color: red;">red</option>
@@ -145,7 +149,7 @@
 							<option style="color: Tomato;">Tomato</option>
 						</select>
 						<button id="setBall15Color">ok</button> <br>
-						<label id="twentyFivePoints">Select for 25 points:</label> 	
+						<label id="twentyFivePoints">25 points:</label> 	
 						<br/> <select name="twentyFivePointsBall" id="twentyFivePointsBall">
 							<option>select color</option>
 							<option style="color: green;">green</option>
@@ -156,11 +160,6 @@
 						<br> <br>
 					</div> 
 				</div> <br>
-				<img id="pacmanSettings" src="images\pacman-settings.gif"></img> 
-				<div id="settingsButtons" class="column">
-					<button id="setRandomSettings">choose random <br> values</button>
-					<button id='startGame'>start game</button>
-				</div>
 			</div>
 				
 				<!-- Modal -->

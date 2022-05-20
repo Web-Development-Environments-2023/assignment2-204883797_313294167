@@ -37,19 +37,16 @@ function setBallColor(pointsAmount, fiveColor, fifteenColor, twentyFiveColor)
 		case 5:
 			fiveColor = document.getElementById("fivePointsBall").value;
 			if (fiveColor == 'select color') {fiveColor = 'plum'; }
-			alert('5 point ball color is set to: ' + fiveColor)
             return fiveColor;
 		
 		case 15:
 			fifteenColor = document.getElementById("fifteenPointsBall").value;
 			if (fifteenColor == 'select color') {fifteenColor = 'red'; }
-			alert('15 point ball color is set to: ' + fifteenColor)
 			return fifteenColor;
 
 		case 25:
 			twentyFiveColor = document.getElementById("twentyFivePointsBall").value;
 			if (twentyFiveColor == 'select color') {twentyFiveColor = 'green'; }
-			alert('25 point ball color is set to: ' + twentyFiveColor)
 			return twentyFiveColor;
 	}
     

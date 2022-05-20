@@ -706,17 +706,16 @@ function Draw()
 				context.drawImage(block, center.x-20, center.y-20);
 			}
 
-
-
-
-			if (monstersNum==1){
+			if (monstersNum==1)
+			{
 				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 				{
 						context.drawImage(monster1, center.x-20, center.y-20);
 				}
 			}
 
-			else if (monstersNum==2){
+			else if (monstersNum==2)
+			{
 				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 				{
 						context.drawImage(monster1, center.x-20, center.y-20);
@@ -727,7 +726,8 @@ function Draw()
 				}
 			}
 
-			else if (monstersNum==3){
+			else if (monstersNum==3)
+			{
 				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 				{
 						context.drawImage(monster1, center.x-20, center.y-20);
@@ -743,7 +743,8 @@ function Draw()
 				}
 			}
 
-			else if (monstersNum==4){
+			else if (monstersNum==4)
+			{
 				if (board[col][row] == 20 || board[col][row] == 30 || ((board[col][row] >= 60) && (board[col][row] <= 66))) //orange ghost
 				{
 						context.drawImage(monster1, center.x-20, center.y-20);
@@ -763,13 +764,6 @@ function Draw()
 					context.drawImage(monster4, center.x-20, center.y-20);
 				}
 			}
-
-
-
-
-
-
-
 
 		}
 	}
@@ -908,6 +902,7 @@ function UpdatePosition()
 		{
 			if (pacmanLives == 1) 
 			{ 
+				pacmanLives--;
 				endGame();
 				return; 
 			}
@@ -926,6 +921,7 @@ function UpdatePosition()
 		{
 			if(pacmanLives==1) 
 			{ 
+				pacmanLives--;
 				endGame();
 				return; 
 			}
@@ -1044,7 +1040,7 @@ function clearBoxes(ids)
 
 function endGame() 
 { 
-	if (pacmanLives == 1)
+	if (pacmanLives == 0)
 	{
 		alert("Loser!");
 	}
@@ -1056,8 +1052,12 @@ function endGame()
 		}
 		else 
 		{
-			alert("Winer!!!")
+			alert("Winner!!!")
 		}
+	}
+	else if (ballsToEat == 0)
+	{
+		alert("Winner!!!")
 	}
 	if (confirm("Play Again?")) //yes
 	{
@@ -1065,7 +1065,7 @@ function endGame()
 	} 
 	else //no
 	{
-		
+		switchContent("welcomePage")
 	}
 }
 
@@ -1075,6 +1075,7 @@ function setTime()
 	if (/^\d+$/.test(time))
 	{
 		time = parseInt(document.getElementById("enterTime").value);
+		time = time * 60;
 	}
 	if (isNaN(time) || !(Number.isInteger(time)))
 	{
@@ -1084,7 +1085,6 @@ function setTime()
 	else if (time > 60) 
 	{ 
 		gameTime = time; 
-		alert('time set to: ' + gameTime)
 	}
 	else 
 	{
@@ -1118,7 +1118,6 @@ function setMonsters()
 	else 
 	{ 
 		monstersNum = monsters; 
-		alert('number of monsters set to ' +  monstersNum);
 	}
 	
 }
