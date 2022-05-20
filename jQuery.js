@@ -1,12 +1,14 @@
-$(document).ready(function() {
+$(document).ready(function() 
+{
 
 	var account = ['k','k'];
   var accountList = [];
   accountList.push(account);
 
-
+  //login check if userName and password exist
   
-	$('#login-button').on('click', function() {
+	$('#login-button').on('click', function() 
+  {
 		var loginUsernameEntry = $("#userNameLog").val();
 		var loginPasswordEntry = $("#passwordLog").val();
     var check=0;
@@ -31,8 +33,10 @@ $(document).ready(function() {
 		};
 	});
   
-	$('#submit-button').on('click', function() {
-    
+  //register submit checks
+
+	$('#submit-button').on('click', function() 
+  {
 		var createUsernameEntry = $("#userNameReg").val();
 		var createPasswordEntry = $("#passwordReg").val();
     var createNameEntry = $("#name").val();
@@ -55,8 +59,6 @@ $(document).ready(function() {
     var validateName = /^([^0-9]*)$/;
     var validatePass= /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     var validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-   
-
 
     if(!validate.test(createUsernameEntry) || (createUsernameEntry).length == 0 || (createUsernameEntry == "Enter a valid username")) {
       $(createUsernameObject).addClass("error")
@@ -122,14 +124,18 @@ $(document).ready(function() {
     });
 
 
-
-		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true && createBirthDayValid == true) {
+		if(createUsernameValid == true && createPasswordValid == true && createEmailValid == true  && createNameValid == true && createBirthDayValid == true) 
+    {
         account = [createUsername, createPassword];
         accountList.push(account);
         $("#registerPage").hide();
         $("#loginPage").show();
     
-      }
+    }
+    else 
+    {
+      alert("at least one field isn't valid please check the info you submitted")
+    }
     });
     
 

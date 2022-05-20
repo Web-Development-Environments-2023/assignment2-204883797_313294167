@@ -23,7 +23,7 @@ var keyDown = '40';
 var keyRight = '39';
 var keyLeft = '37';
 var keysDown;
-var ballsNum = 50;
+var ballsNum = 80;
 var fiveColor = 'plum'
 var fifteenColor = 'red'
 var twentyFiveColor = 'green'
@@ -91,7 +91,7 @@ var slow_cell_j;
 var clock_eat=0;
 var startMove = false;
 var userNameLog;
-var starttimer=false;
+var starttimer = false;
 
 var loginButton = document.getElementById('login-button');
 loginButton.addEventListener("click", function()
@@ -305,10 +305,10 @@ function Start()
 	context = canvas.getContext("2d");
 	board = new Array();
 	startMove = false;
+	starttimer = false;
 	score = 0;
 	clock_eat = 0;
 	ballsToEat = ballsNum;
-	var cnt = 400;
 	slow_time = 0;
 	slow_time_left=0;
 	eatCherry=false;
@@ -399,7 +399,6 @@ function Start()
 					pacman_remain--;
 					board[col][row] = 2;
 				} else { board[col][row] = 0; }
-				cnt--;
 			}
 		}
 	}
@@ -700,10 +699,10 @@ function UpdatePosition()
 {
 	board[shape.i][shape.j] = 0;
 	var x = GetKeyPressed();
-	if((1<=x || x<=4)&&(starttimer==false)){
-		starttimer=true;
+	if ((1 <= x || x <= 4) && (starttimer == false))
+	{
+		starttimer = true;
 		startTime = new Date();
-
 	}
 	if (x == 1) //move up
 	{
@@ -807,14 +806,14 @@ function UpdatePosition()
 	}
 	else if (board[shape.i][shape.j] == 52) //eat clock
 	{ 
-		gameTime=gameTime+10;
+		gameTime = gameTime + 10;
 		fruit_sound.play();
 	}
 
 	else if (board[shape.i][shape.j] == 53) //eat clock and bucs
 	{ 
-		score=score+50; 
-		gameTime=gameTime+10;
+		score = score + 50; 
+		gameTime = gameTime + 10;
 		fruit_sound.play();
 	}
 
@@ -863,16 +862,20 @@ function UpdatePosition()
 	if (startMove == true)
 	{
 		//move ghosts
-		for(var i in ghosts){
+		for(var i in ghosts)
+		{
 			moveGhost(board, ghosts[i], shape);
 		}
 	}
-	if(starttimer==true){
+	if (starttimer == true)
+	{
 		var currentTime = new Date();
 		timeElapsed = (currentTime - startTime) / 1000;
-
 	}
-
+	if (starttimer == false)
+	{
+		timeElapsed = 0;
+	}
 	if (timeElapsed > gameTime)
 	{
 		window.clearInterval(interval);
