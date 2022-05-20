@@ -94,6 +94,23 @@ var startMove = false;
 var userNameLog;
 var starttimer = false;
 
+
+var playPauseMusic = document.getElementById('playPauseMusic');
+playPauseMusic.addEventListener("click", function()
+{
+	if (playPauseMusic.textContent == "ON")
+	{
+		gameMusic.pause();
+		gameMusic.currentTime = 0;
+		playPauseMusic.textContent = "OFF";
+	}
+	else
+	{
+		gameMusic.play();
+		playPauseMusic.textContent = "ON";
+	}
+})
+
 var loginButton = document.getElementById('login-button');
 loginButton.addEventListener("click", function()
 {
@@ -309,6 +326,7 @@ function Start()
 		new Ghost('clyde', 1, 1, 4, 20, 'images/pacman-monster1.png')
 	]
 	gameMusic.play();
+	playPauseMusic.textContent = "ON";
 	context = canvas.getContext("2d");
 	board = new Array();
 	startMove = false;

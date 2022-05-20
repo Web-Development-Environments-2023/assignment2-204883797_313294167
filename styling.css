@@ -79,7 +79,7 @@ body
 	flex-direction: column;
 }
 
-#welcomePage button, #loginPage button, #settingsPage button, #registerPage button
+#welcomePage button, #loginPage button, #settingsPage button, #registerPage button, #playPauseMusic
 {
     background-color: darkblue;
 	color: white;
@@ -137,7 +137,7 @@ body
 	background-color: black;
 }
 
-#timeLabel, #scoreLabel, #livesLabel, #musicPlay
+#timeLabel, #scoreLabel, #livesLabel, #musicPlay, #musicVolume
 {
 	color: white;
 }
