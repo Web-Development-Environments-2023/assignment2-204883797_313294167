@@ -1,4 +1,4 @@
-import { restart, isBorder } from './app.js'
+import { restart, isBorder,cant_die } from './app.js'
 
 class Ghost
 {
@@ -215,8 +215,10 @@ function moveGhost(board, ghost, shape)
 					break;
 
 				case 2: //dead
+				if(cant_die==false){
 					restart();
 					break;
+				}
 				
 				case 5: //15 point
 					board[ghost.currIndexCol][ghost.currIndexRow] = 61;
@@ -259,8 +261,10 @@ function moveGhost(board, ghost, shape)
 					break;
 
 				case 2: //dead
+				if(cant_die==false){
 					restart();
 					break;
+				}
 				
 				case 5: //15 point
 					board[ghost.currIndexCol][ghost.currIndexRow] = 71;
@@ -303,8 +307,10 @@ function moveGhost(board, ghost, shape)
 					break;
 
 				case 2: //dead
+				if(cant_die==false){
 					restart();
 					break;
+				}
 				
 				case 5: //15 point
 					board[ghost.currIndexCol][ghost.currIndexRow] = 81;
@@ -347,8 +353,10 @@ function moveGhost(board, ghost, shape)
 					break;
 
 				case 2: //dead
+				if(cant_die==false){
 					restart();
 					break;
+				}
 				
 				case 5: //15 point
 					board[ghost.currIndexCol][ghost.currIndexRow] = 91;

@@ -1094,4 +1094,4 @@ function randomSelectSettings()
 }
 
 
-export {showSetter, isBorder, restart, clearBoxes}
+export {showSetter, isBorder, restart, clearBoxes, cant_die}
