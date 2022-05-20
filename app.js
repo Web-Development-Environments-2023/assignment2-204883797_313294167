@@ -477,7 +477,7 @@ function Start()
 	);
 
 	
-	drawSetting();
+	drawSettings();
 	drawUserDetails();
 	interval = setInterval(UpdatePosition, intervalTime);
 
@@ -575,26 +575,26 @@ function drawBall(color, context, center)
 	context.fill();
 }
 
-function drawSetting()
+function drawSettings()
 {
 	contextSettings = canvasSettings.getContext("2d");
 	contextSettings.clearRect(0, 0, canvasSettings.width, canvasSettings.height);
 	contextSettings.font = "30px Dancing Script";
 	contextSettings.fillStyle = "blue";
-	contextSettings.fillText("Settings", 200, 50);
+	contextSettings.fillText("Settings", 150, 50);
 	contextSettings.fillStyle = "white";
 	contextSettings.textAlign = "center";
 	contextSettings.font = "20px Dancing Script";
-	contextSettings.fillText(`Total Time: ${gameTime}`, 250, 100);
-	contextSettings.fillText(`Number Of Ghosts: ${monstersNum}`, 250, 150);
-	contextSettings.fillText(`Key Up: ${upChar}`, 250, 200);
-	contextSettings.fillText(`Key Left: ${leftChar}`, 250, 250);
-	contextSettings.fillText(`Key Right: ${rightChar}`, 250, 300);
-	contextSettings.fillText(`Key Down: ${downChar}`, 250, 350);
-	contextSettings.fillText(`Total Balls: ${ballsNum}`, 250, 400);
-	contextSettings.fillText(`5 Points Ball Color: ${fiveColor}`, 250, 450);
-	contextSettings.fillText(`15 Points Ball Color: ${fifteenColor}`, 250, 500);
-	contextSettings.fillText(`25 Points Ball Color: ${twentyFiveColor}`, 250, 550);
+	contextSettings.fillText(`Total Time: ${gameTime}`, 200, 100);
+	contextSettings.fillText(`Number Of Ghosts: ${monstersNum}`, 200, 150);
+	contextSettings.fillText(`Key Up: ${upChar}`, 200, 200);
+	contextSettings.fillText(`Key Left: ${leftChar}`, 200, 250);
+	contextSettings.fillText(`Key Right: ${rightChar}`, 200, 300);
+	contextSettings.fillText(`Key Down: ${downChar}`, 200, 350);
+	contextSettings.fillText(`Total Balls: ${ballsNum}`, 200, 400);
+	contextSettings.fillText(`5 Points Ball Color: ${fiveColor}`, 200, 450);
+	contextSettings.fillText(`15 Points Ball Color: ${fifteenColor}`, 200, 500);
+	contextSettings.fillText(`25 Points Ball Color: ${twentyFiveColor}`, 200, 550);
 }
 
 function drawUserDetails()
@@ -615,9 +615,13 @@ function Draw()
 		monster2.src = 'images/ghost_sick.jpg'
 		monster3.src = 'images/ghost_sick.jpg'
 		monster4.src = 'images/ghost_sick.jpg'
-		cant_die=true;
+		cant_die = true;
 		monster_time--;
-		if (monster_time==0) { eatCherry = false; }
+		if (monster_time==0) 
+		{ 
+			eatCherry = false; 
+			cant_die = false;
+		}
 	}
 	else
 	{
@@ -625,7 +629,7 @@ function Draw()
 		monster2.src = 'images/pacman-monster2.png'
 		monster3.src = 'images/pacman-monster3.png'
 		monster4.src = 'images/pacman-monster4.png'
-		cant_die=false;
+		cant_die = false;
 	}
 
 	canvas.width = canvas.width; //clean board
@@ -836,18 +840,24 @@ function UpdatePosition()
 		fruit_sound.play();
 	}
 
+	//ghosts collision with ball
 	else if(((board[shape.i][shape.j] >= 60) && (board[shape.i][shape.j] <= 62)) || ((board[shape.i][shape.j] >= 70) && (board[shape.i][shape.j] <= 72))
 	|| ((board[shape.i][shape.j] >= 80) && (board[shape.i][shape.j] <= 82)) || ((board[shape.i][shape.j] >= 90) && (board[shape.i][shape.j] <= 92))
 	){
 		ballsToEat--;
 		if(cant_die==false)
 		{
-			if (pacmanLives == 1) { lose(); }
+			if (pacmanLives == 1) 
+			{ 
+				endGame();
+				return; 
+			}
 			board[shape.i][shape.j] = 0;
 			restart();
 		}
 	}
 
+	//ghosts collision
 	else if ((board[shape.i][shape.j] == 20)  || ((board[shape.i][shape.j] >= 63) && (board[shape.i][shape.j] <= 66))
     || (board[shape.i][shape.j] == 21) || ((board[shape.i][shape.j] >= 73) && (board[shape.i][shape.j] <= 76))
 	|| (board[shape.i][shape.j] == 22) || ((board[shape.i][shape.j] >= 83) && (board[shape.i][shape.j] <= 86))
@@ -855,7 +865,11 @@ function UpdatePosition()
 	{
 		if(cant_die==false)
 		{
-			if(pacmanLives==1) { lose(); }
+			if(pacmanLives==1) 
+			{ 
+				endGame();
+				return; 
+			}
 			board[shape.i][shape.j] = 0;
 			restart();
 		}
@@ -898,14 +912,31 @@ function UpdatePosition()
 	if (timeElapsed > gameTime)
 	{
 		window.clearInterval(interval);
-		alert('time up!');
+		changeMusic("OFF");
+		endGame();
 	}
 	if (ballsToEat == 0) 
 	{
 		window.clearInterval(interval);
-		window.alert("Game completed");
+		changeMusic("OFF");
+		endGame();
 	} 
 	else { Draw(); }
+}
+
+function changeMusic(text)
+{
+	if (text == "ON")
+	{
+		gameMusic.play();
+		playPauseMusic.textContent = "ON";
+	}
+	else if (text == "OFF")
+	{
+		gameMusic.pause();
+		gameMusic.currentTime = 0;
+		playPauseMusic.textContent = "OFF";
+	}
 }
 
 function setDefault(direction, isRandom)
@@ -951,7 +982,32 @@ function clearBoxes(ids)
 	}
 }
 
-function lose() { alert("You lost"); }
+function endGame() 
+{ 
+	if (pacmanLives == 1)
+	{
+		alert("Loser!");
+	}
+	else if (timeElapsed > gameTime)
+	{
+		if (score < 100)
+		{
+			alert(`You are better than ${score} points!`)
+		}
+		else 
+		{
+			alert("Winer!!!")
+		}
+	}
+	if (confirm("Play Again?")) //yes
+	{
+		switchContent("settingsPage");
+	} 
+	else //no
+	{
+		
+	}
+}
 
 function setTime()
 {
