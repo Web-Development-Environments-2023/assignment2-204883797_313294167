@@ -1,5 +1,4 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=7810687&assignment_repo_type=AssignmentRepo)
-# Assignment2
+# Pacman
  
 Creators: Leah & Shachar
 
@@ -9,3 +8,8 @@ Special fetures in game:
  - snail: makes ghosts move slower 
 
 https://web-development-environments-2022.github.io/assignment2-204883797_313294167/
+
+Demo:
+
+https://user-images.githubusercontent.com/63493176/224473957-41a1391a-50d3-4bbc-af38-fae60d519c2c.mp4
+
